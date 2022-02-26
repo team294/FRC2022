@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.Ports;
 import frc.robot.Constants.TargetType;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.OIConstants;
@@ -35,19 +34,12 @@ import frc.robot.utilities.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final FileLog log = new FileLog("A1");
+  private final PowerDistribution m_powerdistribution = new PowerDistribution(0, ModuleType.kRev);
   private final Shooter m_shooter = new Shooter(log);
   private final Feeder m_feeder = new Feeder("Feeder", log);
   private final Uptake m_uptake = new Uptake("Uptake",log);
-
   private final Turret m_turret = new Turret(log);
-
-  private final PowerDistribution m_powerdistribution = new PowerDistribution(0, ModuleType.kRev);
   private final PiVisionHub m_pivisionhub = new PiVisionHub(m_powerdistribution, log); //Pi ip: 10.2.94.21
-
-  
-  private final FalconController m_falcon1 = new FalconController(Ports.CANFalcon1, "Falcon1", log);
-  private final FalconController m_falcon2 = new FalconController(Ports.CANFalcon2, "Falcon2", log);
-  private final FalconStop m_autoCommand = new FalconStop(m_falcon1, log);
   
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
   private final Joystick rightJoystick = new Joystick(OIConstants.usbRightJoystick);
@@ -55,6 +47,7 @@ public class RobotContainer {
 
   private int displayCount = 1;
   private boolean rumbling = false;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
@@ -69,21 +62,6 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, m_shooter, log));
 
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(m_shooter, log));
-
-    SmartDashboard.putData("Falcon1 Stop", new FalconStop(m_falcon1, log));
-    SmartDashboard.putData("Falcon1 Set Percent", new FalconSetPercentOutput(m_falcon1, log));
-    SmartDashboard.putData("Falcon1 Set PID", new FalconSetPIDSV(m_falcon1, log));
-    SmartDashboard.putData("Falcon1 Set Velocity", new FalconSetVelocity(m_falcon1, log));
-    SmartDashboard.putData("Falcon1 Joystick Control", new FalconControlWithJoystick(leftJoystick, m_falcon1, log));
-
-    SmartDashboard.putData("Falcon1 Calibrate Slow Fwd", new FalconRampOutput(0, 0.9, 30.0, m_falcon1, log));
-    SmartDashboard.putData("Falcon1 Calibrate Slow Rev", new FalconRampOutput(0, -0.9, 30.0, m_falcon1, log));
-
-    SmartDashboard.putData("Falcon2 Stop", new FalconStop(m_falcon2, log));
-    SmartDashboard.putData("Falcon2 Set Percent", new FalconSetPercentOutput(m_falcon2, log));
-    SmartDashboard.putData("Falcon2 Set PID", new FalconSetPIDSV(m_falcon2, log));
-    SmartDashboard.putData("Falcon2 Set Velocity", new FalconSetVelocity(m_falcon2, log));
-    SmartDashboard.putData("Falcon2 Joystick Control", new FalconControlWithJoystick(rightJoystick, m_falcon2, log));
 
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(m_feeder, log));
     SmartDashboard.putData("Stop Feeder", new FeederStop(m_feeder, log));
@@ -119,6 +97,9 @@ public class RobotContainer {
     configureXboxButtons();
   }
 
+  /**
+   * Configures XBox buttons and controls
+   */
   private void configureXboxButtons(){
     JoystickButton[] xb = new JoystickButton[11];
     //check povtrigger and axis trigger number bindings
@@ -145,9 +126,12 @@ public class RobotContainer {
     //xb[8].whenHeld(); //start, toggle lights
     //xbPOVLeft.whenHeld();//climb
 
-   
   }
 
+  /**
+   * Sets the rumble on the XBox controller
+   * @param percentRumble The normalized value (0 to 1) to set the rumble to
+   */
 	public void setXBoxRumble(double percentRumble) {
 		xboxController.setRumble(RumbleType.kLeftRumble, percentRumble);
     xboxController.setRumble(RumbleType.kRightRumble, percentRumble);
@@ -163,7 +147,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    // return m_autoCommand;
+    return null;
   }
 
   /**
