@@ -1,0 +1,54 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX[11]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[11]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[11]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[11]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[12]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX[12]/Integrated Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[11]/Analog In": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Actuator": "Subsystem",
+      "/LiveWindow/Shooter": "Subsystem",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Set Motor Percent": "Command",
+      "/SmartDashboard/Set Motor Velocity": "Command",
+      "/SmartDashboard/Set Position": "Command",
+      "/SmartDashboard/Shooter Manual SetPoint": "Command",
+      "/SmartDashboard/Stop Motor": "Command"
+    }
+  }
+}

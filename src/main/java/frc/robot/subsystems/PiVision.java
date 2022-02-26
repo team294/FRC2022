@@ -1,0 +1,127 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems;
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PiVisionConstants;
+import frc.robot.utilities.FileLog;
+import frc.robot.utilities.Loggable;
+import frc.robot.utilities.StringUtil;
+
+public class PiVision extends SubsystemBase implements Loggable {
+  private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+  protected NetworkTable table;
+  protected NetworkTableEntry rx, ry, rv, rw;
+  protected FileLog log;
+  protected double x, y, width, targetExists;
+  protected String name;
+  protected int networkTableReadCounter = 0;
+  protected boolean fastLogging = false;
+
+  /** Creates a new PiVision. */
+  public PiVision(String name, FileLog log) {
+    this.log = log;
+    this.name = name;
+    table = tableInstance.getTable(name);
+
+    rw = table.getEntry("rw");
+    // rx = table.getEntry("rx");
+    // ry = table.getEntry("ry");
+    rv = table.getEntry("rv");
+  }
+
+  /**
+   * @return true when limelight sees a target, false when not seeing a target
+   */
+  public boolean seesTarget() {
+    return (targetExists==1);
+  }
+
+  /**
+   * @return true when limelight is connected & reading data
+   * false when limelight is disconnected or not reading any data   TODO when would x be 1064??
+   */
+  public boolean isGettingData() {
+    // return (x != (1000 * PiVisionConstants.angleMultiplier) && y != 1000);
+    return (width != 1000 && targetExists != 1000);
+  }
+
+  public void readData() {
+    double xNew, yNew, targetExistsNew, widthNew; 
+    targetExistsNew = rv.getDouble(1000.0);
+    widthNew = rw.getDouble(1000.0);
+    // xNew = -rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
+    // yNew = ry.getDouble(1000.0);
+    networkTableReadCounter = 0;
+  
+    // Check if the Limelight updated the NetworkTable while we were reading values, to ensure that all
+    // of the data (targetExists, X, Y, etc) are from the same vision frame.
+    do {
+      targetExists = targetExistsNew;
+      width = widthNew;
+      // x = xNew;
+      // y = yNew;
+
+      targetExistsNew = rv.getDouble(1000.0);
+      widthNew = rw.getDouble(1000.0);
+      // xNew = rx.getDouble(1000.0);
+      // yNew = ry.getDouble(1000.0);
+      networkTableReadCounter++;
+    // } while(networkTableReadCounter<= 5 && (xNew != x || yNew != y));
+    } while(networkTableReadCounter<= 5 && (widthNew != width));
+
+  }
+
+  @Override
+  public void periodic() {
+    readData();
+    
+    if (fastLogging || log.getLogRotation() == log.PIVISION_CYCLE) {
+      updatePiVisionLog(false);
+    }
+    
+    if (log.getLogRotation() == log.PIVISION_CYCLE) {
+
+      if(!isGettingData()) {
+        // TODO yeet
+        // RobotPreferences.recordStickyFaults(name, log);
+        log.writeLog(false, name, "Update Variables", "Failure", "NOT WORKING");
+      }
+
+      // SmartDashboard.putNumber(StringUtil.buildString(name, " area"), area);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " x"), x);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " y"), y);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " width"), width);
+      SmartDashboard.putBoolean(StringUtil.buildString(name, " Sees Target"), seesTarget());
+      // SmartDashboard.putBoolean(StringUtil.buildString(name, " Updating"), isGettingData());
+    }
+  }
+
+  @Override
+  public void enableFastLogging(boolean enabled) {
+    fastLogging = enabled;
+  }
+
+  /**
+   * Write information about pivision to fileLog.
+   * @param logWhenDisabled true = log when disabled, false = discard the string
+   */
+  public void updatePiVisionLog(boolean logWhenDisabled) {
+    // TODO fix
+    log.writeLog(logWhenDisabled, name, "Update Variables", 
+      "Target Valid", seesTarget(),
+      "Center Offset X", x, 
+      "Center Offset Y", y,
+      // "Target Area", area,
+      // "Latency", latency,
+      "Network Table Read Counter", networkTableReadCounter
+      // "Snapshot Count", snapshotCount
+      );
+  }
+}
