@@ -10,7 +10,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.FileLog;
-import frc.robot.utilities.StringUtil;
 
 public class PiVisionHub extends PiVision {
   private boolean setFlashAuto = true, ledOn = false;
