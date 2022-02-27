@@ -16,7 +16,7 @@ public class PiVisionHub extends PiVision {
   private PowerDistribution pd;
   
   public PiVisionHub(PowerDistribution pd, FileLog log) {
-    super("Camera 0", log);
+    super("shooter-cam", log);
     this.pd = pd;
   }
 
@@ -33,7 +33,7 @@ public class PiVisionHub extends PiVision {
    * @return distance from camera to target, on the floor, in feet
    */
   public double getDistance() {    //  TODO  this could return a erroneous value if vision misses a frame or is temporarily blocked.  Use avgrging or filtering
-    if (50 < width && width < 280) return -1.3974*width+359.833;
+    if (50 < width && width < 300) return -1.3974*width+359.833;
     return 0;
   }
 

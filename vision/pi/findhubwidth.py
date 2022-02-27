@@ -7,17 +7,17 @@ width = 680
 height = 480
 
 name = "shooter-cam"
-yTolerance = 10 # in pixels
+yTolerance = 60 # in pixels
 contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
 
 settings = [ { "name": "connect_verbose", "value": 1 }, { "name": "contrast", "value": 50 }, { "name": "saturation", "value": 60 }, { "name": "power_line_frequency", "value": 2 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ]
 
 NetworkTablesInstance.getDefault().initialize(server='10.2.94.2')
 sd = NetworkTablesInstance.getDefault().getTable(name)
-sd.putNumber("LowerThresholdH", 70)
-sd.putNumber("LowerThresholdS", 60)
-sd.putNumber("LowerThresholdV", 200)
-sd.putNumber("UpperThresholdH", 82)
+sd.putNumber("LowerThresholdH", 56)
+sd.putNumber("LowerThresholdS", 129)
+sd.putNumber("LowerThresholdV", 65)
+sd.putNumber("UpperThresholdH", 74)
 sd.putNumber("UpperThresholdS", 255)
 sd.putNumber("UpperThresholdV", 255)
 sd.putNumber("rv", 1000)
@@ -68,7 +68,7 @@ while True:
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
             # print([cX, cY, x, x+w, y, y+h])
-            filtered.append([cX, cY, x, x+w, y, y+h])
+            filtered.append([cX, cY, x, x+w, y, y+h, cv2.contourArea(c)])
 
     rv = 0
     rw = 0
@@ -86,6 +86,7 @@ while True:
         filtered = list(filter(lambda f: abs(median-f[1]) < sd.getNumber("ytol", yTolerance), filtered))
 
         if len(filtered) > 0:
+            filtered = sorted(filtered, key=lambda f: f[6])[-4:]
             fx, fy, bx, by = filtered[0][2], filtered[0][4], filtered[0][3], filtered[0][5]
             for f in filtered:
                 if f[2] < fx: fx = f[2]
