@@ -16,14 +16,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.Constants.TargetType;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
+import frc.robot.commands.commandGroups.*;
 import frc.robot.subsystems.*;
-import frc.robot.triggers.AxisTrigger;
-import frc.robot.triggers.POVTrigger;
+import frc.robot.triggers.*;
 import frc.robot.utilities.*;
 
 /**
