@@ -65,16 +65,17 @@ public final class Constants {
 
     public static final class RobotConstants {
         // Global constants go here
+        public static final double temperatureCheck = 40; // in celsius
         
     }
 
     public static final class Ports {
         // CANbus addresses
-        public static final int canLeftDriveMotor1 = 11;
-        public static final int canLeftDriveMotor2 = 12;
+        public static final int CANLeftDriveMotor1 = 11;
+        public static final int CANLeftDriveMotor2 = 12;
 
-        public static final int canRightDriveMotor1 = 15;
-        public static final int canRightDriveMotor2 = 16;
+        public static final int CANRightDriveMotor1 = 15;
+        public static final int CANRightDriveMotor2 = 16;
 
         public static final int CANIntake = 21;
 

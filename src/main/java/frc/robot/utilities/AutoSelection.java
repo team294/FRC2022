@@ -6,12 +6,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.CoordType;
-import frc.robot.Constants.SearchType;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.TrajectoryCache.TrajectoryType;
-import frc.robot.Constants.StopType;
+// import frc.robot.Constants.CoordType;
+// import frc.robot.Constants.SearchType;
+// import frc.robot.Constants.StopType;
 
 
 /**

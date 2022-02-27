@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -42,6 +41,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter(log);
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
+  private final Intake intake = new Intake("Intake",log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
 
@@ -242,8 +242,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoSelection.getAutoCommand(driveTrain, 
-      shooter, feeder, hopper, intake, limeLightGoal, limeLightBall, log, led);
+    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intake, 
+      // limeLightGoal, limeLightBall, led,
+      log );
   }
 
   /**
@@ -269,6 +270,7 @@ public class RobotContainer {
   public void disabledInit() {
     log.writeLogEcho(true, "Disabled", "Robot disabled");   // Don't log the word "Init" here -- it affects the Excel macro
 
+    driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }
 
   /**
@@ -289,7 +291,9 @@ public class RobotContainer {
    */
   public void autonomousInit() {
     log.writeLogEcho(true, "Auto", "Mode Init");
-    
+   
+    driveTrain.setDriveModeCoast(false);
+
     // NOTE:  Do NOT reset the gyro or encoder here!!!!!
     // The first command in auto mode initializes before this code is run, and
     // it will read the gyro/encoder before the reset goes into effect.
@@ -307,6 +311,7 @@ public class RobotContainer {
   public void teleopInit() {
     log.writeLogEcho(true, "Teleop", "Mode Init");
 
+    driveTrain.setDriveModeCoast(false);
   }
 
   /**
