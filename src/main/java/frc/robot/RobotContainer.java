@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -50,6 +51,8 @@ public class RobotContainer {
   private final Intake intake = new Intake("Intake",log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
+  private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
+  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
   private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
@@ -122,13 +125,13 @@ public class RobotContainer {
     SmartDashboard.putData("DriveBackward", new DriveSetPercentOutput(-0.4, -0.4, driveTrain, log));
     SmartDashboard.putData("DriveTurnLeft", new DriveSetPercentOutput(-0.4, 0.4, driveTrain, log));
     SmartDashboard.putData("DriveTurnRight", new DriveSetPercentOutput(0.4, -0.4, driveTrain, log));
-    SmartDashboard.putData("DriveStraightRel", new DriveStraight(3, TargetType.kRelative, 0.0, 2.66, 3.8, true, driveTrain, limeLightGoal, log));
-    SmartDashboard.putData("DriveStraightAbs", new DriveStraight(3, TargetType.kAbsolute, 0.0, 2.66, 3.8, true, driveTrain, limeLightGoal, log));
-    SmartDashboard.putData("DriveStraightVis", new DriveStraight(3, TargetType.kVision, 0.0, 2.66, 3.8, true, driveTrain, limeLightGoal, log));
-    // SmartDashboard.putData("Drive Vision Assist", new VisionAssistSequence(driveTrain, limeLightGoal, log, shooter, feeder, led, hopper, intake));
-    SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 2, driveTrain, limeLightGoal, log));
-    SmartDashboard.putData("TurnRelative", new DriveTurnGyro(TargetType.kRelative, 90, 90, 100, 1, driveTrain, limeLightGoal, log));
-    SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("DriveStraightRel", new DriveStraight(3, TargetType.kRelative, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightAbs", new DriveStraight(3, TargetType.kAbsolute, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightVis", new DriveStraight(3, TargetType.kVision, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    // SmartDashboard.putData("Drive Vision Assist", new VisionAssistSequence(driveTrain, limelightFront, log, shooter, feeder, led, hopper, intake));
+    SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 2, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("TurnRelative", new DriveTurnGyro(TargetType.kRelative, 90, 90, 100, 1, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnCal Left Slow", new DriveTurnCalibrate(0.3, 35, 0.01, true, driveTrain, log));
     SmartDashboard.putData("TurnCal Right Slow", new DriveTurnCalibrate(0.3, 35, 0.01, false, driveTrain, log));
     SmartDashboard.putData("TurnCal Left Fast", new DriveTurnCalibrate(0.3, 10, 0.05, true, driveTrain, log));
@@ -143,8 +146,8 @@ public class RobotContainer {
     ) );
 
     // drive profile calibration buttons
-    SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightGoal, log));
-    SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightFront, log));
 
     // Testing for autos and trajectories
     SmartDashboard.putData("ZeroGyro", new DriveZeroGyro(driveTrain, log));
@@ -215,8 +218,8 @@ public class RobotContainer {
     // right[1].whenPressed(new Wait(0));
 
     // joystick right button
-    // left[2].whenHeld(new VisionAssistSequence(driveTrain, limeLightGoal, log, shooter, feeder, led, hopper, intake));
-    // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limeLightGoal, log)); // turn gyro with vision
+    // left[2].whenHeld(new VisionAssistSequence(driveTrain, limelightFront, log, shooter, feeder, led, hopper, intake));
+    // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
     // right[1].whenHeld(new DriveJogTurn(true,  driveTrain, log ));
     // left[1].whenHeld(new DriveJogTurn(false,  driveTrain, log ));
   }
@@ -291,7 +294,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intake, 
-      // limeLightGoal, limeLightBall, led,
+      // limelightFront, limeLightBall, led,
       log );
   }
 
@@ -303,6 +306,8 @@ public class RobotContainer {
     if(!RobotPreferences.prefsExist()) {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
+
+    // Alliance alliance = DriverStation.getAlliance();
   }
 
   /**
@@ -366,7 +371,7 @@ public class RobotContainer {
    * Method called once every scheduler cycle when teleop mode is initialized/enabled.
    */
   public void teleopPeriodic() {
-    // if (limeLightGoal.seesTarget()) {
+    // if (limelightFront.seesTarget()) {
     //   setXBoxRumble(1.0);
     // } else if (intake.intakeGetPercentOutput() == Math.abs(Constants.IntakeConstants.intakeDefaultPercentOutput)) {
     //   setXBoxRumble(0.4);

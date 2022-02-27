@@ -40,6 +40,7 @@ public class FileLog {
 	public final int UPTAKE_CYCLE = 5;
 	public final int TURRET_CYCLE = 6;
 
+	public final int LIMELIGHT_CYCLE = 8;
 	public final int PIVISION_CYCLE = 9;
 
     

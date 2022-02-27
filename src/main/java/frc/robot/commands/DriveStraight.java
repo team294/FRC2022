@@ -24,7 +24,7 @@ public class DriveStraight extends CommandBase {
    */
 
   private DriveTrain driveTrain; // reference to driveTrain
-  private LimeLightGoal limeLight;
+  private LimeLight limeLight;
   private TargetType angleType;
   private double target; // how many more degrees to the right to turn
   private double direction;  // +1 = forward, -1 = reverse
@@ -58,10 +58,10 @@ public class DriveStraight extends CommandBase {
    * @param maxAccel max acceleration in meters/second2, between 0 and kMaxAccelerationMetersPerSecondSquared in Constants
    * @param regenerate true = regenerate profile each cycle (to accurately reach target distance), false = don't regenerate (for debugging)
    * @param driveTrain reference to the drive train subsystem
-   * @param limelight reference to the limelightGoal subsystem
+   * @param limelight reference to the LimeLight subsystem
    * @param log
    */
-  public DriveStraight(double target, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLightGoal limeLight, FileLog log) {
+  public DriveStraight(double target, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     this.limeLight = limeLight;
@@ -86,11 +86,11 @@ public class DriveStraight extends CommandBase {
    * @param maxVel max velocity in meters/second, between 0 and kMaxSpeedMetersPerSecond in Constants
    * @param regenerate true = regenerate profile each cycle (to accurately reach target distance), false = don't regenerate (for debugging)
    * @param driveTrain reference to the drive train subsystem
-   * @param limelight reference to the limelightGoal subsystem
+   * @param limelight reference to the LimeLight subsystem
    * @param log
    */
 
-  public DriveStraight(boolean sweetSpot, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLightGoal limeLight, FileLog log) {
+  public DriveStraight(boolean sweetSpot, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.sweetSpot = sweetSpot;
     this.target = 0.0;
@@ -113,10 +113,10 @@ public class DriveStraight extends CommandBase {
    *   kVision (use limelight to drive towards the goal)
    * @param regenerate true = regenerate profile each cycle (to accurately reach target distance), false = don't regenerate (for debugging)
    * @param driveTrain reference to the drive train subsystem
-   * @param limelight reference to the limelightGoal subsystem
+   * @param limelight reference to the LimeLight subsystem
    * @param log
    */
-  public DriveStraight(TargetType angleType, boolean regenerate, DriveTrain driveTrain, LimeLightGoal limeLight, FileLog log) {
+  public DriveStraight(TargetType angleType, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     this.limeLight = limeLight;
@@ -168,9 +168,9 @@ public class DriveStraight extends CommandBase {
         angleTarget = driveTrain.normalizeAngle(driveTrain.getGyroRotation() + limeLight.getXOffset());
     }
 
-    if (sweetSpot && limeLight.seesTarget()) {
-        target = Units.inchesToMeters(limeLight.getSweetSpot() * 12);
-    }
+    // if (sweetSpot && limeLight.seesTarget()) {
+    //     target = Units.inchesToMeters(limeLight.getSweetSpot() * 12);
+    // }
 
     direction = Math.signum(target);
 

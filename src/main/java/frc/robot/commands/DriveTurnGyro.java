@@ -107,10 +107,10 @@ public class DriveTurnGyro extends CommandBase {
       SmartDashboard.putNumber("TurnGyro Manual Target Ang", 90);
     }
     if(SmartDashboard.getNumber("TurnGyro Manual MaxVel", -9999) == -9999) {
-      SmartDashboard.putNumber("TurnGyro Manual MaxVel", kMaxAngularVelocity * 0.08);
+      SmartDashboard.putNumber("TurnGyro Manual MaxVel", 90);
     }
     if(SmartDashboard.getNumber("TurnGyro Manual MaxAccel", -9999) == -9999) {
-      SmartDashboard.putNumber("TurnGyro Manual MaxAccel", kMaxAngularAcceleration);
+      SmartDashboard.putNumber("TurnGyro Manual MaxAccel", 100);
     }
     if(SmartDashboard.getNumber("TurnGyro Manual Tolerance", -9999) == -9999) {
       SmartDashboard.putNumber("TurnGyro Manual Tolerance", 2);

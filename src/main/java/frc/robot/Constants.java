@@ -205,6 +205,16 @@ public final class Constants {
 
     }
 
+    public static final class LimeLightConstants {
+        public static final double angleMultiplier = 1.064;
+
+        // *******************************
+        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
+        // for each robot, not in this code!
+        // *******************************
+        public static boolean takeSnapshots = true;
+    }
+
     public static final class DriveConstants {
 
         // *******************************
