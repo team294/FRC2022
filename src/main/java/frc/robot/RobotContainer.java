@@ -13,18 +13,24 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants.TargetType;
 import frc.robot.Constants.BallColor;
+import frc.robot.Constants.CoordType;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.StopType;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.DriveFollowTrajectory.PIDType;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
 import frc.robot.commands.commandGroups.*;
 import frc.robot.subsystems.*;
 import frc.robot.triggers.*;
 import frc.robot.utilities.*;
+import frc.robot.utilities.TrajectoryCache.TrajectoryType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -75,7 +81,7 @@ public class RobotContainer {
     // display overheating motors
     tempCheck.displayOverheatingMotors();
 
-    // Shooter widgets
+    // Shooter subsystem
     SmartDashboard.putData("Shooter Stop", new ShooterStop(shooter, log));
     SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
     SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
@@ -84,27 +90,78 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
 
+    // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
     SmartDashboard.putData("Stop Feeder", new FeederStop(feeder, log));
 
+    // Feeder sequences
     SmartDashboard.putData("Start Feeder Sequence", new FeederBallReadyToShoot(feeder, log));
     SmartDashboard.putData("Shoot Red Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kBlue));
     SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
-    
+
+    // Uptake subsystem and sequences
     SmartDashboard.putData("Uptake Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
 
+    // Turret subsystem
     SmartDashboard.putData("Turret Stop", new TurretStop(turret, log));
     SmartDashboard.putData("Turret Set Percent", new TurretSetPercentOutput(turret, log));
     SmartDashboard.putData("Turret Calibrate Fwd", new TurretRampOutput(0, 0.3, 10.0, turret, log));  
     SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, log));
 
+    // Shooter camera subsystem
     SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubToggleLED(pivisionhub));
     SmartDashboard.putData("shooter-cam LEDOn", new PiVisionHubLEDOn(pivisionhub));
     SmartDashboard.putData("shooter-cam LEDOff", new PiVisionHubLEDOff(pivisionhub));
+
+    // buttons for testing drive code, not updating numbers from SmartDashboard
+    SmartDashboard.putData("DriveForward", new DriveSetPercentOutput(0.4, 0.4, driveTrain, log));
+    SmartDashboard.putData("DriveBackward", new DriveSetPercentOutput(-0.4, -0.4, driveTrain, log));
+    SmartDashboard.putData("DriveTurnLeft", new DriveSetPercentOutput(-0.4, 0.4, driveTrain, log));
+    SmartDashboard.putData("DriveTurnRight", new DriveSetPercentOutput(0.4, -0.4, driveTrain, log));
+    SmartDashboard.putData("DriveStraightRel", new DriveStraight(3, TargetType.kRelative, 0.0, 2.66, 3.8, true, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("DriveStraightAbs", new DriveStraight(3, TargetType.kAbsolute, 0.0, 2.66, 3.8, true, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("DriveStraightVis", new DriveStraight(3, TargetType.kVision, 0.0, 2.66, 3.8, true, driveTrain, limeLightGoal, log));
+    // SmartDashboard.putData("Drive Vision Assist", new VisionAssistSequence(driveTrain, limeLightGoal, log, shooter, feeder, led, hopper, intake));
+    SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 2, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("TurnRelative", new DriveTurnGyro(TargetType.kRelative, 90, 90, 100, 1, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightGoal, log));
+    SmartDashboard.putData("TurnCal Left Slow", new DriveTurnCalibrate(0.3, 35, 0.01, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Slow", new DriveTurnCalibrate(0.3, 35, 0.01, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Fast", new DriveTurnCalibrate(0.3, 10, 0.05, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Fast", new DriveTurnCalibrate(0.3, 10, 0.05, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Step0.2", new DriveTurnCalibrate(0.2, 6, 3, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Step0.2", new DriveTurnCalibrate(0.2, 6, 3, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Step0.3", new DriveTurnCalibrate(0.3, 6, 3, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Step0.3", new DriveTurnCalibrate(0.3, 6, 3, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left-Right", new SequentialCommandGroup(
+      new DriveTurnCalibrate(0.3, 3, 15, true, driveTrain, log),
+      new DriveTurnCalibrate(0.3, 3, 15, false, driveTrain, log)
+    ) );
+
+    // drive profile calibration buttons
+    SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightGoal, log));
+    SmartDashboard.putNumber("TurnGyro Manual Target Ang", 90);
+    SmartDashboard.putNumber("TurnGyro Manual MaxVel", 90);
+    SmartDashboard.putNumber("TurnGyro Manual MaxAccel", 100);
+    SmartDashboard.putNumber("TurnGyro Manual Tolerance", 2);
+    SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightGoal, log));
+    SmartDashboard.putNumber("DriveStraight Manual Target Dist", 2);
+    SmartDashboard.putNumber("DriveStraight Manual Angle", 0);
+    SmartDashboard.putNumber("DriveStraight Manual MaxVel", DriveConstants.kMaxSpeedMetersPerSecond);
+    SmartDashboard.putNumber("DriveStraight Manual MaxAccel", DriveConstants.kMaxAccelerationMetersPerSecondSquared);
+    // TO DO Clean this up!!!!
+
+    // Testing for autos and trajectories
+    SmartDashboard.putData("ZeroGyro", new DriveZeroGyro(driveTrain, log));
+    SmartDashboard.putData("ZeroEncoders", new DriveZeroEncoders(driveTrain, log));
+    SmartDashboard.putData("ZeroOdometry", new DriveResetPose(0, 0, 0, driveTrain, log));
+    SmartDashboard.putData("Drive Trajectory Relative", new DriveFollowTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.cache[TrajectoryType.test.value], false, PIDType.kTalon, driveTrain, log));
+    SmartDashboard.putData("Drive Trajectory Curve Relative", new DriveFollowTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.cache[TrajectoryType.testCurve.value], false, PIDType.kTalon, driveTrain, log));
+    SmartDashboard.putData("Drive Trajectory Absolute", new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.test.value], driveTrain, log));  
   }
 
   /**

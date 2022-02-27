@@ -36,6 +36,20 @@ public final class Constants {
         BallColor(int value) { this.value = value; }
     }
 
+    /**
+     * Ball locations within the robot.
+     */
+    public enum BallLocation {
+        kIntake(0),
+        kUptake(1),
+        kFeeder(2),
+        kShooter(3);
+
+        public final int value;
+        BallLocation(int value){
+            this.value = value;
+        }
+    }
 
     /**
      * Options to select driving or turret target types.
@@ -50,17 +64,30 @@ public final class Constants {
         TargetType(int value) { this.value = value; }
     }
 
-    public enum BallLocation {
-        kIntake(0),
-        kUptake(1),
-        kFeeder(2),
-        kShooter(3);
-
+    /**
+     * Options to select driving coordinates.
+     */
+    public enum CoordType {
+        kRelative(0),
+        kAbsolute(1),
+        kAbsoluteResetPose(2);
+    
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final int value;
-        BallLocation(int value){
-            this.value = value;
-        }
+        CoordType(int value) { this.value = value; }
+    }
 
+    /**
+     * Options to select driving stopping types.
+     */
+    public enum StopType {
+        kNoStop(0),
+        kCoast(1),
+        kBrake(2);
+    
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
+        public final int value;
+        StopType(int value) { this.value = value; }
     }
 
     public static final class RobotConstants {
