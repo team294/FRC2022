@@ -78,6 +78,7 @@ public final class Constants {
         public static final int CANFalcon1 = 31;
         public static final int CANFalcon2 = 32;
         public static final int CANIntake = 0;
+        public static final int CANPneumaticHub = 0;
 
 
         // Digital IO ports

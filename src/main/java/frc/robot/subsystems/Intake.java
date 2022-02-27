@@ -11,6 +11,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.FileLog;
@@ -18,10 +21,13 @@ import frc.robot.utilities.Loggable;
 import static frc.robot.utilities.StringUtil.*;
 import static frc.robot.Constants.*;
 
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
+
 
 public class Intake extends SubsystemBase implements Loggable {
   private final FileLog log;
-  private final WPI_TalonFX Intake;
+  private final WPI_TalonFX motor;
+  private final DoubleSolenoid solenoid;
   
   private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
   private String subsystemName;    // subsystem name for use in file logging and Shuffleboard
@@ -33,26 +39,27 @@ public class Intake extends SubsystemBase implements Loggable {
   private double setpointRPM = 0.0;             // Current velocity setpoint
 
   
-  public Intake(String subsystemName, FileLog log) {
+  public Intake(String subsystemName, int CANMotorPort, int solenoidForwardChannel, int solenoidReverseChannel, FileLog log) {
     this.log = log; // save reference to the fileLog
     this.subsystemName = subsystemName;
-    Intake = new WPI_TalonFX(Ports.CANIntake);
+    motor = new WPI_TalonFX(CANMotorPort); // Ports.CANIntake
+    solenoid = new DoubleSolenoid(Ports.CANPneumaticHub, PneumaticsModuleType.REVPH, solenoidForwardChannel, solenoidReverseChannel);
 
     // set Intake configuration
-    Intake.configFactoryDefault();
-    Intake.setInverted(false);
-    Intake.setNeutralMode(NeutralMode.Brake);
-    Intake.configPeakOutputForward(1.0);
-    Intake.configPeakOutputReverse(-1.0);
-    Intake.configNeutralDeadband(0.01);
-    Intake.configVoltageCompSaturation(FalconConstants.compensationVoltage);
-    Intake.enableVoltageCompensation(true);
-    Intake.configOpenloopRamp(0.05);   //seconds from neutral to full
-    Intake.configClosedloopRamp(0.05); //seconds from neutral to full
+    motor.configFactoryDefault();
+    motor.setInverted(false);
+    motor.setNeutralMode(NeutralMode.Brake);
+    motor.configPeakOutputForward(1.0);
+    motor.configPeakOutputReverse(-1.0);
+    motor.configNeutralDeadband(0.01);
+    motor.configVoltageCompSaturation(FalconConstants.compensationVoltage);
+    motor.enableVoltageCompensation(true);
+    motor.configOpenloopRamp(0.05);   //seconds from neutral to full
+    motor.configClosedloopRamp(0.05); //seconds from neutral to full
 
     // set sensor configuration
-    Intake.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, timeoutMs); 
-    Intake.setSensorPhase(false);
+    motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, timeoutMs); 
+    motor.setSensorPhase(false);
 
     zeroEncoder();
   }
@@ -78,7 +85,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @param voltage voltage
    */
   public void setVoltage(double voltage) {
-    Intake.setVoltage(voltage);
+    motor.setVoltage(voltage);
     setpointRPM = 0.0;
   }
 
@@ -87,7 +94,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @param percent percent
    */
   public void setMotorPercentOutput(double percent){
-    Intake.set(ControlMode.PercentOutput, percent);
+    motor.set(ControlMode.PercentOutput, percent);
     setpointRPM = 0.0;
   }
 
@@ -105,7 +112,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @return position of Intake in raw units, without software zeroing
    */
   public double getMotorPositionRaw(){
-    return Intake.getSelectedSensorPosition(0);
+    return motor.getSelectedSensorPosition(0);
   }
 
   /**
@@ -127,7 +134,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @return velocity of Intake in rpm
    */
   public double getMotorVelocity(){
-    return Intake.getSelectedSensorVelocity(0)*FalconConstants.rawVelocityToRPM;
+    return motor.getSelectedSensorVelocity(0)*FalconConstants.rawVelocityToRPM;
   }
 
   /**
@@ -135,7 +142,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @param motorRPM setPoint RPM
    */
   public void setMotorVelocity(double velocity) {
-    Intake.set(ControlMode.Velocity, velocity);
+    motor.set(ControlMode.Velocity, velocity);
   }
 
 
@@ -145,10 +152,10 @@ public class Intake extends SubsystemBase implements Loggable {
     if(fastLogging || log.getLogRotation() == log.FALCON_CYCLE) {
       updateLog(false);
 
-      SmartDashboard.putNumber(buildString(subsystemName, " Voltage"), Intake.getMotorOutputVoltage());
+      SmartDashboard.putNumber(buildString(subsystemName, " Voltage"), motor.getMotorOutputVoltage());
       SmartDashboard.putNumber(buildString(subsystemName, " Position Rev"), getMotorPosition());
       SmartDashboard.putNumber(buildString(subsystemName, " Velocity RPM"), measuredRPM);
-      SmartDashboard.putNumber(buildString(subsystemName, " Temperature C"), Intake.getTemperature());
+      SmartDashboard.putNumber(buildString(subsystemName, " Temperature C"), motor.getTemperature());
     }
   }
 
@@ -163,11 +170,11 @@ public class Intake extends SubsystemBase implements Loggable {
    */
 	public void updateLog(boolean logWhenDisabled) {
 		log.writeLog(logWhenDisabled, subsystemName, "Update Variables",  
-      "Bus Volt", Intake.getBusVoltage(),
-      "Out Percent", Intake.getMotorOutputPercent(),
-      "Volt", Intake.getMotorOutputVoltage(), 
-      "Amps", Intake.getSupplyCurrent(),
-      "Temperature", Intake.getTemperature(),
+      "Bus Volt", motor.getBusVoltage(),
+      "Out Percent", motor.getMotorOutputPercent(),
+      "Volt", motor.getMotorOutputVoltage(), 
+      "Amps", motor.getSupplyCurrent(),
+      "Temperature", motor.getTemperature(),
       "Position", getMotorPosition(),
       "Measured RPM", measuredRPM,
       "Setpoint RPM", setpointRPM
