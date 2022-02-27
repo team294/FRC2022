@@ -36,6 +36,20 @@ public final class Constants {
         BallColor(int value) { this.value = value; }
     }
 
+    /**
+     * Ball locations within the robot.
+     */
+    public enum BallLocation {
+        kIntake(0),
+        kUptake(1),
+        kFeeder(2),
+        kShooter(3);
+
+        public final int value;
+        BallLocation(int value){
+            this.value = value;
+        }
+    }
 
     /**
      * Options to select driving or turret target types.
@@ -50,41 +64,58 @@ public final class Constants {
         TargetType(int value) { this.value = value; }
     }
 
-    public enum BallLocation {
-        kIntake(0),
-        kUptake(1),
-        kFeeder(2),
-        kShooter(3);
-
+    /**
+     * Options to select driving coordinates.
+     */
+    public enum CoordType {
+        kRelative(0),
+        kAbsolute(1),
+        kAbsoluteResetPose(2);
+    
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final int value;
-        BallLocation(int value){
-            this.value = value;
-        }
+        CoordType(int value) { this.value = value; }
+    }
 
+    /**
+     * Options to select driving stopping types.
+     */
+    public enum StopType {
+        kNoStop(0),
+        kCoast(1),
+        kBrake(2);
+    
+        @SuppressWarnings({"MemberName", "PMD.SingularField"})
+        public final int value;
+        StopType(int value) { this.value = value; }
     }
 
     public static final class RobotConstants {
         // Global constants go here
+        public static final double temperatureCheck = 40; // in celsius
         
     }
 
     public static final class Ports {
         // CANbus addresses
-        public static final int CANShooter = 21;
-        public static final int CANEject = 23;
-        public static final int CANUptake = 24;
-        public static final int CANFeeder = 11;
-        public static final int CANTurret = 25;
-        public static final int CANFalcon1 = 31;
-        public static final int CANFalcon2 = 32;
-        public static final int CANIntake = 0;
+        public static final int CANLeftDriveMotor1 = 11;
+        public static final int CANLeftDriveMotor2 = 12;
 
+        public static final int CANRightDriveMotor1 = 15;
+        public static final int CANRightDriveMotor2 = 16;
+
+        public static final int CANIntake = 21;
+
+        public static final int CANUptake = 31;
+        public static final int CANEject = 32;
+        public static final int CANFeeder = 33;
+        public static final int CANTurret = 34;
+        public static final int CANShooter = 35;
 
         // Digital IO ports
         public static final int DIOFeederBallSensor = 1;
         public static final int DIOEjectBallSensor = 2;
         public static final int DIOTurretCalSwitch = 3;
-
 
         // I2C ports
         public static final int I2CcolorSensor = 0x52;       // According to REV docs, color sensor is at 0x52 = 82.  Rob had 39?
@@ -94,7 +125,7 @@ public final class Constants {
         public static final int usbXboxController = 0;
         public static final int usbLeftJoystick = 1;
         public static final int usbRightJoystick = 2;
-        // public static final int usbCoPanel = 3;
+        public static final int usbCoPanel = 3;
     }
 
     public static final class FalconConstants {
@@ -172,6 +203,75 @@ public final class Constants {
         public static final double targetHeight = 104; // inches from ground
         public static final double cameraAngle = 18; // angle
 
+    }
+
+    public static final class LimeLightConstants {
+        public static final double angleMultiplier = 1.064;
+
+        // *******************************
+        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
+        // for each robot, not in this code!
+        // *******************************
+        public static boolean takeSnapshots = true;
+    }
+
+    public static final class DriveConstants {
+
+        // *******************************
+        // The constants below apply to all robots and are not in RobotPreferences
+        // *******************************
+
+        public static final double compensationVoltage = 12.0; // voltage compensation on drive motors
+        public static final double MAX_VOLTAGE_IN_TRAJECTORY = 10.0;
+
+        // suggested from tutorial
+        public static final double kRamseteB = 2.0;
+        public static final double kRamseteZeta = 0.70;
+
+        // *******************************
+        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
+        // for each robot, not in this code!
+        // *******************************
+
+        public static double ticksPerInch = 1210.0; // TODO update for 2022
+
+        // turnGyro constants
+        public static double kMaxAngularVelocity = 1125; // degrees per second  // TODO update for 2022
+        public static double kMaxAngularAcceleration = 200; // degrees per second per second  // TODO update for 2022
+        public static double kVAngular = 0.00108;   // TODO update for 2022
+        public static double kAAngular = 0.00015;   // TODO update for 2022
+        public static double kSAngular = 0.01;      // TODO update for 2022
+        public static double kPAngular = 0.001;     // TODO update for 2022
+        public static double kDAngular = 0;
+        public static double kIAngular = 0.015;    // TODO update for 2022
+        public static double tLagAngular = 0.020;          // Lag time to start/stop turning, or just one cycle forcast through scheduler
+        public static final double maxSecondsForTurnGyro = 2.0; // max time to wait for turn gyro. use this in commands to timeout
+
+        public static final double wheelInchesToGyroDegrees = 4.205; // converts from inches traveled by the wheels when spinning in place to degrees turned // TODO update for 2022
+
+        // DriveStraight constants
+        public static double kMaxSpeedMetersPerSecond = 5.22;   // TODO update for 2022
+        public static double kMaxAccelerationMetersPerSecondSquared = 3.8;   // TODO update for 2022
+        public static double kVLinear = 0.187;  // TODO update for 2022
+        public static double kALinear = 0.025;  // TODO update for 2022
+        public static double kSLinear = 0.024;  // TODO update for 2022
+        public static double kPLinear = 0.280;  // TODO update for 2022
+        public static double kILinear = 0;
+        public static double kDLinear = 0; 
+        public static double kAngLinear = 0.030; // TODO update for 2022
+
+        // Trajectory generation constants
+        public static double kS = kSLinear * compensationVoltage; 
+        public static double kV = kVLinear * compensationVoltage; 
+        public static double kA = kALinear * compensationVoltage; 
+
+        public static double TRACK_WIDTH = 0.71;   // in meters     // TODO update for 2022
+
+        public static void updateDerivedConstants() {
+            kS = kSLinear * compensationVoltage; 
+            kV = kVLinear * compensationVoltage; 
+            kA = kALinear * compensationVoltage; 
+        }
     }
 
 }
