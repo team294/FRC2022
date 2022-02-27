@@ -144,16 +144,7 @@ public class RobotContainer {
 
     // drive profile calibration buttons
     SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightGoal, log));
-    SmartDashboard.putNumber("TurnGyro Manual Target Ang", 90);
-    SmartDashboard.putNumber("TurnGyro Manual MaxVel", 90);
-    SmartDashboard.putNumber("TurnGyro Manual MaxAccel", 100);
-    SmartDashboard.putNumber("TurnGyro Manual Tolerance", 2);
     SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightGoal, log));
-    SmartDashboard.putNumber("DriveStraight Manual Target Dist", 2);
-    SmartDashboard.putNumber("DriveStraight Manual Angle", 0);
-    SmartDashboard.putNumber("DriveStraight Manual MaxVel", DriveConstants.kMaxSpeedMetersPerSecond);
-    SmartDashboard.putNumber("DriveStraight Manual MaxAccel", DriveConstants.kMaxAccelerationMetersPerSecondSquared);
-    // TO DO Clean this up!!!!
 
     // Testing for autos and trajectories
     SmartDashboard.putData("ZeroGyro", new DriveZeroGyro(driveTrain, log));
