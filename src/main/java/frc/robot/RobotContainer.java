@@ -50,7 +50,7 @@ public class RobotContainer {
   private final Uptake uptake = new Uptake("Uptake",log);
   private final Intake intake = new Intake("Intake",log);
   private final Turret turret = new Turret(log);
-  private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
+  private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21S
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
   private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
@@ -116,9 +116,7 @@ public class RobotContainer {
     SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, log));
 
     // Shooter camera subsystem
-    SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubToggleLED(pivisionhub));
-    SmartDashboard.putData("shooter-cam LEDOn", new PiVisionHubLEDOn(pivisionhub));
-    SmartDashboard.putData("shooter-cam LEDOff", new PiVisionHubLEDOff(pivisionhub));
+    SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubSetLEDState(2, pivisionhub));
 
     // buttons for testing drive code, not updating numbers from SmartDashboard
     SmartDashboard.putData("DriveForward", new DriveSetPercentOutput(0.4, 0.4, driveTrain, log));

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.FileLog;
 
 public class PiVisionHub extends PiVision {
-  private boolean setFlashAuto = true, ledOn = false;
+  private boolean setFlashAuto = true;
   private PowerDistribution pd;
   
   public PiVisionHub(PowerDistribution pd, FileLog log) {
@@ -20,23 +20,12 @@ public class PiVisionHub extends PiVision {
     this.pd = pd;
   }
 
-  public void ledOn() {
-    ledOn = true;
-    pd.setSwitchableChannel(ledOn);
+  public void setLEDState(boolean state) {
+    pd.setSwitchableChannel(state);
   }
 
-  public void ledOff() {
-    ledOn = false;
-    pd.setSwitchableChannel(ledOn);
-  }
-
-  public void ledToggle() {
-    ledOn = !ledOn;
-    pd.setSwitchableChannel(ledOn);
-  }
-
-  public boolean ledState() {
-    return ledOn;
+  public boolean LEDState() {
+    return pd.getSwitchableChannel();
   }
 
   /**
