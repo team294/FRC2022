@@ -33,7 +33,8 @@ public class PiVisionHub extends PiVision {
    * @return distance from camera to target, on the floor, in feet
    */
   public double getDistance() {    //  TODO  this could return a erroneous value if vision misses a frame or is temporarily blocked.  Use avgrging or filtering
-    if (50 < width && width < 300) return -1.3974*width+359.833;
+    // if (50 < width && width < 300) return -1.3974*width+359.833;
+    if (50 < width && width < 300) return -1.2336*width+327.002;
     return 0;
   }
 
