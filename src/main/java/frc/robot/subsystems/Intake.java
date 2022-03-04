@@ -35,9 +35,6 @@ public class Intake extends SubsystemBase implements Loggable {
   private double encoderZero = 0.0;     // Zero position for encoder
   private int timeoutMs = 0; // was 30, changed to 0 for testing
 
-  private double measuredRPM = 0.0;             // Current measured speed
-  private double setpointRPM = 0.0;             // Current velocity setpoint
-
   
   public Intake(String subsystemName, int CANMotorPort, int solenoidForwardChannel, int solenoidReverseChannel, FileLog log) {
     this.log = log; // save reference to the fileLog
@@ -52,7 +49,7 @@ public class Intake extends SubsystemBase implements Loggable {
     motor.configPeakOutputForward(1.0);
     motor.configPeakOutputReverse(-1.0);
     motor.configNeutralDeadband(0.01);
-    motor.configVoltageCompSaturation(FalconConstants.compensationVoltage);
+    motor.configVoltageCompSaturation(IntakeConstants.compensationVoltage);
     motor.enableVoltageCompensation(true);
     motor.configOpenloopRamp(0.05);   //seconds from neutral to full
     motor.configClosedloopRamp(0.05); //seconds from neutral to full
@@ -86,7 +83,6 @@ public class Intake extends SubsystemBase implements Loggable {
    */
   public void setVoltage(double voltage) {
     motor.setVoltage(voltage);
-    setpointRPM = 0.0;
   }
 
   /**
@@ -95,7 +91,6 @@ public class Intake extends SubsystemBase implements Loggable {
    */
   public void setMotorPercentOutput(double percent){
     motor.set(ControlMode.PercentOutput, percent);
-    setpointRPM = 0.0;
   }
 
   /**
@@ -103,7 +98,6 @@ public class Intake extends SubsystemBase implements Loggable {
   */
   public void stopMotor(){
     setMotorPercentOutput(0);
-    setpointRPM = 0.0;
   }
 
 
@@ -120,7 +114,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @return position of Intake in revolutions
    */
   public double getMotorPosition(){
-    return (getMotorPositionRaw() - encoderZero)/FalconConstants.ticksPerRevolution;
+    return (getMotorPositionRaw() - encoderZero)/IntakeConstants.ticksPerRevolution;
   }
 
   /**
@@ -134,27 +128,18 @@ public class Intake extends SubsystemBase implements Loggable {
    * @return velocity of Intake in rpm
    */
   public double getMotorVelocity(){
-    return motor.getSelectedSensorVelocity(0)*FalconConstants.rawVelocityToRPM;
-  }
-
-  /**
-   * Run Intake in a velocity closed loop mode.
-   * @param motorRPM setPoint RPM
-   */
-  public void setMotorVelocity(double velocity) {
-    motor.set(ControlMode.Velocity, velocity);
+    return motor.getSelectedSensorVelocity(0)*IntakeConstants.rawVelocityToRPM;
   }
 
 
   @Override
   public void periodic(){
-    measuredRPM = getMotorVelocity();
-    if(fastLogging || log.getLogRotation() == log.FALCON_CYCLE) {
+    if(fastLogging || log.getLogRotation() == log.INTAKE_CYCLE) {
       updateLog(false);
 
       SmartDashboard.putNumber(buildString(subsystemName, " Voltage"), motor.getMotorOutputVoltage());
       SmartDashboard.putNumber(buildString(subsystemName, " Position Rev"), getMotorPosition());
-      SmartDashboard.putNumber(buildString(subsystemName, " Velocity RPM"), measuredRPM);
+      SmartDashboard.putNumber(buildString(subsystemName, " Velocity RPM"), getMotorVelocity());
       SmartDashboard.putNumber(buildString(subsystemName, " Temperature C"), motor.getTemperature());
     }
   }
@@ -176,8 +161,7 @@ public class Intake extends SubsystemBase implements Loggable {
       "Amps", motor.getSupplyCurrent(),
       "Temperature", motor.getTemperature(),
       "Position", getMotorPosition(),
-      "Measured RPM", measuredRPM,
-      "Setpoint RPM", setpointRPM
+      "Measured RPM", getMotorVelocity()
     );
   }
 
