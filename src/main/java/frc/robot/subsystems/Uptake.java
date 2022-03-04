@@ -82,13 +82,14 @@ public class Uptake extends SubsystemBase implements Loggable {
     return subsystemName;
   }
 
-    /**
+  /**
    * 
-   * @return true = ball has been ejectedf
+   * @return true = ball is in ejector
    */
-  public boolean isBallPresent(){
+  public boolean isBallInEjector(){
     return ejectSensor.get();
   }
+
   /**
    * Sets the voltage of the uptake
    * 
@@ -173,15 +174,16 @@ public class Uptake extends SubsystemBase implements Loggable {
     if(fastLogging || log.getLogRotation() == log.UPTAKE_CYCLE) {
       updateLog(false);
 
-      SmartDashboard.putNumber("Uptake Eject Voltage", eject.getMotorOutputVoltage());
-      SmartDashboard.putNumber("Uptake Uptake Voltage", uptake.getMotorOutputVoltage());
-      SmartDashboard.putNumber("Uptake Uptake Position Rev", getUptakePositionRaw());
-      SmartDashboard.putNumber("Uptake Eject Position Rev", getEjectPositionRaw());
-      SmartDashboard.putNumber("Uptake Eject Velocity RPM", getEjectVelocity());
-      SmartDashboard.putNumber("Uptake Uptake Velocity RPM", getUptakeVelocity());
-      SmartDashboard.putNumber("Uptake Eject Temperature C", eject.getTemperature());
-      SmartDashboard.putNumber("Uptake Uptake Temperature C", uptake.getTemperature());
+      SmartDashboard.putNumber("Eject Voltage", eject.getMotorOutputVoltage());
+      SmartDashboard.putNumber("Uptake Voltage", uptake.getMotorOutputVoltage());
+      SmartDashboard.putNumber("Uptake Position Rev", getUptakePositionRaw());
+      SmartDashboard.putNumber("Eject Position Rev", getEjectPositionRaw());
+      SmartDashboard.putNumber("Eject Velocity RPM", getEjectVelocity());
+      SmartDashboard.putNumber("Uptake Velocity RPM", getUptakeVelocity());
+      SmartDashboard.putNumber("Eject Temperature C", eject.getTemperature());
+      SmartDashboard.putNumber("Uptake Temperature C", uptake.getTemperature());
       SmartDashboard.putBoolean("Uptake Ball Present", colorSensor.isBallPresent());
+      SmartDashboard.putBoolean("Eject Ball Present", isBallInEjector());
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);
@@ -211,7 +213,9 @@ public class Uptake extends SubsystemBase implements Loggable {
       "Uptake Position", getUptakePositionRaw(),
       "Eject Position", getEjectPositionRaw(),
       "Uptake RPM", getUptakeVelocity(),
-      "Eject RPM", getEjectVelocity()
+      "Eject RPM", getEjectVelocity(),
+      "Uptake Ball Present", colorSensor.isBallPresent(),
+      "Eject Ball Present", isBallInEjector()
     );
   }
 

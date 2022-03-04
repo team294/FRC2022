@@ -114,12 +114,13 @@ public final class Constants {
         public static final int CANEject = 32;
         public static final int CANFeeder = 33;
         public static final int CANTurret = 34;
-        public static final int CANShooter = 35;
+        public static final int CANShooter1 = 35;       // First shooter motor
+        public static final int CANShooter2 = 36;       // Second shooter motor
 
         // Digital IO ports
-        public static final int DIOFeederBallSensor = 1;
-        public static final int DIOEjectBallSensor = 2;
-        public static final int DIOTurretCalSwitch = 3;
+        public static final int DIOTurretCalSwitch = 1;
+        public static final int DIOFeederBallSensor = 2;
+        public static final int DIOEjectBallSensor = 3;
 
         // I2C ports
         public static final int I2CcolorSensor = 0x52;       // According to REV docs, color sensor is at 0x52 = 82.  Rob had 39?
@@ -179,7 +180,7 @@ public final class Constants {
         public static final double softLimitFwd = 80.0;            // Forward position soft limit, in turret degrees
         public static final double limitSwitchRev = -70.0;            // Position of physical reverse limit switch, in turret degrees
         public static final double limitSwitchFwd = 85.0;            // Position of physical forward limit switch, in turret degrees
-        public static final double calSwitch = -4.0;            // Position of starting calibration limit switch, in turret degrees
+        public static final double calSwitch = 0.0;            // Position of starting calibration limit switch, in turret degrees
 
         // Turn-to-angle constants
         public static final double kMaxTurnVelocity = 1150.0;        // Max turret velocity in degrees per second (extrapolted at 100% power)

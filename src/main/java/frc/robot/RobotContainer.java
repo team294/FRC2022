@@ -24,7 +24,6 @@ import frc.robot.Constants.CoordType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.StopType;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.DriveFollowTrajectory.PIDType;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
@@ -85,6 +84,11 @@ public class RobotContainer {
 
     // display overheating motors
     tempCheck.displayOverheatingMotors();
+
+    // Intake subsystem
+    SmartDashboard.putData("Intake Front Fwd", new IntakeSetPercentOutput(0.1, 0.1, intakeFront, log));
+    SmartDashboard.putData("Intake Front Rev", new IntakeSetPercentOutput(-0.1, -0.1, intakeFront, log));
+    SmartDashboard.putData("Intake Front Stop", new IntakeStop(intakeFront, log));
 
     // Shooter subsystem
     SmartDashboard.putData("Shooter Stop", new ShooterStop(shooter, log));

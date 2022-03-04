@@ -87,7 +87,7 @@ public class Intake extends SubsystemBase implements Loggable {
 	 * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
 	 * properly - unlike the ordinary set function, it is not "set it and forget it."
 	 *
-   * @param voltage voltage
+   * @param voltage voltage (+ = intake, - = outtake)
    */
   public void setVoltage(double voltage) {
     motor.setVoltage(voltage);
@@ -95,7 +95,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
   /**
    * sets the percent of the Intake, using voltage compensation if turned on
-   * @param percent percent
+   * @param percent -1 to 1 (+ = intake, - = outtake)
    */
   public void setMotorPercentOutput(double percent){
     motor.set(ControlMode.PercentOutput, percent);
