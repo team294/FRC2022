@@ -48,7 +48,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         // Eject ball
         sequence(
           new UptakeSetPercentOutput(0.25, true, uptake, log),
-          new WaitCommand(2).perpetually().withInterrupt(uptake::isBallPresent), 
+          new WaitCommand(2).perpetually().withInterrupt(uptake::isBallInEjector), 
           new WaitCommand(.5),
           new BallCountSubtractBall(BallLocation.kUptake, log),
           new UptakeStop(uptake, log)

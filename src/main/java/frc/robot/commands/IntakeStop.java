@@ -13,9 +13,15 @@ public class IntakeStop extends CommandBase {
   private Intake intake;
   private FileLog log;
 
+  /**
+   * Stops the intake motor(s).  If front intake, then stops both motors.
+   * @param intake
+   * @param log
+   */
   public IntakeStop(Intake intake, FileLog log) {
     this.intake = intake;
     this.log = log;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }

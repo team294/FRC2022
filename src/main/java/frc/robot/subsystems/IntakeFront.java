@@ -48,7 +48,7 @@ public class IntakeFront extends Intake {
 	 * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
 	 * properly - unlike the ordinary set function, it is not "set it and forget it."
 	 *
-   * @param voltage voltage (sets both motors to same voltage)
+   * @param voltage voltage (sets both motors to same voltage)   (+ = intake, - = outtake)
    */
   @Override
   public void setVoltage(double voltage) {
@@ -67,8 +67,8 @@ public class IntakeFront extends Intake {
 	 * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
 	 * properly - unlike the ordinary set function, it is not "set it and forget it."
 	 *
-   * @param intakeVoltage voltage for intake motor
-   * @param transferVoltage voltage for transfer motor
+   * @param intakeVoltage voltage for intake motor  (+ = intake, - = outtake)
+   * @param transferVoltage voltage for transfer motor  (+ = intake, - = outtake)
    */
   public void setVoltage(double intakeVoltage, double transferVoltage) {
     super.setVoltage(intakeVoltage);
@@ -76,8 +76,9 @@ public class IntakeFront extends Intake {
   }
   
   /**
-   * sets the percent of the Intake motor and the transfer motor, using voltage compensation if turned on
-   * @param percent percent (sets both motors to same percent)
+   * Sets the percent of the Intake motor and the transfer motor, using voltage compensation if turned on.
+   * Sets both motors to same percent
+   * @param percent -1 to +1 (+ = intake, - = outtake)
    */
   @Override
   public void setMotorPercentOutput(double percent){
@@ -87,8 +88,8 @@ public class IntakeFront extends Intake {
 
   /**
    * sets the percent of the Intake motor and the transfer motor, using voltage compensation if turned on
-   * @param intakePercent percent for intake motor
-   * @param transferPercent percent for transfer motor
+   * @param intakePercent percent for intake motor, -1 to +1  (+ = intake, - = outtake)
+   * @param transferPercent percent for transfer motor, -1 to +1  (+ = intake, - = outtake)
    */
   public void setMotorPercentOutput(double intakePercent, double transferPercent){
     super.setMotorPercentOutput(intakePercent);
