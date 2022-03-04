@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -13,17 +14,24 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import frc.robot.Constants.TargetType;
 import frc.robot.Constants.BallColor;
+import frc.robot.Constants.CoordType;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.StopType;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.*;
+import frc.robot.commands.DriveFollowTrajectory.PIDType;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
+import frc.robot.commands.commandGroups.*;
 import frc.robot.subsystems.*;
-import frc.robot.triggers.AxisTrigger;
-import frc.robot.triggers.POVTrigger;
+import frc.robot.triggers.*;
 import frc.robot.utilities.*;
+import frc.robot.utilities.TrajectoryCache.TrajectoryType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,57 +42,120 @@ import frc.robot.utilities.*;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final FileLog log = new FileLog("A1");
-  private final PowerDistribution m_powerdistribution = new PowerDistribution(0, ModuleType.kRev);
-  private final Shooter m_shooter = new Shooter(log);
-  private final Feeder m_feeder = new Feeder("Feeder", log);
-  private final Uptake m_uptake = new Uptake("Uptake",log);
-  private final Turret m_turret = new Turret(log);
-  private final PiVisionHub m_pivisionhub = new PiVisionHub(m_powerdistribution, log); //Pi ip: 10.2.94.21
-  
+  private final TemperatureCheck tempCheck = new TemperatureCheck(log);
+  private final PowerDistribution powerdistribution = new PowerDistribution(0, ModuleType.kRev);
+  private final DriveTrain driveTrain = new DriveTrain(log, tempCheck);
+  private final Shooter shooter = new Shooter(log);
+  private final Feeder feeder = new Feeder("Feeder", log);
+  private final Uptake uptake = new Uptake("Uptake",log);
+  private final Intake intake = new Intake("Intake",log);
+  private final Turret turret = new Turret(log);
+  private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
+  private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
+  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
+
+  private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
+  private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
+
+  private final Joystick xboxController = new Joystick(OIConstants.usbXboxController);//assuming usbxboxcontroller is int
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
   private final Joystick rightJoystick = new Joystick(OIConstants.usbRightJoystick);
-  private final Joystick xboxController = new Joystick(OIConstants.usbXboxController);//assuming usbxboxcontroller is int
+  private final Joystick coPanel = new Joystick(OIConstants.usbCoPanel);
 
-  private int displayCount = 1;
   private boolean rumbling = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
+    configureButtonBindings(); // configure button bindings
+    configureShuffleboard(); // configure shuffleboard
 
-    // Configure Shuffleboard
-    SmartDashboard.putData("Shooter Stop", new ShooterStop(m_shooter, log));
-    SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(m_shooter, log));
-    SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(m_shooter, log));
-    SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, m_shooter, log));
-    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, m_shooter, log));
-    SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, m_shooter, log));
+    driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
+  }
 
-    SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(m_shooter, log));
+  /**
+   * Define Shuffleboard mappings.
+   */
+  public void configureShuffleboard() {
 
-    SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(m_feeder, log));
-    SmartDashboard.putData("Stop Feeder", new FeederStop(m_feeder, log));
+    // display sticky faults
+    RobotPreferences.showStickyFaults();
+    SmartDashboard.putData("Clear Sticky Faults", new StickyFaultsClear(log));
 
-    SmartDashboard.putData("Start Feeder Sequence", new FeederBallReadyToShoot(m_feeder, log));
-    SmartDashboard.putData("Shoot Red Ball Sequence", new FeedAndShootBall(m_shooter, m_feeder, m_uptake, log, BallColor.kBlue));
-    SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(m_shooter, m_feeder, m_uptake, log, BallColor.kRed));
-    
-    SmartDashboard.putData("Uptake Run Upward", new UptakeSetPercentOutput(.25, false, m_uptake, log));
-    SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, m_uptake, log));
-    SmartDashboard.putData("Uptake Stop", new UptakeStop(m_uptake, log));
-    SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, m_uptake, m_feeder, log));
-    SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, m_uptake, m_feeder, log));
+    // display overheating motors
+    tempCheck.displayOverheatingMotors();
 
-    SmartDashboard.putData("Turret Stop", new TurretStop(m_turret, log));
-    SmartDashboard.putData("Turret Set Percent", new TurretSetPercentOutput(m_turret, log));
-    SmartDashboard.putData("Turret Calibrate Fwd", new TurretRampOutput(0, 0.3, 10.0, m_turret, log));  
-    SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, m_turret, log));
+    // Shooter subsystem
+    SmartDashboard.putData("Shooter Stop", new ShooterStop(shooter, log));
+    SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
+    SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
+    SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, shooter, log));
+    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
+    SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
+    SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
 
-    SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubToggleLED(m_pivisionhub));
-    SmartDashboard.putData("shooter-cam LEDOn", new PiVisionHubLEDOn(m_pivisionhub));
-    SmartDashboard.putData("shooter-cam LEDOff", new PiVisionHubLEDOff(m_pivisionhub));
+    // Feeder subsystem
+    SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
+    SmartDashboard.putData("Stop Feeder", new FeederStop(feeder, log));
 
+    // Feeder sequences
+    SmartDashboard.putData("Start Feeder Sequence", new FeederBallReadyToShoot(feeder, log));
+    SmartDashboard.putData("Shoot Red Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kBlue));
+    SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
+
+    // Uptake subsystem and sequences
+    SmartDashboard.putData("Uptake Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
+    SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
+    SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
+    SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
+
+    // Turret subsystem
+    SmartDashboard.putData("Turret Stop", new TurretStop(turret, log));
+    SmartDashboard.putData("Turret Set Percent", new TurretSetPercentOutput(turret, log));
+    SmartDashboard.putData("Turret Calibrate Fwd", new TurretRampOutput(0, 0.3, 10.0, turret, log));  
+    SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, log));
+
+    // Shooter camera subsystem
+    SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubToggleLED(pivisionhub));
+    SmartDashboard.putData("shooter-cam LEDOn", new PiVisionHubLEDOn(pivisionhub));
+    SmartDashboard.putData("shooter-cam LEDOff", new PiVisionHubLEDOff(pivisionhub));
+
+    // buttons for testing drive code, not updating numbers from SmartDashboard
+    SmartDashboard.putData("DriveForward", new DriveSetPercentOutput(0.4, 0.4, driveTrain, log));
+    SmartDashboard.putData("DriveBackward", new DriveSetPercentOutput(-0.4, -0.4, driveTrain, log));
+    SmartDashboard.putData("DriveTurnLeft", new DriveSetPercentOutput(-0.4, 0.4, driveTrain, log));
+    SmartDashboard.putData("DriveTurnRight", new DriveSetPercentOutput(0.4, -0.4, driveTrain, log));
+    SmartDashboard.putData("DriveStraightRel", new DriveStraight(3, TargetType.kRelative, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightAbs", new DriveStraight(3, TargetType.kAbsolute, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightVis", new DriveStraight(3, TargetType.kVision, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    // SmartDashboard.putData("Drive Vision Assist", new VisionAssistSequence(driveTrain, limelightFront, log, shooter, feeder, led, hopper, intake));
+    SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 2, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("TurnRelative", new DriveTurnGyro(TargetType.kRelative, 90, 90, 100, 1, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("TurnCal Left Slow", new DriveTurnCalibrate(0.3, 35, 0.01, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Slow", new DriveTurnCalibrate(0.3, 35, 0.01, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Fast", new DriveTurnCalibrate(0.3, 10, 0.05, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Fast", new DriveTurnCalibrate(0.3, 10, 0.05, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Step0.2", new DriveTurnCalibrate(0.2, 6, 3, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Step0.2", new DriveTurnCalibrate(0.2, 6, 3, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Step0.3", new DriveTurnCalibrate(0.3, 6, 3, true, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Step0.3", new DriveTurnCalibrate(0.3, 6, 3, false, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left-Right", new SequentialCommandGroup(
+      new DriveTurnCalibrate(0.3, 3, 15, true, driveTrain, log),
+      new DriveTurnCalibrate(0.3, 3, 15, false, driveTrain, log)
+    ) );
+
+    // drive profile calibration buttons
+    SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightFront, log));
+
+    // Testing for autos and trajectories
+    SmartDashboard.putData("ZeroGyro", new DriveZeroGyro(driveTrain, log));
+    SmartDashboard.putData("ZeroEncoders", new DriveZeroEncoders(driveTrain, log));
+    SmartDashboard.putData("ZeroOdometry", new DriveResetPose(0, 0, 0, driveTrain, log));
+    SmartDashboard.putData("Drive Trajectory Relative", new DriveFollowTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.cache[TrajectoryType.test.value], false, PIDType.kTalon, driveTrain, log));
+    SmartDashboard.putData("Drive Trajectory Curve Relative", new DriveFollowTrajectory(CoordType.kRelative, StopType.kBrake, trajectoryCache.cache[TrajectoryType.testCurve.value], false, PIDType.kTalon, driveTrain, log));
+    SmartDashboard.putData("Drive Trajectory Absolute", new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.test.value], driveTrain, log));  
   }
 
   /**
@@ -94,7 +165,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    configureXboxButtons();
+    configureXboxButtons(); // configure xbox controller
+    configureJoystickButtons(); // configure joysticks
+    configureCopanel(); // configure copanel
   }
 
   /**
@@ -116,10 +189,10 @@ public class RobotContainer {
     }
     
 
-    xb[1].whenPressed(new ShootBall(0,m_shooter, m_uptake,log));//a -short
-    xb[2].whenPressed(new ShootBall(0,m_shooter,m_uptake,log));//b -medium
+    xb[1].whenPressed(new ShootBall(0,shooter, uptake,log));//a -short
+    xb[2].whenPressed(new ShootBall(0,shooter,uptake,log));//b -medium
     // xb[3].whenHeld();//x -auto?
-    xb[4].whenPressed(new ShootBall(0,m_shooter,m_uptake,log));//y -long
+    xb[4].whenPressed(new ShootBall(0,shooter,uptake,log));//y -long
     //xb[11].whenHeld(); //l1, turn turret left
     //xb[12].whenHeld(); //r1, turn turret right
     //xb[7].whenHeld(); //start, toggle rollers
@@ -127,6 +200,80 @@ public class RobotContainer {
     //xbPOVLeft.whenHeld();//climb
 
   }
+
+  /**
+   * Define Joystick button mappings.
+   */
+  public void configureJoystickButtons() {
+    JoystickButton[] left = new JoystickButton[3];
+    JoystickButton[] right = new JoystickButton[3];
+
+    for (int i = 1; i < left.length; i++) {
+      left[i] = new JoystickButton(leftJoystick, i);
+      right[i] = new JoystickButton(rightJoystick, i);
+    }
+
+    // joystick left button
+    // left[1].whenPressed(new Wait(0));
+    // right[1].whenPressed(new Wait(0));
+
+    // joystick right button
+    // left[2].whenHeld(new VisionAssistSequence(driveTrain, limelightFront, log, shooter, feeder, led, hopper, intake));
+    // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
+    // right[1].whenHeld(new DriveJogTurn(true,  driveTrain, log ));
+    // left[1].whenHeld(new DriveJogTurn(false,  driveTrain, log ));
+  }
+
+  /** 
+   * Define Copanel button mappings.
+   *  
+   *  1  3  5  8
+   *  2  4  6  8
+   *      
+   *  9  11 13 7
+   *  10 12 14 7
+   * 
+   *  15
+   *  16
+   */
+  public void configureCopanel() {
+    JoystickButton[] coP = new JoystickButton[20];
+
+    for (int i = 1; i < coP.length; i++) {
+      coP[i] = new JoystickButton(coPanel, i);
+    }
+
+    // top row UP then DOWN, from LEFT to RIGHT
+    // coP[1].whenPressed(new ClimbPistonsSetPosition(true, climb, log)); // deploy climb pistons
+    // coP[2].whenPressed(new ClimbPistonsSetPosition(false, climb, log)); // retract climb pistons
+
+    // coP[3].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchHeight, climb, log)); // raise climb arms to default latching height
+    // coP[4].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchExtensionHeight, climb, log)); // raise climb arms to slightly above default latching height
+
+    // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly
+    // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly
+    
+    // top row RED SWITCH
+    // coP[8].whenPressed(new ClimbLiftSequence(climb, led, log)); // climb lift sequence (rainbow LEDs and climb arms lower to lifting height)
+
+    // middle row UP then DOWN, from LEFT to RIGHT
+    // coP[9].whenHeld(new ClimbLeftSetPercentOutput(0.4, climb, log)); // manually raise left climb arm, slowly
+    // coP[10].whenHeld(new ClimbLeftSetPercentOutput(-0.4, climb, log)); // manually lower left climb arm, slowly
+
+    // coP[11].whenHeld(new ClimbRightSetPercentOutput(0.4, climb, log)); // manually raise right climb arm, slowly
+    // coP[12].whenHeld(new ClimbRightSetPercentOutput(-0.4, climb, log)); // manually lower right climb arm, slowly
+
+    // coP[13].whenHeld(new ClimbSetPercentOutput(0.8, climb, log)); // manually raise climb arms, quickly
+    // coP[14].whenHeld(new ClimbSetPercentOutput(-0.8, climb, log)); // manually lower climb arms, quickly
+
+    // middle row UP OR DOWN, fourth button
+    // coP[7].whenPressed(new ShooterSetVoltage(0, shooter, log)); // stop shooter
+
+    // bottom row UP then DOWN, from LEFT to RIGHT
+    // coP[15].whenPressed(new ClimbPistonUnlock(false, climb)); // lock climb lock
+    // coP[16].whenPressed(new ClimbPistonUnlock(true, climb)); // unlock climb lock
+  }
+
 
   /**
    * Sets the rumble on the XBox controller
@@ -146,9 +293,21 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    // return m_autoCommand;
-    return null;
+    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intake, 
+      // limelightFront, limeLightBall, led,
+      log );
+  }
+
+  /**
+   * Method called when robot is initialized.
+   */
+  public void robotInit() {
+    SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
+    if(!RobotPreferences.prefsExist()) {
+      RobotPreferences.recordStickyFaults("RobotPreferences", log);
+    }
+
+    // Alliance alliance = DriverStation.getAlliance();
   }
 
   /**
@@ -156,6 +315,68 @@ public class RobotContainer {
    */
   public void robotPeriodic(){
     log.advanceLogRotation();
-    
+  }
+
+  /**
+   * Method called when robot is disabled.
+   */
+  public void disabledInit() {
+    log.writeLogEcho(true, "Disabled", "Robot disabled");   // Don't log the word "Init" here -- it affects the Excel macro
+
+    driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
+  }
+
+  /**
+   * Method called once every scheduler cycle when robot is disabled.
+   */
+  public void disabledPeriodic() {
+    // Check for CAN bus error.  This is to prevent the issue that caused us to be eliminated in 2020!
+    boolean error = true;
+    if ((driveTrain.getLeftBusVoltage() > 8.0) && (driveTrain.isGyroReading() == true) && (driveTrain.getRightTemp() > 5.0)) error = false;    // The CAN bus and Gyro are working
+  
+    if (error) {
+      RobotPreferences.recordStickyFaults("CAN Bus", log);
+    }  //    TODO May want to flash this
+  }
+  
+  /**
+   * Method called when auto mode is initialized/enabled.
+   */
+  public void autonomousInit() {
+    log.writeLogEcho(true, "Auto", "Mode Init");
+   
+    driveTrain.setDriveModeCoast(false);
+
+    // NOTE:  Do NOT reset the gyro or encoder here!!!!!
+    // The first command in auto mode initializes before this code is run, and
+    // it will read the gyro/encoder before the reset goes into effect.
+  }
+
+  /**
+   * Method called once every scheduler cycle when auto mode is initialized/enabled
+   */
+  public void autonomousPeriodic() {
+  }
+
+  /**
+   * Method called when teleop mode is initialized/enabled.
+   */
+  public void teleopInit() {
+    log.writeLogEcho(true, "Teleop", "Mode Init");
+
+    driveTrain.setDriveModeCoast(false);
+  }
+
+  /**
+   * Method called once every scheduler cycle when teleop mode is initialized/enabled.
+   */
+  public void teleopPeriodic() {
+    // if (limelightFront.seesTarget()) {
+    //   setXBoxRumble(1.0);
+    // } else if (intake.intakeGetPercentOutput() == Math.abs(Constants.IntakeConstants.intakeDefaultPercentOutput)) {
+    //   setXBoxRumble(0.4);
+    // } else {
+    //   setXBoxRumble(0);
+    // }
   }
 }

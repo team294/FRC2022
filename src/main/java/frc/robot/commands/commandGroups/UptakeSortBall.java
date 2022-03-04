@@ -2,13 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
+import frc.robot.commands.BallCountAddBall;
+import frc.robot.commands.BallCountSubtractBall;
+import frc.robot.commands.UptakeSetPercentOutput;
+import frc.robot.commands.UptakeStop;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
