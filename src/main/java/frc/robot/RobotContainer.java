@@ -49,7 +49,7 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter(log);
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
-  private final Intake intakeFront = new Intake("Intake-Front", Ports.CANIntakeFront, Ports.SolIntakeFrontFwd, Ports.SolIntakeFrontRev, log);
+  private final IntakeFront intakeFront = new IntakeFront(log);
   // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21

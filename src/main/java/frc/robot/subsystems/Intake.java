@@ -25,21 +25,29 @@ import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 
 public class Intake extends SubsystemBase implements Loggable {
-  private final FileLog log;
+  protected final FileLog log;
   private final WPI_TalonFX motor;
   private final DoubleSolenoid solenoid;
   
-  private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
+  protected boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
   private String subsystemName;    // subsystem name for use in file logging and Shuffleboard
 
   private double encoderZero = 0.0;     // Zero position for encoder
   private int timeoutMs = 0; // was 30, changed to 0 for testing
 
   
+  /**
+   * Creates a generic intake (front or rear)
+   * @param subsystemName  String name for subsystem
+   * @param CANMotorPort
+   * @param solenoidForwardChannel
+   * @param solenoidReverseChannel
+   * @param log
+   */
   public Intake(String subsystemName, int CANMotorPort, int solenoidForwardChannel, int solenoidReverseChannel, FileLog log) {
     this.log = log; // save reference to the fileLog
     this.subsystemName = subsystemName;
-    motor = new WPI_TalonFX(CANMotorPort); // Ports.CANIntake
+    motor = new WPI_TalonFX(CANMotorPort);
     solenoid = new DoubleSolenoid(Ports.CANPneumaticHub, PneumaticsModuleType.REVPH, solenoidForwardChannel, solenoidReverseChannel);
 
     // set Intake configuration
@@ -155,6 +163,16 @@ public class Intake extends SubsystemBase implements Loggable {
    */
 	public void updateLog(boolean logWhenDisabled) {
 		log.writeLog(logWhenDisabled, subsystemName, "Update Variables",  
+      logString()
+    );
+  }
+
+  /**
+   * Builds string for use in FileLog.  Useful when subclassing this Subsystem.
+   * @return
+   */
+  protected String logString() {
+    return buildStringWithCommas(
       "Bus Volt", motor.getBusVoltage(),
       "Out Percent", motor.getMotorOutputPercent(),
       "Volt", motor.getMotorOutputVoltage(), 
@@ -164,6 +182,4 @@ public class Intake extends SubsystemBase implements Loggable {
       "Measured RPM", getMotorVelocity()
     );
   }
-
-  
 }
