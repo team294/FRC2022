@@ -29,7 +29,6 @@ public class IntakeBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new IntakeSetPercentOutput(0.3, intake, log),
       new IntakeSetPercentOutput(0.25, intake, log)
       .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
       new BallCountAddBall(BallLocation.kUptake, log),

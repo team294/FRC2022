@@ -34,7 +34,7 @@ public class FileLog {
     // Note:  Remove/add cycles as we remove/add subsystems
 	public int rotation = 0;
     public final int DRIVE_CYCLE = 0;
-	public final int FALCON_CYCLE = 1;
+	public final int INTAKE_CYCLE = 1;
 	public final int SHOOTER_CYCLE = 2;
 	public final int FEEDER_CYCLE = 4;
 	public final int UPTAKE_CYCLE = 5;

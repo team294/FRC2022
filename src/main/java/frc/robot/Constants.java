@@ -98,13 +98,17 @@ public final class Constants {
 
     public static final class Ports {
         // CANbus addresses
+        public static final int CANPneumaticHub = 0;
+
         public static final int CANLeftDriveMotor1 = 11;
         public static final int CANLeftDriveMotor2 = 12;
 
         public static final int CANRightDriveMotor1 = 15;
         public static final int CANRightDriveMotor2 = 16;
 
-        public static final int CANIntake = 21;
+        public static final int CANIntakeFront = 21;
+        public static final int CANIntakeFrontTransfer = 22;    // Horizontal Omni wheels between intake and uptake
+        public static final int CANIntakeRear = 23;
 
         public static final int CANUptake = 31;
         public static final int CANEject = 32;
@@ -119,6 +123,14 @@ public final class Constants {
 
         // I2C ports
         public static final int I2CcolorSensor = 0x52;       // According to REV docs, color sensor is at 0x52 = 82.  Rob had 39?
+
+        // Pneumatic solenoid ports
+        public static final int SolIntakeFrontFwd = 1;
+        public static final int SolIntakeFrontRev = 2;
+        public static final int SolIntakeRearFwd = 3;
+        public static final int SolIntakeRearRev = 4;
+        public static final int SolClimbArm = 5;
+        public static final int SolClimbHook = 6;
     }
    
     public static final class OIConstants {
@@ -126,19 +138,6 @@ public final class Constants {
         public static final int usbLeftJoystick = 1;
         public static final int usbRightJoystick = 2;
         public static final int usbCoPanel = 3;
-    }
-
-    public static final class FalconConstants {
-        public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
-        public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
-        public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
-
-        public static final double kP = 0.2;        // PID terms
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        // public static final double kFF = 0.056;     // value = 1023 * desired-percent-out / at-sensor-velocity-sensor-units-per-100ms
-        public static final double kS = 0.02;
-        public static final double kV = 0.000161;
     }
 
     public static final class ShooterConstants {
@@ -159,6 +158,12 @@ public final class Constants {
     }
 
     public static final class UptakeConstants {
+        public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
+        public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
+        public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
+    }
+
+    public static final class IntakeConstants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM

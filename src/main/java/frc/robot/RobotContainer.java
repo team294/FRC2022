@@ -22,6 +22,7 @@ import frc.robot.Constants.TargetType;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.Ports;
 import frc.robot.Constants.StopType;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.*;
@@ -48,11 +49,12 @@ public class RobotContainer {
   private final Shooter shooter = new Shooter(log);
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
-  private final Intake intake = new Intake("Intake",log);
+  private final IntakeFront intakeFront = new IntakeFront(log);
+  // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
-  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
+  // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
   private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
@@ -293,7 +295,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intake, 
+    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, 
       // limelightFront, limeLightBall, led,
       log );
   }
