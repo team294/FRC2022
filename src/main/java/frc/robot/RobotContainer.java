@@ -5,9 +5,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -40,10 +42,13 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  // Define robot key utilities
   private final FileLog log = new FileLog("A1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
-  private final PowerDistribution powerdistribution = new PowerDistribution(0, ModuleType.kRev);
+  private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
+  private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+
+  // Define robot subsystems  
   private final DriveTrain driveTrain = new DriveTrain(log, tempCheck);
   private final Shooter shooter = new Shooter(log);
   private final Feeder feeder = new Feeder("Feeder", log);
@@ -55,9 +60,11 @@ public class RobotContainer {
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
   // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
+  // Define trajectories and auto selection
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
   private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
 
+  // Define controllers
   private final Joystick xboxController = new Joystick(OIConstants.usbXboxController);//assuming usbxboxcontroller is int
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
   private final Joystick rightJoystick = new Joystick(OIConstants.usbRightJoystick);
@@ -314,6 +321,9 @@ public class RobotContainer {
     }
 
     // Alliance alliance = DriverStation.getAlliance();
+
+    // TODO delete this line that disables the compressor!!!!  This is only here for testing.
+    compressor.disable();
   }
 
   /**
