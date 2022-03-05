@@ -22,11 +22,13 @@ public class DriveSetPercentOutput extends CommandBase {
    private double lPercent;
    private double rPercent;
   public DriveSetPercentOutput(double lPercent, double rPercent, DriveTrain driveTrain, FileLog log) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     this.lPercent = lPercent;
     this.rPercent = rPercent;
     this.log = log;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.

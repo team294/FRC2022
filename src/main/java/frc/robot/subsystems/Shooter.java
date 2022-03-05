@@ -51,8 +51,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     motor1.configNeutralDeadband(0.01);
     motor1.configVoltageCompSaturation(ShooterConstants.compensationVoltage);
     motor1.enableVoltageCompensation(true);
-    motor1.configOpenloopRamp(0.05);   //seconds from neutral to full
-    motor1.configClosedloopRamp(0.05); //seconds from neutral to full
+    motor1.configOpenloopRamp(0.15);   //seconds from neutral to full
+    motor1.configClosedloopRamp(0.15); //seconds from neutral to full
 
     // set motor2 configuration
     motor2.configFactoryDefault();

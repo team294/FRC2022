@@ -38,7 +38,7 @@ public class Feeder extends SubsystemBase implements Loggable {
 
     // set motor configuration
     motor.configFactoryDefault();
-    motor.setInverted(true);
+    motor.setInverted(false);
     motor.setNeutralMode(NeutralMode.Coast);
     motor.configPeakOutputForward(1.0);
     motor.configPeakOutputReverse(-1.0);

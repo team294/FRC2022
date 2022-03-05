@@ -93,8 +93,8 @@ public class RobotContainer {
     tempCheck.displayOverheatingMotors();
 
     // Intake subsystem
-    SmartDashboard.putData("Intake Front Fwd", new IntakeSetPercentOutput(0.1, 0.1, intakeFront, log));
-    SmartDashboard.putData("Intake Front Rev", new IntakeSetPercentOutput(-0.1, -0.1, intakeFront, log));
+    SmartDashboard.putData("Intake Front Fwd", new IntakeSetPercentOutput(0.2, 0.2, intakeFront, log));
+    SmartDashboard.putData("Intake Front Rev", new IntakeSetPercentOutput(-0.2, -0.2, intakeFront, log));
     SmartDashboard.putData("Intake Front Stop", new IntakeStop(intakeFront, log));
 
     // Shooter subsystem
