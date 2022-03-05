@@ -105,6 +105,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
+    SmartDashboard.putData("Shoot Red Ball", new ShootBall(10, BallColor.kBlue, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(10, BallColor.kRed, shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));

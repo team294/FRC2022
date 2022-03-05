@@ -31,14 +31,14 @@ import frc.robot.utilities.FileLog;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootBall extends SequentialCommandGroup {
   /** Creates a new ShootBall. */
-  public ShootBall(double velocity, BallColor ejectColor, Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
+  public ShootBall(double distance, BallColor ejectColor, Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ConditionalCommand(
         new ConditionalCommand(
           sequence(
-            new ShooterSetVelocity(InputMode.kDistFeet, velocity, shooter, log),
+            new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(.25, feeder, log),
             new WaitCommand(2),
             new BallCountSubtractBall(BallLocation.kShooter, log),
@@ -60,7 +60,7 @@ public class ShootBall extends SequentialCommandGroup {
               )
           ), 
           sequence(
-            new ShooterSetVelocity(InputMode.kDistFeet, velocity, shooter, log),
+            new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(0.25, feeder, log),
             parallel(
               new BallCountSubtractBall(BallLocation.kFeeder, log),
@@ -75,7 +75,7 @@ public class ShootBall extends SequentialCommandGroup {
         ),
         new ConditionalCommand(
           sequence(
-            new ShooterSetVelocity(InputMode.kDistFeet, velocity, shooter, log),
+            new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(0.25, feeder, log),
             new UptakeSortBall(ejectColor, uptake, feeder, log),
             new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent),
