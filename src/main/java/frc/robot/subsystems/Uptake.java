@@ -216,7 +216,8 @@ public class Uptake extends SubsystemBase implements Loggable {
       "Uptake RPM", getUptakeVelocity(),
       "Eject RPM", getEjectVelocity(),
       "Uptake Ball Present", colorSensor.isBallPresent(),
-      "Eject Ball Present", isBallInEjector()
+      "Eject Ball Present", isBallInEjector(),
+      "Uptake Ball color", colorSensor.getBallColorString()
     );
   }
 

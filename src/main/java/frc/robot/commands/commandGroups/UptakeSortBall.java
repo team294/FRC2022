@@ -36,7 +36,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
       new ConditionalCommand(
         new WaitCommand(0.02),
         sequence(
-          new UptakeSetPercentOutput(0.25, uptake, log)
+          new UptakeSetPercentOutput(0.15, uptake, log)
           .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
           new BallCountAddBall(BallLocation.kUptake, log)
         ),
