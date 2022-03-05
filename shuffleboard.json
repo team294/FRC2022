@@ -137,6 +137,13 @@
                   "Colors/Color when false": "#8B0000FF"
                 },
                 {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Eject Ball Present",
+                  "_title": "Eject Ball Present",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
                   "_type": "Command",
                   "_source0": "network_table:///SmartDashboard/Stop Feeder",
                   "_title": "Stop Feeder"
@@ -286,6 +293,11 @@
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Color Blue",
                   "_title": "Color Blue"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Color",
+                  "_title": "Color"
                 }
               ]
             }
@@ -423,13 +435,18 @@
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Intake-Front Position Rev",
-                  "_title": "Intake-Front Position Rev"
+                  "_source0": "network_table:///SmartDashboard/Intake-Front Voltage",
+                  "_title": "Intake-Front Voltage"
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Intake-Front Voltage",
-                  "_title": "Intake-Front Voltage"
+                  "_source0": "network_table:///SmartDashboard/Intake-Front Transfer Voltage",
+                  "_title": "Intake-Front Transfer Voltage"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Intake-Front Position Rev",
+                  "_title": "Intake-Front Position Rev"
                 },
                 {
                   "_type": "Text View",
@@ -445,11 +462,6 @@
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Intake-Front Transfer Temperature C",
                   "_title": "Intake-Front Transfer Temperature C"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Intake-Front Transfer Voltage",
-                  "_title": "Intake-Front Transfer Voltage"
                 }
               ]
             }
@@ -928,6 +940,149 @@
               "_type": "Text View",
               "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan5",
               "_title": "Ungrouped/PowerDistribution[1]/Chan5"
+            }
+          },
+          "0,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan6",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan6"
+            }
+          },
+          "1,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan7",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan7"
+            }
+          },
+          "2,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan8",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan8"
+            }
+          },
+          "3,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan9",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan9"
+            }
+          },
+          "4,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan10",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan10"
+            }
+          },
+          "5,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan11",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan11"
+            }
+          },
+          "6,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan12",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan12"
+            }
+          },
+          "7,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan13",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan13"
+            }
+          },
+          "8,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan14",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan14"
+            }
+          },
+          "9,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan15",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan15"
+            }
+          },
+          "10,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan16",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan16"
+            }
+          },
+          "11,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan17",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan17"
+            }
+          },
+          "12,7": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistribution[1]/Chan18",
+              "_title": "Ungrouped/PowerDistribution[1]/Chan18"
             }
           }
         }

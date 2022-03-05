@@ -49,7 +49,7 @@ public class ColorSensor {
    * @return true = ball is in the uptake.
    */
   public boolean isBallPresent() {
-    return getProximity() >= 450;
+    return getProximity() >= 180;
   }
 
   /**
@@ -70,16 +70,21 @@ public class ColorSensor {
    * @return BallColor kNone, kRed, kBlue, kYellow, or kOther.
    */
   public BallColor getBallColor() {
-    // Some color data (R,G,B,Prox) from prototype uptake, 2/4/22:
+    // Some color data (R,G,B,Prox) from prototype uptake, 2/4/22, proto board:
     // No ball (wood) = (0.31, 0.48, 0.21, 228)
     // Ball blue = (0.16, 0.41, 0.43, 690)
     // Ball red = (0.50, 0.36, 0.14, 700)
     // Ball yellow = (0.28, 0.60, 0.12, 1050)
+    // Some color data (R,G,B,Prox) from prototype uptake, 2/4/22:
+    // No ball (wood) = (0.28, 0.48, 0.24, 75)
+    // Ball blue = (0.17, 0.41, 0.42, 288)
+    // Ball red = (0.46, 0.37, 0.17, 300)
+    // Ball yellow = (0.27, 0.60, 0.13, 312)
     Color color = getColor();
 
     if (!isBallPresent()) {
       return BallColor.kNone;
-    } else if (color.blue >= 0.2 && color.red < 0.35 && color.green < 0.5) {
+    } else if (color.blue >= 0.3 && color.red < 0.35 && color.green < 0.5) {
       return BallColor.kBlue;
     } else if (color.red > 0.35 && color.blue <= 0.3 && color.green < 0.5) {
       return BallColor.kRed;
