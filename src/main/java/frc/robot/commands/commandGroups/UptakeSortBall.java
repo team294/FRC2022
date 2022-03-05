@@ -55,14 +55,14 @@ public class UptakeSortBall extends SequentialCommandGroup {
         // Load ball to feeder
         new ConditionalCommand(
           new WaitCommand(0.2),
-            sequence(
-              new UptakeSetPercentOutput(0.25, false, uptake, log), 
-              new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
-              new UptakeStop(uptake, log),
-              parallel(
-                new BallCountAddBall(BallLocation.kFeeder, log),
-                new BallCountSubtractBall(BallLocation.kUptake, log)
-              )  
+          sequence(
+            new UptakeSetPercentOutput(0.25, false, uptake, log), 
+            new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
+            new UptakeStop(uptake, log),
+            parallel(
+              new BallCountAddBall(BallLocation.kFeeder, log),
+              new BallCountSubtractBall(BallLocation.kUptake, log)
+            )  
             ),
           () -> feeder.isBallPresent()
         ),
