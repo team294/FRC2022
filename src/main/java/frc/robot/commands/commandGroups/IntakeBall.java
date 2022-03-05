@@ -17,7 +17,7 @@ import frc.robot.commands.BallCountAddBall;
 import frc.robot.commands.BallCountSubtractBall;
 import frc.robot.commands.IntakeSetPercentOutput;
 import frc.robot.commands.IntakeStop;
-import frc.robot.commands.UptakeSetPercentOutput;
+import frc.robot.commands.UptakeEjectSetPercentOutput;
 import frc.robot.commands.UptakeStop;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -40,7 +40,7 @@ public class IntakeBall extends SequentialCommandGroup {
       new ConditionalCommand(
         new ConditionalCommand(
           sequence(
-          new UptakeSetPercentOutput(0.25, true, uptake, log), 
+          new UptakeEjectSetPercentOutput(0.25, true, uptake, log), 
           new WaitCommand(2),
           new UptakeStop(uptake, log)
           ),
@@ -48,7 +48,7 @@ public class IntakeBall extends SequentialCommandGroup {
          () -> BallCount.getBallCount(BallLocation.kShooter) == 0
       ),
         sequence(
-          new UptakeSetPercentOutput(0.25, false, uptake, log),
+          new UptakeEjectSetPercentOutput(0.25, false, uptake, log),
           new WaitCommand(2),
           new BallCountSubtractBall(BallLocation.kUptake, log),
           new BallCountAddBall(BallLocation.kShooter, log)

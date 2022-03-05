@@ -8,22 +8,25 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
-public class UptakeSetPercentOutput extends CommandBase {
+public class UptakeEjectSetPercentOutput extends CommandBase {
   /** Creates a new testUptake. */
   private final Uptake uptake;
   private double percent;
   private FileLog log;
+  private boolean ejectBall;
 
   /**
    * Runs the uptake motors
    * @param percent -1.0 to 1.0, + = up, - = down
+   * @param ejectBall true = ball path to eject, false = ball path to feeder
    * @param uptake uptake subsystem
    * @param log logfile
    */
-  public UptakeSetPercentOutput(double percent, Uptake uptake, FileLog log) {
+  public UptakeEjectSetPercentOutput(double percent, boolean ejectBall, Uptake uptake, FileLog log) {
     this.uptake = uptake;
     this.percent = percent;
     this.log = log;
+    this.ejectBall = ejectBall;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(uptake);
   }
@@ -31,8 +34,8 @@ public class UptakeSetPercentOutput extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    uptake.setUptakePercentOutput(percent);
-    log.writeLog(false, "Uptake Set Percent", "initialize", "percent", percent);
+    uptake.setUptakeEjectPercentOutput(percent ,ejectBall);
+    log.writeLog(false, "Uptake Set Percent", "initialize", "percent", percent, "Eject Ball", ejectBall);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

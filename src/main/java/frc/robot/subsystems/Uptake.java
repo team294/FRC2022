@@ -114,10 +114,11 @@ public class Uptake extends SubsystemBase implements Loggable {
    * @param percent -1.0 to 1.0, + = up, - = down
    * @param ejectBall true = ball path to eject, false = ball path to feeder
    */
-  public void setMotorPercentOutput(double percent,boolean ejectBall){
+  public void setUptakeEjectPercentOutput(double percent,boolean ejectBall){
     uptake.set(ControlMode.PercentOutput, percent);
     eject.set(ControlMode.PercentOutput, ejectBall ? percent : -percent);
   }
+
 
     /**
    * sets the percent of the uptake, using voltage compensation if turned on
@@ -134,7 +135,7 @@ public class Uptake extends SubsystemBase implements Loggable {
   * Stops the uptake
   */
   public void stopMotor(){
-    setMotorPercentOutput(0,false);
+    setUptakeEjectPercentOutput(0,false);
   }
 
 

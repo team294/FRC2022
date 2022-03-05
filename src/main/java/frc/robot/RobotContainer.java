@@ -118,8 +118,9 @@ public class RobotContainer {
     SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
 
     // Uptake subsystem and sequences
-    SmartDashboard.putData("Uptake Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
-    SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeEjectSetPercentOutput(.25, false, uptake, log));
+    SmartDashboard.putData("Uptake Eject Ball", new UptakeEjectSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake Set Percent", new UptakeSetPercentOutput(0.25, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
