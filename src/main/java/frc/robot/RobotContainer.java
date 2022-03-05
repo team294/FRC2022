@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
   private final IntakeFront intakeFront = new IntakeFront(log);
-  // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
+  private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
@@ -202,10 +202,10 @@ public class RobotContainer {
     }
     
 
-    xb[1].whenPressed(new ShootBall(0,shooter, uptake,log));//a -short
-    xb[2].whenPressed(new ShootBall(0,shooter,uptake,log));//b -medium
+    xb[1].whenPressed(new ShootBall(0,BallColor.kBlue,shooter, uptake,feeder, log));//a -short
+    xb[2].whenPressed(new ShootBall(0,BallColor.kBlue, shooter,uptake, feeder, log));//b -medium
     // xb[3].whenHeld();//x -auto?
-    xb[4].whenPressed(new ShootBall(0,shooter,uptake,log));//y -long
+    xb[4].whenPressed(new ShootBall(0, BallColor.kBlue, shooter,uptake, feeder, log));//y -long
     //xb[11].whenHeld(); //l1, turn turret left
     //xb[12].whenHeld(); //r1, turn turret right
     //xb[7].whenHeld(); //start, toggle rollers
