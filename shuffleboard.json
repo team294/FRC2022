@@ -137,13 +137,6 @@
                   "Colors/Color when false": "#8B0000FF"
                 },
                 {
-                  "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Eject Ball Present",
-                  "_title": "Eject Ball Present",
-                  "Colors/Color when true": "#7CFC00FF",
-                  "Colors/Color when false": "#8B0000FF"
-                },
-                {
                   "_type": "Command",
                   "_source0": "network_table:///SmartDashboard/Stop Feeder",
                   "_title": "Stop Feeder"
@@ -219,6 +212,13 @@
               "_title": "Uptake",
               "Layout/Label position": "LEFT",
               "_children": [
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Eject Ball Present",
+                  "_title": "Eject Ball Present",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
                 {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Uptake Uptake Position Rev",
