@@ -49,6 +49,7 @@ public class Intake extends SubsystemBase implements Loggable {
     this.subsystemName = subsystemName;
     motor = new WPI_TalonFX(CANMotorPort);
     solenoid = new DoubleSolenoid(Ports.CANPneumaticHub, PneumaticsModuleType.REVPH, solenoidForwardChannel, solenoidReverseChannel);
+    // TODO implement solenoid code.
 
     // set Intake configuration
     motor.configFactoryDefault();

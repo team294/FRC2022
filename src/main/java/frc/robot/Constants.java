@@ -98,7 +98,8 @@ public final class Constants {
 
     public static final class Ports {
         // CANbus addresses
-        public static final int CANPneumaticHub = 0;
+        public static final int CANPneumaticHub = 1;
+        public static final int CANPowerDistHub = 1;
 
         public static final int CANLeftDriveMotor1 = 11;
         public static final int CANLeftDriveMotor2 = 12;
