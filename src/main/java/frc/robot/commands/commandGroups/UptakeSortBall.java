@@ -37,8 +37,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         sequence(
           new UptakeSetPercentOutput(0.25, false, uptake, log)
           .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
-          new BallCountAddBall(BallLocation.kUptake, log),
-          new BallCountSubtractBall(BallLocation.kIntake, log)
+          new BallCountAddBall(BallLocation.kUptake, log)
         ),
         uptake.colorSensor::isBallPresent
       ),
@@ -49,19 +48,23 @@ public class UptakeSortBall extends SequentialCommandGroup {
         sequence(
           new UptakeSetPercentOutput(0.25, true, uptake, log),
           new WaitCommand(2).perpetually().withInterrupt(uptake::isBallInEjector), 
-          new WaitCommand(.5),
+          new WaitCommand(2).perpetually().withInterrupt(() -> !uptake.isBallInEjector()),
           new BallCountSubtractBall(BallLocation.kUptake, log),
           new UptakeStop(uptake, log)
         ),
         // Load ball to feeder
-        sequence(
-          new UptakeSetPercentOutput(0.25, false, uptake, log), 
-          new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
-          new UptakeStop(uptake, log),
-          parallel(
-            new BallCountAddBall(BallLocation.kFeeder, log),
-            new BallCountSubtractBall(BallLocation.kUptake, log)
-          )  
+        new ConditionalCommand(
+          new WaitCommand(0.2),
+            sequence(
+              new UptakeSetPercentOutput(0.25, false, uptake, log), 
+              new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
+              new UptakeStop(uptake, log),
+              parallel(
+                new BallCountAddBall(BallLocation.kFeeder, log),
+                new BallCountSubtractBall(BallLocation.kUptake, log)
+              )  
+            ),
+          () -> feeder.isBallPresent()
         ),
         () -> uptake.colorSensor.getBallColor() == ejectColor
       ),
