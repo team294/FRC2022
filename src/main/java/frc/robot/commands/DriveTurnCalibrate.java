@@ -30,7 +30,6 @@ public class DriveTurnCalibrate extends CommandBase {
     * @param log
     */
   public DriveTurnCalibrate(double maxPctOut, double rampTime, double rampRate, boolean turnLeft, DriveTrain driveTrain, FileLog log) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.maxPctOut = Math.abs(maxPctOut);
     this.driveTrain = driveTrain;
     this.log = log;
@@ -38,6 +37,7 @@ public class DriveTurnCalibrate extends CommandBase {
     this.rampRate = Math.abs(rampRate);
     direction = turnLeft ? 1.0 : -1.0;
     
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
 
