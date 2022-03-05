@@ -146,13 +146,13 @@ public final class Constants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
-        public static final double pidErrorTolerance = 200; // in RPM
+        public static final double pidErrorTolerance = 100; // in RPM
 
-        public static final double kP = 0.15;        // PID terms
+        public static final double kP = 0.02;        // PID terms
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kS = 0;
-        public static final double kV = 0.000164;
+        public static final double kS = 0.003;
+        public static final double kV = 0.000154;
 
         public static final int[][] distanceFromTargetToRPMTable = {{5,3500},{10, 4350},{15,2450},{20,2500},{25,2550}};         // Values in feet, RPM
         public static final double shooterDefaultRPM = 2800;

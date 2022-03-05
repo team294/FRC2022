@@ -30,12 +30,13 @@ public class DriveResetPose extends CommandBase {
    * @param driveTrain DriveTrain subsytem
 	 */
   public DriveResetPose(double curXinMeters, double curYinMeters, double curAngleinDegrees, DriveTrain driveTrain, FileLog log) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     this.log = log;
     curX = curXinMeters;
     curY = curYinMeters;
     curAngle = curAngleinDegrees;
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
 

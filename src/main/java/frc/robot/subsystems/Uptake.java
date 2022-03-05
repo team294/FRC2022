@@ -42,7 +42,7 @@ public class Uptake extends SubsystemBase implements Loggable {
 
     // set uptake configuration
     uptake.configFactoryDefault();
-    uptake.setInverted(false);
+    uptake.setInverted(true);
     uptake.setNeutralMode(NeutralMode.Brake);
     uptake.configPeakOutputForward(1.0);
     uptake.configPeakOutputReverse(-1.0);
@@ -87,7 +87,7 @@ public class Uptake extends SubsystemBase implements Loggable {
    * @return true = ball is in ejector
    */
   public boolean isBallInEjector(){
-    return ejectSensor.get();
+    return !ejectSensor.get();
   }
 
   /**
