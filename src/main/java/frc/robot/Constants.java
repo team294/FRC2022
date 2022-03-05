@@ -175,22 +175,22 @@ public final class Constants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double maxOutputUncalibrated = 0.05;             // Max output power when turret is *not* calibrated
         public static final double maxOutputCalibrated = 0.3;               // Max output power when turret is calibrated
-        public static final double ticksPerDegree = 2048.0/360.0 * 4*180/18;         // Divide by this to convert raw ticks to turrent degrees  (4:1 versaplanetary, plus chain gear ratio 18:180)
+        public static final double ticksPerDegree = 2048.0/360.0 * 4*170/16;         // Divide by this to convert raw ticks to turrent degrees  (4:1 versaplanetary, plus chain gear ratio 18:180)
         public static final double rawVelocityToDegPerSec = 10.0 / ticksPerDegree;   // Multiply by this to convert raw velocity (ticksPer100ms) to degrees per second
-        public static final double softLimitRev = -65.0;            // Reverse position soft limit, in turret degrees
-        public static final double softLimitFwd = 80.0;            // Forward position soft limit, in turret degrees
-        public static final double limitSwitchRev = -70.0;            // Position of physical reverse limit switch, in turret degrees
-        public static final double limitSwitchFwd = 85.0;            // Position of physical forward limit switch, in turret degrees
+        public static final double softLimitRev = -140.0;            // Reverse position soft limit, in turret degrees
+        public static final double softLimitFwd = 140.0;            // Forward position soft limit, in turret degrees
+        public static final double limitSwitchRev = -145.0;            // Position of physical reverse limit switch, in turret degrees
+        public static final double limitSwitchFwd = 147.0;            // Position of physical forward limit switch, in turret degrees
         public static final double calSwitch = 0.0;            // Position of starting calibration limit switch, in turret degrees
 
         // Turn-to-angle constants
         public static final double kMaxTurnVelocity = 1150.0;        // Max turret velocity in degrees per second (extrapolted at 100% power)
-        public static final double kClampTurnVelocity = 150.0;       // Max turret velocity allowed (for safety) in degrees per second
-        public static final double kMaxTurnAcceleration = 200.0;     // Max acceleration in degrees per second^2
+        public static final double kClampTurnVelocity = 300.0;       // Max turret velocity allowed (for safety) in degrees per second
+        public static final double kMaxTurnAcceleration = 500.0;     // Max acceleration in degrees per second^2
         public static final double tLagTurn = 0.020;          // Lag time to start/stop turning, or just one cycle forcast through scheduler
-        public static double kITurnEnd = 0.005;         // Value of kI to use after the trapezoid profile is finished
-        public static double kPTurn = 0.001;         // PID terms
-        public static double kITurn = 0.000;
+        public static double kITurnEnd = 0.02;         // Value of kI to use after the trapezoid profile is finished
+        public static double kPTurn = 0.001;         // PID terms  0.001
+        public static double kITurn = 0.01;
         public static double kDTurn = 0.000;
         public static double kSTurn = 0.012;       // Feed-forward terms
         public static double kVTurn = 0.00102;      
