@@ -37,9 +37,6 @@ mjpeg.setSource(output)
 
 input_img = np.array([[]])
 
-def sortY(c):
-    return c[1]
-
 while True:
     time, input_img = sink.grabFrame(input_img)
 
@@ -76,9 +73,8 @@ while True:
         # filtered = np.array(filtered, dtype=contourType)
         # filtered = np.sort(filtered, order='y')
         
-        filtered.sort(key=sortY)
+        filtered.sort(key=lambda c: c[1])
 
-        rv = 1
         # median = filtered[int(filtered.size/2)]['y'] if filtered.size % 2 == 1 else filtered[filtered.size/2]['y']+filtered[filtered.size/2-1]['y']/2
         median = filtered[int(len(filtered)/2)][1]
         # filtered = np.array(list(filter(lambda c: abs(median-c['y']) < sd.getNumber("ytol", yTolerance), filtered)), dtype=contourType)
@@ -87,6 +83,7 @@ while True:
 
         if len(filtered) > 0:
             filtered = sorted(filtered, key=lambda f: f[6])[-4:]
+            rv = len(filtered)
             fx, fy, bx, by = filtered[0][2], filtered[0][4], filtered[0][3], filtered[0][5]
             for f in filtered:
                 if f[2] < fx: fx = f[2]
