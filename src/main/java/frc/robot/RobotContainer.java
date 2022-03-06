@@ -58,7 +58,7 @@ public class RobotContainer {
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
-  // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
+  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
   // Define trajectories and auto selection
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
@@ -321,6 +321,9 @@ public class RobotContainer {
     }
 
     // Alliance alliance = DriverStation.getAlliance();
+
+    limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
+    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
 
     // TODO delete this line that disables the compressor!!!!  This is only here for testing.
     compressor.disable();
