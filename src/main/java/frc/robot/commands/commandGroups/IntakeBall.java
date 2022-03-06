@@ -45,13 +45,13 @@ public class IntakeBall extends SequentialCommandGroup {
           new UptakeStop(uptake, log)
           ),
           new WaitCommand(0.2),
-         () -> BallCount.getBallCount(BallLocation.kShooter) == 0
+         () -> BallCount.getBallCount(BallLocation.kFeeder) == 0
       ),
         sequence(
           new UptakeSetPercentOutput(0.25, false, uptake, log),
           new WaitCommand(2),
           new BallCountSubtractBall(BallLocation.kUptake, log),
-          new BallCountAddBall(BallLocation.kShooter, log)
+          new BallCountAddBall(BallLocation.kFeeder, log)
         ),
       () -> uptake.colorSensor.getBallColor() == teamColor
       )

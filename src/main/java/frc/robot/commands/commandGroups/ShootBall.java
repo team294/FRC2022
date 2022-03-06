@@ -41,7 +41,7 @@ public class ShootBall extends SequentialCommandGroup {
             new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(.25, feeder, log),
             new WaitCommand(2),
-            new BallCountSubtractBall(BallLocation.kShooter, log),
+            new BallCountSubtractBall(BallLocation.kFeeder, log),
             new UptakeSortBall(ejectColor, uptake, feeder, log),
             new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent),
             new ConditionalCommand(
@@ -49,7 +49,7 @@ public class ShootBall extends SequentialCommandGroup {
                 new WaitCommand(2),
                 new FeederStop(feeder, log),
                 new ShooterStop(shooter, log),
-                new BallCountSubtractBall(BallLocation.kShooter, log)
+                new BallCountSubtractBall(BallLocation.kFeeder, log)
               ), 
               sequence(
                 new FeederStop(feeder, log),
@@ -66,10 +66,10 @@ public class ShootBall extends SequentialCommandGroup {
             new FeederSetPercentOutput(0.25, feeder, log),
             parallel(
               new BallCountSubtractBall(BallLocation.kFeeder, log),
-              new BallCountAddBall(BallLocation.kShooter, log)
+              new BallCountAddBall(BallLocation.kFeeder, log)
             ),
             new WaitCommand(2),
-            new BallCountSubtractBall(BallLocation.kShooter, log),
+            new BallCountSubtractBall(BallLocation.kFeeder, log),
             new ShooterStop(shooter, log),
             new FeederStop(feeder, log)
           ),  
@@ -86,12 +86,8 @@ public class ShootBall extends SequentialCommandGroup {
             new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent),
             new ConditionalCommand(
               sequence(
-                parallel(
-                new BallCountAddBall(BallLocation.kShooter, log),
-                new BallCountSubtractBall(BallLocation.kFeeder, log)
-                ),
                 new WaitCommand(2),
-                new BallCountSubtractBall(BallLocation.kShooter, log)
+                new BallCountSubtractBall(BallLocation.kFeeder, log)
               ),
               new WaitCommand(2),
               () -> feeder.isBallPresent()
