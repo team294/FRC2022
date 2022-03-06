@@ -105,6 +105,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
+    SmartDashboard.putData("Shoot Red Ball", new ShootBall(10, BallColor.kBlue, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(10, BallColor.kRed, shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -116,8 +118,9 @@ public class RobotContainer {
     SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
 
     // Uptake subsystem and sequences
-    SmartDashboard.putData("Uptake Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
+    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.25, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
@@ -202,10 +205,10 @@ public class RobotContainer {
     }
     
 
-    xb[1].whenPressed(new ShootBall(0,shooter, uptake,log));//a -short
-    xb[2].whenPressed(new ShootBall(0,shooter,uptake,log));//b -medium
+    xb[1].whenPressed(new ShootBall(0,BallColor.kBlue,shooter, uptake,feeder, log));//a -short
+    xb[2].whenPressed(new ShootBall(0,BallColor.kBlue, shooter,uptake, feeder, log));//b -medium
     // xb[3].whenHeld();//x -auto?
-    xb[4].whenPressed(new ShootBall(0,shooter,uptake,log));//y -long
+    xb[4].whenPressed(new ShootBall(0, BallColor.kBlue, shooter,uptake, feeder, log));//y -long
     //xb[11].whenHeld(); //l1, turn turret left
     //xb[12].whenHeld(); //r1, turn turret right
     //xb[7].whenHeld(); //start, toggle rollers
