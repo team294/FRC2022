@@ -101,41 +101,36 @@ public class Uptake extends SubsystemBase implements Loggable {
 	 * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
 	 * properly - unlike the ordinary set function, it is not "set it and forget it."
 	 *
-   * @param voltage voltage, + = up, - = down
-   * @param ejectBall true = ball path to eject, false = ball path to feeder
+   * @param uptakeVoltage voltage, + = up, - = down
+   * @param ejectVoltage voltage, + = eject ball, - = send ball to feeder
    */
-  public void setVoltage(double voltage, boolean ejectBall) {
-    uptake.setVoltage(voltage);
-    eject.setVoltage( ejectBall ? voltage : -voltage );
+  public void setVoltage(double uptakeVoltage, double ejectVoltage) {
+    uptake.setVoltage(uptakeVoltage);
+    eject.setVoltage(ejectVoltage);
   }
 
   /**
    * sets the percent of the uptake, using voltage compensation if turned on
    * @param percent -1.0 to 1.0, + = up, - = down
-   * @param ejectBall true = ball path to eject, false = ball path to feeder
-   */
-  public void setUptakeEjectPercentOutput(double percent,boolean ejectBall){
-    uptake.set(ControlMode.PercentOutput, percent);
-    eject.set(ControlMode.PercentOutput, ejectBall ? percent : -percent);
-  }
-
-
-    /**
-   * sets the percent of the uptake, using voltage compensation if turned on
-   * @param percent percent
    */
   public void setUptakePercentOutput(double percent){
     uptake.set(ControlMode.PercentOutput, percent);
-    
   }
 
-  
+  /**
+   * sets the percent of the uptake, using voltage compensation if turned on
+   * @param percent -1.0 to 1.0, + = eject ball, - = send ball to feeder
+   */
+  public void setEjectPercentOutput(double percent){
+    eject.set(ControlMode.PercentOutput, percent);
+  }  
 
   /**
   * Stops the uptake
   */
   public void stopMotor(){
-    setUptakeEjectPercentOutput(0,false);
+    setUptakePercentOutput(0);
+    setEjectPercentOutput(0);
   }
 
 

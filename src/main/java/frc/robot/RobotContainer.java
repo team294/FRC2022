@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
   private final IntakeFront intakeFront = new IntakeFront(log);
-  private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
+  // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
@@ -118,9 +118,9 @@ public class RobotContainer {
     SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
 
     // Uptake subsystem and sequences
-    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeEjectSetPercentOutput(.25, false, uptake, log));
-    SmartDashboard.putData("Uptake Eject Ball", new UptakeEjectSetPercentOutput(.25, true, uptake, log));
-    SmartDashboard.putData("Uptake Set Percent", new UptakeSetPercentOutput(0.25, uptake, log));
+    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
+    SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.25, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));

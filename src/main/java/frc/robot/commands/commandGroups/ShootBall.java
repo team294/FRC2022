@@ -15,7 +15,7 @@ import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.ShooterSetVelocity;
 import frc.robot.commands.ShooterStop;
-import frc.robot.commands.UptakeEjectSetPercentOutput;
+import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeStop;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
 import frc.robot.Constants.BallColor;
