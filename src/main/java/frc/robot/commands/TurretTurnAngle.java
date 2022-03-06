@@ -12,6 +12,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants.TargetType;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.*;
 import frc.robot.utilities.MathBCR;
@@ -54,6 +55,41 @@ public class TurretTurnAngle extends CommandBase {
   private TrapezoidProfileBCR.State tStateForecast; // state of the system in the future, as calculated by the profile generator
   private TrapezoidProfileBCR.State tStateFinal; // goal state of the system (position in deg and time in sec)
   private TrapezoidProfileBCR.Constraints tConstraints; // max vel (deg/sec) and max accel (deg/sec/sec) of the system
+
+  /**
+   * Turns the robot to a target angle.
+   * <p> This is the EASIEST constructor to use for the TurrentTurnAngle command.
+   * @param type kRelative (target is an angle relative to current robot facing),
+   *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
+   *   kVision (use limelight to turn towards the goal)   //TODO0
+   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
+   * @param angleTolerance the tolerance to use for turn gyro
+   * @param turret turret subsystem
+   * @param limeLight limelight  //TODO (removed for now)
+   * @param log log
+   */
+  public TurretTurnAngle(TargetType type, double target, double angleTolerance, Turret turret, FileLog log) {
+    // this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, limeLight, log);
+    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, log);
+  }
+
+  /**
+   * Turns the robot to a target angle.
+   * @param type kRelative (target is an angle relative to current robot facing),
+   *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
+   *   kVision (use limelight to turn towards the goal)   //TODO
+   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
+   * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
+   * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
+   * @param angleTolerance the tolerance to use for turn gyro
+   * @param turret turret subsystem
+   * @param limeLight limelight  //TODO (removed for now)
+   * @param log log
+   */
+  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, FileLog log) {
+    // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, limeLight, log);
+    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
+  }
 
   /**
    * Turns the robot to a target angle.
@@ -113,24 +149,6 @@ public class TurretTurnAngle extends CommandBase {
     pidAngVel = new PIDController(kPTurn, 0, kDTurn);
   }
  
-  /**
-   * Turns the robot to a target angle.
-   * @param type kRelative (target is an angle relative to current robot facing),
-   *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)   //TODO
-   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
-   * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
-   * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
-   * @param angleTolerance the tolerance to use for turn gyro
-   * @param turret turret subsystem
-   * @param limeLight limelight  //TODO (removed for now)
-   * @param log log
-   */
-  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, FileLog log) {
-    // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, limeLight, log);
-    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -177,8 +195,12 @@ public class TurretTurnAngle extends CommandBase {
     if ( (startAngle + targetRel)>softLimitFwd )  targetRel = softLimitFwd - startAngle;
     if ( (startAngle + targetRel)<softLimitRev )  targetRel = softLimitRev - startAngle;
 
+    // Set initial and final states
     tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0); // initialize goal state (degrees to turn)
     tStateCurr = new TrapezoidProfileBCR.State(0.0, turret.getTurretVelocity()); // initialize initial state (relative turning, so assume initPos is 0 degrees)
+
+    // Clamp acceleration for short turns
+    if ( Math.abs(targetRel) <= kShortTurn) maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, kClampAccelShortTurn);
 
     // initialize velocity and accel limits
     tConstraints = new TrapezoidProfileBCR.Constraints(maxVel , maxAccel);
