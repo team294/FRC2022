@@ -62,7 +62,6 @@ public class DriveStraight extends CommandBase {
    * @param log
    */
   public DriveStraight(double target, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     this.limeLight = limeLight;
     this.log = log;
@@ -73,6 +72,8 @@ public class DriveStraight extends CommandBase {
     this.target = target;
     this.maxVel = MathUtil.clamp(Math.abs(maxVel), 0, DriveConstants.kMaxSpeedMetersPerSecond);
     this.maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, DriveConstants.kMaxAccelerationMetersPerSecondSquared);
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
 
@@ -91,7 +92,6 @@ public class DriveStraight extends CommandBase {
    */
 
   public DriveStraight(boolean sweetSpot, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.sweetSpot = sweetSpot;
     this.target = 0.0;
     this.driveTrain = driveTrain;
@@ -103,6 +103,8 @@ public class DriveStraight extends CommandBase {
     this.fromShuffleboard = false;
     this.maxVel = MathUtil.clamp(Math.abs(maxVel), 0, DriveConstants.kMaxSpeedMetersPerSecond);
     this.maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, DriveConstants.kMaxAccelerationMetersPerSecondSquared);
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
   }
 
@@ -117,7 +119,6 @@ public class DriveStraight extends CommandBase {
    * @param log
    */
   public DriveStraight(TargetType angleType, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrain = driveTrain;
     this.limeLight = limeLight;
     this.log = log;
@@ -128,6 +129,8 @@ public class DriveStraight extends CommandBase {
     this.target = 0;
     this.maxVel = 0.5 * DriveConstants.kMaxSpeedMetersPerSecond;
     this.maxAccel = 0.5 * DriveConstants.kMaxAccelerationMetersPerSecondSquared;
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
 
     if(SmartDashboard.getNumber("DriveStraight Manual Target Dist", -9999) == -9999) {

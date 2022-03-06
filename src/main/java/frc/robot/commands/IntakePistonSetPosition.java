@@ -8,55 +8,47 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.utilities.FileLog;
 
-public class DriveSetPercentOutput extends CommandBase {
+public class IntakePistonSetPosition extends CommandBase {
+  private Intake intake;
+  private FileLog log;
+  private boolean deploy;
+  
   /**
-   * Sets drive motors to percent output
+   * Set the intake piston position.
+   * This command immediately ends.
+   * @param deploy true = deploy, false = retract
+   * @param intake intake subsystem
    */
-
-   private DriveTrain driveTrain;
-   private FileLog log;
-   private double lPercent;
-   private double rPercent;
-  public DriveSetPercentOutput(double lPercent, double rPercent, DriveTrain driveTrain, FileLog log) {
-    this.driveTrain = driveTrain;
-    this.lPercent = lPercent;
-    this.rPercent = rPercent;
+  public IntakePistonSetPosition(boolean deploy, Intake intake, FileLog log) {
+    this.intake = intake;
+    this.deploy = deploy;
     this.log = log;
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    driveTrain.setOpenLoopRampLimit(true);
-    driveTrain.setLeftMotorOutput(lPercent);
-    driveTrain.setRightMotorOutput(rPercent);
-    log.writeLog(false, "DriveSetPercentOutput", "Init", "Target % L", lPercent, "Target % R", rPercent);
+    intake.intakeSetPiston(deploy);
+    log.writeLog(false, intake.getName(), "IntakeSetPiston", "IntakePiston", (deploy) ? "Deploy" : "Retract");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.setLeftMotorOutput(lPercent);
-    driveTrain.setRightMotorOutput(rPercent);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //driveTrain.setLeftMotorOutput(0);
-    //driveTrain.setRightMotorOutput(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

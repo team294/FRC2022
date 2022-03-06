@@ -22,7 +22,7 @@ import static frc.robot.Constants.*;
 
 public class Shooter extends SubsystemBase implements Loggable {
   private final FileLog log;
-  private final WPI_TalonFX motor;
+  private final WPI_TalonFX motor1, motor2;
   
   private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
   private String subsystemName;    // subsystem name for use in file logging and Shuffleboard
@@ -40,23 +40,40 @@ public class Shooter extends SubsystemBase implements Loggable {
   public Shooter(FileLog log) {
     this.log = log; // save reference to the fileLog
     subsystemName = "Shooter";
-    motor = new WPI_TalonFX(Ports.CANShooter);
+    motor1 = new WPI_TalonFX(Ports.CANShooter1);
+    motor2 = new WPI_TalonFX(Ports.CANShooter2);
 
-    // set motor configuration
-    motor.configFactoryDefault();
-    motor.setInverted(true);
-    motor.setNeutralMode(NeutralMode.Coast);
-    motor.configPeakOutputForward(1.0);
-    motor.configPeakOutputReverse(-1.0);
-    motor.configNeutralDeadband(0.01);
-    motor.configVoltageCompSaturation(ShooterConstants.compensationVoltage);
-    motor.enableVoltageCompensation(true);
-    motor.configOpenloopRamp(0.05);   //seconds from neutral to full
-    motor.configClosedloopRamp(0.05); //seconds from neutral to full
+    // set motor1 configuration
+    motor1.configFactoryDefault();
+    motor1.setNeutralMode(NeutralMode.Coast);
+    motor1.configPeakOutputForward(1.0);
+    motor1.configPeakOutputReverse(-1.0);
+    motor1.configNeutralDeadband(0.01);
+    motor1.configVoltageCompSaturation(ShooterConstants.compensationVoltage);
+    motor1.enableVoltageCompensation(true);
+    motor1.configOpenloopRamp(0.15);   //seconds from neutral to full
+    motor1.configClosedloopRamp(0.15); //seconds from neutral to full
+
+    // set motor2 configuration
+    motor2.configFactoryDefault();
+    motor2.setNeutralMode(NeutralMode.Coast);
+    motor2.configPeakOutputForward(1.0);
+    motor2.configPeakOutputReverse(-1.0);
+    motor2.configNeutralDeadband(0.01);
+    motor2.configVoltageCompSaturation(ShooterConstants.compensationVoltage);
+    motor2.enableVoltageCompensation(true);
+    motor2.configOpenloopRamp(0.05);   //seconds from neutral to full
+    motor2.configClosedloopRamp(0.05); //seconds from neutral to full
+
+    // set motor2 to follow motor1
+    motor1.setInverted(true);
+    motor2.setInverted(false);
+    motor2.set(ControlMode.Follower, Ports.CANShooter1);
+    motor2.follow(motor1);
 
     // set sensor configuration
-    motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, timeoutMs); 
-    motor.setSensorPhase(false);
+    motor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, timeoutMs); 
+    motor1.setSensorPhase(false);
 
     zeroEncoder();
 
@@ -88,7 +105,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param voltage voltage, + = forward (shoot out)
    */
   public void setVoltage(double voltage) {
-    motor.setVoltage(voltage);
+    motor1.setVoltage(voltage);
     velocityControlOn = false;
     setpointRPM = 0.0;
   }
@@ -98,7 +115,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param percent percent, + = forward (shoot out)
    */
   public void setMotorPercentOutput(double percent){
-    motor.set(ControlMode.PercentOutput, percent);
+    motor1.set(ControlMode.PercentOutput, percent);
     velocityControlOn = false;
     setpointRPM = 0.0;
   }
@@ -118,7 +135,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return position of motor in raw units, without software zeroing
    */
   public double getMotorPositionRaw(){
-    return motor.getSelectedSensorPosition(0);
+    return motor1.getSelectedSensorPosition(0);
   }
 
   /**
@@ -140,7 +157,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return velocity of motor in rpm
    */
   public double getMotorVelocity(){
-    return motor.getSelectedSensorVelocity(0)*ShooterConstants.rawVelocityToRPM;
+    return motor1.getSelectedSensorVelocity(0)*ShooterConstants.rawVelocityToRPM;
   }
 
 
@@ -159,9 +176,9 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setPIDSV(double P, double I, double D, double S, double V)  {
     // set PID coefficients
-    motor.config_kP(0, P, timeoutMs);
-    motor.config_kI(0, I, timeoutMs);
-    motor.config_kD(0, D, timeoutMs);
+    motor1.config_kP(0, P, timeoutMs);
+    motor1.config_kI(0, I, timeoutMs);
+    motor1.config_kD(0, D, timeoutMs);
     // motor.config_kF(0, F, timeoutMs);  // value = 1023 * desired-percent-out / at-sensor-velocity-sensor-units-per-100ms
     kS = S;
     kV = V;
@@ -180,7 +197,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     velocityControlOn = true;
     setpointRPM = motorRPM;
     
-    motor.set(ControlMode.Velocity, setpointRPM/ShooterConstants.rawVelocityToRPM,
+    motor1.set(ControlMode.Velocity, setpointRPM/ShooterConstants.rawVelocityToRPM,
       DemandType.ArbitraryFeedForward, kS*Math.signum(setpointRPM) + kV*setpointRPM);
   }
   
@@ -231,10 +248,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     if(fastLogging || log.getLogRotation() == log.SHOOTER_CYCLE) {
       updateLog(false);
 
-      SmartDashboard.putNumber(buildString(subsystemName, " Voltage"), motor.getMotorOutputVoltage());
+      SmartDashboard.putNumber(buildString(subsystemName, " Voltage"), motor1.getMotorOutputVoltage());
       SmartDashboard.putNumber(buildString(subsystemName, " Position Rev"), getMotorPosition());
       SmartDashboard.putNumber(buildString(subsystemName, " Velocity RPM"), measuredRPM);
-      SmartDashboard.putNumber(buildString(subsystemName, " Temperature C"), motor.getTemperature());
+      SmartDashboard.putNumber(buildString(subsystemName, " Temperature C"), motor1.getTemperature());
     }
   }
 
@@ -249,11 +266,11 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
 	public void updateLog(boolean logWhenDisabled) {
 		log.writeLog(logWhenDisabled, subsystemName, "Update Variables",  
-      "Bus Volt", motor.getBusVoltage(),
-      "Out Percent", motor.getMotorOutputPercent(),
-      "Volt", motor.getMotorOutputVoltage(), 
-      "Amps", motor.getSupplyCurrent(),
-      "Temperature", motor.getTemperature(),
+      "Bus Volt", motor1.getBusVoltage(),
+      "Out Percent", motor1.getMotorOutputPercent(),
+      "Volt", motor1.getMotorOutputVoltage(), 
+      "Amps", motor1.getSupplyCurrent(),
+      "Temperature", motor1.getTemperature(),
       "Position", getMotorPosition(),
       "Measured RPM", measuredRPM,
       "Setpoint RPM", setpointRPM

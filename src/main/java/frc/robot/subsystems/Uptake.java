@@ -42,7 +42,7 @@ public class Uptake extends SubsystemBase implements Loggable {
 
     // set uptake configuration
     uptake.configFactoryDefault();
-    uptake.setInverted(false);
+    uptake.setInverted(true);
     uptake.setNeutralMode(NeutralMode.Brake);
     uptake.configPeakOutputForward(1.0);
     uptake.configPeakOutputReverse(-1.0);
@@ -82,13 +82,14 @@ public class Uptake extends SubsystemBase implements Loggable {
     return subsystemName;
   }
 
-    /**
+  /**
    * 
-   * @return true = ball has been ejectedf
+   * @return true = ball is in ejector
    */
-  public boolean isBallPresent(){
-    return ejectSensor.get();
+  public boolean isBallInEjector(){
+    return !ejectSensor.get();
   }
+
   /**
    * Sets the voltage of the uptake
    * 
@@ -100,40 +101,36 @@ public class Uptake extends SubsystemBase implements Loggable {
 	 * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
 	 * properly - unlike the ordinary set function, it is not "set it and forget it."
 	 *
-   * @param voltage voltage, + = up, - = down
-   * @param ejectBall true = ball path to eject, false = ball path to feeder
+   * @param uptakeVoltage voltage, + = up, - = down
+   * @param ejectVoltage voltage, + = eject ball, - = send ball to feeder
    */
-  public void setVoltage(double voltage, boolean ejectBall) {
-    uptake.setVoltage(voltage);
-    eject.setVoltage( ejectBall ? voltage : -voltage );
+  public void setVoltage(double uptakeVoltage, double ejectVoltage) {
+    uptake.setVoltage(uptakeVoltage);
+    eject.setVoltage(ejectVoltage);
   }
 
   /**
    * sets the percent of the uptake, using voltage compensation if turned on
    * @param percent -1.0 to 1.0, + = up, - = down
-   * @param ejectBall true = ball path to eject, false = ball path to feeder
-   */
-  public void setMotorPercentOutput(double percent,boolean ejectBall){
-    uptake.set(ControlMode.PercentOutput, percent);
-    eject.set(ControlMode.PercentOutput, ejectBall ? percent : -percent);
-  }
-
-    /**
-   * sets the percent of the uptake, using voltage compensation if turned on
-   * @param percent percent
    */
   public void setUptakePercentOutput(double percent){
     uptake.set(ControlMode.PercentOutput, percent);
-    
   }
 
-  
+  /**
+   * sets the percent of the uptake, using voltage compensation if turned on
+   * @param percent -1.0 to 1.0, + = eject ball, - = send ball to feeder
+   */
+  public void setEjectPercentOutput(double percent){
+    eject.set(ControlMode.PercentOutput, percent);
+  }  
 
   /**
   * Stops the uptake
   */
   public void stopMotor(){
-    setMotorPercentOutput(0,false);
+    setUptakePercentOutput(0);
+    setEjectPercentOutput(0);
   }
 
 
@@ -173,15 +170,16 @@ public class Uptake extends SubsystemBase implements Loggable {
     if(fastLogging || log.getLogRotation() == log.UPTAKE_CYCLE) {
       updateLog(false);
 
-      SmartDashboard.putNumber("Uptake Eject Voltage", eject.getMotorOutputVoltage());
-      SmartDashboard.putNumber("Uptake Uptake Voltage", uptake.getMotorOutputVoltage());
-      SmartDashboard.putNumber("Uptake Uptake Position Rev", getUptakePositionRaw());
-      SmartDashboard.putNumber("Uptake Eject Position Rev", getEjectPositionRaw());
-      SmartDashboard.putNumber("Uptake Eject Velocity RPM", getEjectVelocity());
-      SmartDashboard.putNumber("Uptake Uptake Velocity RPM", getUptakeVelocity());
-      SmartDashboard.putNumber("Uptake Eject Temperature C", eject.getTemperature());
-      SmartDashboard.putNumber("Uptake Uptake Temperature C", uptake.getTemperature());
+      SmartDashboard.putNumber("Eject Voltage", eject.getMotorOutputVoltage());
+      SmartDashboard.putNumber("Uptake Voltage", uptake.getMotorOutputVoltage());
+      SmartDashboard.putNumber("Uptake Position Rev", getUptakePositionRaw());
+      SmartDashboard.putNumber("Eject Position Rev", getEjectPositionRaw());
+      SmartDashboard.putNumber("Eject Velocity RPM", getEjectVelocity());
+      SmartDashboard.putNumber("Uptake Velocity RPM", getUptakeVelocity());
+      SmartDashboard.putNumber("Eject Temperature C", eject.getTemperature());
+      SmartDashboard.putNumber("Uptake Temperature C", uptake.getTemperature());
       SmartDashboard.putBoolean("Uptake Ball Present", colorSensor.isBallPresent());
+      SmartDashboard.putBoolean("Eject Ball Present", isBallInEjector());
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);
@@ -211,7 +209,10 @@ public class Uptake extends SubsystemBase implements Loggable {
       "Uptake Position", getUptakePositionRaw(),
       "Eject Position", getEjectPositionRaw(),
       "Uptake RPM", getUptakeVelocity(),
-      "Eject RPM", getEjectVelocity()
+      "Eject RPM", getEjectVelocity(),
+      "Uptake Ball Present", colorSensor.isBallPresent(),
+      "Eject Ball Present", isBallInEjector(),
+      "Uptake Ball color", colorSensor.getBallColorString()
     );
   }
 
