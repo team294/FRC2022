@@ -29,7 +29,7 @@ public class Feeder extends SubsystemBase implements Loggable {
 
   private String subsystemName;    // subsystem name for use in file logging and Shuffleboard
 
-  private boolean fastLogging;
+  private boolean fastLogging = false;  // true is enabled to run every cycle; false follows normal logging cycles
 
   public Feeder(String subsystemName, FileLog log) {
     this.log = log; // save reference to the fileLog
