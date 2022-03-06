@@ -129,6 +129,10 @@ public class Uptake extends SubsystemBase implements Loggable {
     
   }
 
+  public void setEjectPercentOutput(double percent){
+    eject.set(ControlMode.PercentOutput, percent);
+  }
+
   
 
   /**

@@ -155,6 +155,11 @@ public class Intake extends SubsystemBase implements Loggable {
     else return false;
   }
 
+  public void IntakeToggle(){
+    if(intakeGetPiston()) intakeSetPiston(false);
+    else intakeSetPiston(true);
+  }
+
 
   @Override
   public void periodic(){

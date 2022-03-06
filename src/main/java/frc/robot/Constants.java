@@ -40,10 +40,9 @@ public final class Constants {
      * Ball locations within the robot.
      */
     public enum BallLocation {
-        kIntake(0),
-        kUptake(1),
-        kFeeder(2),
-        kShooter(3);
+        kUptake(0),
+        kEject(1),
+        kFeeder(2);
 
         public final int value;
         BallLocation(int value){
