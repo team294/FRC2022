@@ -67,8 +67,7 @@ while True:
             # print([cX, cY, x, x+w, y, y+h])
             filtered.append([cX, cY, x, x+w, y, y+h, cv2.contourArea(c)])
 
-    rv = 0
-    rw = 0
+    rv, rw, rx = 0, 0, 0
     if len(filtered) > 0:
         # filtered = np.array(filtered, dtype=contourType)
         # filtered = np.sort(filtered, order='y')
@@ -91,6 +90,7 @@ while True:
                 if f[3] > bx: bx = f[3]
                 if f[5] > by: by = f[5]
             rw = bx - fx
+            rx = 0.5*(bx-fx)-0.5*width # x in pixels
             # print(f"({fx}, {fy}),({bx}, {by}")
             cv2.rectangle(input_img,(fx, fy),(bx, by),(0,255,0),2)
 
@@ -99,6 +99,6 @@ while True:
     # TODO add x and y position?
     sd.putNumber("rv", rv)
     sd.putNumber("rw", rw)
-    
+    sd.putNumber("rw", rx)
 
     output.putFrame(input_img)

@@ -134,7 +134,7 @@ public class RobotContainer {
     SmartDashboard.putData("Turret Stop", new TurretStop(turret, log));
     SmartDashboard.putData("Turret Set Percent", new TurretSetPercentOutput(turret, log));
     SmartDashboard.putData("Turret Calibrate Fwd", new TurretRampOutput(0, 0.3, 10.0, turret, log));  
-    SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, log));
+    SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, pivisionhub, log));
 
     // Shooter camera subsystem
     SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubSetLEDState(2, pivisionhub));

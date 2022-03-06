@@ -43,6 +43,7 @@ public class TurretTurnAngle extends CommandBase {
   private boolean encoderCalibrated = true;
 
   // private LimeLight limeLight;     //TODO
+  private PiVisionHub piVisionHub;
   private PIDController pidAngVel;
   private double angleTolerance;
   private boolean feedbackUsingVision;
@@ -61,16 +62,16 @@ public class TurretTurnAngle extends CommandBase {
    * <p> This is the EASIEST constructor to use for the TurrentTurnAngle command.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)   //TODO0
+   *   kVision (use limelight to turn towards the goal)   //TODO
    * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
    * @param angleTolerance the tolerance to use for turn gyro
    * @param turret turret subsystem
-   * @param limeLight limelight  //TODO (removed for now)
+   * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretTurnAngle(TargetType type, double target, double angleTolerance, Turret turret, FileLog log) {
-    // this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, limeLight, log);
-    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, log);
+  public TurretTurnAngle(TargetType type, double target, double angleTolerance, Turret turret, PiVisionHub piVisionHub, FileLog log) {
+    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, piVisionHub, log);
+    // this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, log);
   }
 
   /**
@@ -83,31 +84,31 @@ public class TurretTurnAngle extends CommandBase {
    * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
    * @param angleTolerance the tolerance to use for turn gyro
    * @param turret turret subsystem
-   * @param limeLight limelight  //TODO (removed for now)
+   * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, FileLog log) {
-    // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, limeLight, log);
-    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
+  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, PiVisionHub piVisionHub, FileLog log) {
+    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, piVisionHub, log);
+    // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
   }
 
   /**
    * Turns the robot to a target angle.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)     //TODO
+   *   kVision (use pivisionhub to turn towards the goal)     //TODO
    * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
    * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
    * @param regenerate true to regenerate profile while running
    * @param angleTolerance the tolerance to use for turn gyro
    * @param turret turret subsystem
-   * @param limeLight limelight   // TODO (removed for now)
+   * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, boolean regenerate, double angleTolerance, Turret turret, FileLog log) {
+  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, boolean regenerate, double angleTolerance, Turret turret, PiVisionHub piVisionHub, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    // this.limeLight = limeLight;   //TOD
+    this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = MathBCR.normalizeAngle(target);
     this.targetType = type;
@@ -117,8 +118,8 @@ public class TurretTurnAngle extends CommandBase {
     this.fromShuffleboard = false;
     this.angleTolerance = Math.abs(angleTolerance);
 
-    // addRequirements(turret, limeLight);    //TODO
-    addRequirements(turret);
+    addRequirements(turret, piVisionHub);
+    // addRequirements(turret);
 
     pidAngVel = new PIDController(kPTurn, 0, kDTurn);
   }
@@ -127,10 +128,10 @@ public class TurretTurnAngle extends CommandBase {
    * To be used when changing the target value directly from shuffleboard (not a pre-coded target)
    * @param fromShuffleboard true means the value is being changed from shuffleboard
    */
-  public TurretTurnAngle(TargetType type, boolean regenerate, Turret turret, FileLog log) {
+  public TurretTurnAngle(TargetType type, boolean regenerate, Turret turret, PiVisionHub piVisionHub, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    // this.limeLight = limeLight;   //TODO
+    this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = 0;
     this.targetType = type;
@@ -186,8 +187,8 @@ public class TurretTurnAngle extends CommandBase {
         break;
       case kVision:
         targetRel = target;
-        // targetRel = MathBCR.normalizeAngle(limeLight.getXOffset());   //TODO
-        // limeLight.enableFastLogging(true);
+        // targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+        piVisionHub.enableFastLogging(true);
         break;
     }
 
