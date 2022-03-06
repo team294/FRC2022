@@ -24,7 +24,7 @@ import static frc.robot.Constants.LimeLightConstants.*;
 public class LimeLight extends SubsystemBase implements Loggable {
   private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
   protected NetworkTable table;
-  protected NetworkTableEntry tv, tx, ty, ta, tl, pipeline;
+  protected NetworkTableEntry tv, tx, ty, ta, tl, pipeline, ledMode, camMode;
   protected String limelightName;
   protected double targetExists, x, y, area;
   protected double latency;
@@ -49,16 +49,20 @@ public class LimeLight extends SubsystemBase implements Loggable {
     this.log = log;
     table = tableInstance.getTable(tableName);
     limelightName = StringUtil.buildString(tableName.substring(0, 0).toUpperCase(), tableName.substring(1) );
+
     this.snapshotTimer = new Timer();
     snapshotTimer.reset();
     snapshotTimer.start();
     tableInstance.startClientTeam(294);
+
     tv = table.getEntry("tv");
     tx = table.getEntry("tx");
     ty = table.getEntry("ty");
     ta = table.getEntry("ta");
     tl = table.getEntry("tl");
     pipeline = table.getEntry("pipeline");
+    ledMode = table.getEntry("ledMode");
+    camMode = table.getEntry("camMode");
   }
 
   /**
@@ -91,7 +95,7 @@ public class LimeLight extends SubsystemBase implements Loggable {
     return latency;
   }
 
-  
+
   /**
    * @return current pipeline number
    */
@@ -105,6 +109,29 @@ public class LimeLight extends SubsystemBase implements Loggable {
   public void setPipe(double pipeNum) {
     pipeline.setDouble(pipeNum);
   }
+
+  /**
+   * Sets the green LEDs on the front of the limelight.
+   * <ul><li>0 = the LED Mode set in the current pipeline (find this at the ip address of the limelight).</li>
+   * <li>1 = off</li>
+   * <li>2 = blink</li>
+   * <li>3 = on</li></ul>
+   * If a number other than 0 to 3 is selected, turn the LEDs off.
+   * @param modeNumber select a number from 0 to 3.
+   */
+  public void setLedMode(int modeNumber) {
+    if (modeNumber > 3 || modeNumber < 0) modeNumber = 1;
+    ledMode.setDouble(modeNumber);
+  }
+
+  /**
+   * Sets the mode of the camera for use as driver cam or vision processing
+   * @param mode 0 = vision; 1 = driver camera (increases exposure, disables vision processing)
+   */
+  public void setCamMode(int mode) {
+      camMode.setDouble(mode);
+  }
+
 
   /**
    * @param snapshot true is take a snapshot, false is don't take snapshots
