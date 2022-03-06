@@ -33,7 +33,7 @@ public class IntakePistonSetPosition extends CommandBase {
   @Override
   public void initialize() {
     intake.intakeSetPiston(deploy);
-    log.writeLog(false, "IntakeSetPiston", "Init", "IntakePiston", (deploy) ? "Deploy" : "Retract");
+    log.writeLog(false, intake.getName(), "IntakeSetPiston", "IntakePiston", (deploy) ? "Deploy" : "Retract");
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -13,7 +13,7 @@ import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.ShooterSetVelocity;
 import frc.robot.commands.ShooterStop;
-import frc.robot.commands.UptakeEjectSetPercentOutput;
+import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeStop;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
 import frc.robot.subsystems.Feeder;
@@ -41,15 +41,15 @@ public class FeedAndShootBall extends SequentialCommandGroup {
               sequence( 
                 new ConditionalCommand(
                   new WaitCommand(0.02),
-                  new UptakeEjectSetPercentOutput(0.25, false, uptake, log)
+                  new UptakeSetPercentOutput(0.25, false, uptake, log)
                   .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
                   () -> uptake.colorSensor.isBallPresent()
                 ),
                 new ConditionalCommand(
                   // Load ball to feeder
-                  new UptakeEjectSetPercentOutput(0.25, true, uptake, log), 
+                  new UptakeSetPercentOutput(0.25, true, uptake, log), 
                   // Eject ball
-                  new UptakeEjectSetPercentOutput(0.25, false, uptake, log), 
+                  new UptakeSetPercentOutput(0.25, false, uptake, log), 
                   () -> uptake.colorSensor.getBallColor() == teamColor
                 )
               ) 

@@ -11,19 +11,40 @@ import frc.robot.utilities.FileLog;
 public class UptakeSetPercentOutput extends CommandBase {
   /** Creates a new testUptake. */
   private final Uptake uptake;
-  private double percent;
   private FileLog log;
+  private double uptakePercent, ejectPercent;
 
   /**
-   * Runs the uptake motors
+   * Runs the uptake and eject motors
    * @param percent -1.0 to 1.0, + = up, - = down
+   * @param ejectBall true = ball path to eject, false = ball path to feeder
    * @param uptake uptake subsystem
    * @param log logfile
    */
-  public UptakeSetPercentOutput(double percent, Uptake uptake, FileLog log) {
+  public UptakeSetPercentOutput(double percent, boolean ejectBall, Uptake uptake, FileLog log) {
     this.uptake = uptake;
-    this.percent = percent;
     this.log = log;
+
+    uptakePercent = percent;
+    ejectPercent = ejectBall ? percent : -percent;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(uptake);
+  }
+
+  /**
+   * Runs the uptake and eject motors
+   * @param uptakePercent -1.0 to 1.0, + = up, - = down
+   * @param ejectPercent -1.0 to 1.0, + = eject ball, - = send ball to feeder
+   * @param uptake uptake subsystem
+   * @param log logfile
+   */
+  public UptakeSetPercentOutput(double uptakePercent, double ejectPercent, Uptake uptake, FileLog log) {
+    this.uptakePercent = uptakePercent;
+    this.ejectPercent = ejectPercent;
+    this.uptake = uptake;
+    this.log = log;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(uptake);
   }
@@ -31,8 +52,10 @@ public class UptakeSetPercentOutput extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    uptake.setUptakePercentOutput(percent);
-    log.writeLog(false, "Uptake Set Percent", "initialize", "percent", percent);
+    uptake.setUptakePercentOutput(uptakePercent);
+    uptake.setEjectPercentOutput(ejectPercent);
+
+    log.writeLog(false, "Uptake Set Percent", "initialize", "Uptake Percent", uptakePercent, "Eject Percent", ejectPercent);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

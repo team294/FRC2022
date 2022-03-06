@@ -11,7 +11,7 @@ import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
 import frc.robot.commands.BallCountAddBall;
 import frc.robot.commands.BallCountSubtractBall;
-import frc.robot.commands.UptakeEjectSetPercentOutput;
+import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeStop;
 import frc.robot.subsystems.Feeder;
@@ -36,7 +36,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
       new ConditionalCommand(
         new WaitCommand(0.02),
         sequence(
-          new UptakeSetPercentOutput(0.25, uptake, log)
+          new UptakeSetPercentOutput(0.15, 0, uptake, log)
           .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
           new BallCountAddBall(BallLocation.kUptake, log)
         ),
@@ -47,7 +47,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
       new ConditionalCommand(
         // Eject ball
         sequence(
-          new UptakeEjectSetPercentOutput(0.25, true, uptake, log),
+          new UptakeSetPercentOutput(0.25, true, uptake, log),
           new WaitCommand(2).perpetually().withInterrupt(uptake::isBallInEjector), 
           new WaitCommand(2).perpetually().withInterrupt(() -> !uptake.isBallInEjector()),
           new BallCountSubtractBall(BallLocation.kUptake, log),
@@ -57,7 +57,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         new ConditionalCommand(
           new WaitCommand(0.2),
           sequence(
-            new UptakeEjectSetPercentOutput(0.25, false, uptake, log), 
+            new UptakeSetPercentOutput(0.25, false, uptake, log), 
             new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
             new UptakeStop(uptake, log),
             parallel(

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,7 @@ import frc.robot.Constants.BallColor;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Ports;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.*;
 import frc.robot.commands.DriveFollowTrajectory.PIDType;
@@ -54,11 +56,11 @@ public class RobotContainer {
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
   private final IntakeFront intakeFront = new IntakeFront(log);
-  private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
+  // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
-  // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
+  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
   // Define trajectories and auto selection
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
@@ -71,6 +73,9 @@ public class RobotContainer {
   private final Joystick coPanel = new Joystick(OIConstants.usbCoPanel);
 
   private boolean rumbling = false;
+
+  private BallColor ballColor;
+  private BallColor ejectColor;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -105,8 +110,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
-    SmartDashboard.putData("Shoot Red Ball", new ShootBall(10, BallColor.kBlue, shooter, uptake, feeder, log));
-    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(10, BallColor.kRed, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Red Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -118,9 +123,9 @@ public class RobotContainer {
     SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
 
     // Uptake subsystem and sequences
-    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeEjectSetPercentOutput(.25, false, uptake, log));
-    SmartDashboard.putData("Uptake Eject Ball", new UptakeEjectSetPercentOutput(.25, true, uptake, log));
-    SmartDashboard.putData("Uptake Set Percent", new UptakeSetPercentOutput(0.25, uptake, log));
+    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
+    SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.25, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
@@ -200,25 +205,44 @@ public class RobotContainer {
     Trigger xbLT = new AxisTrigger(xboxController, 2, 0.9);
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
 
+    // right trigger shoots ball
+    xbRT.whenActive(new ShootBall(ejectColor, shooter, uptake, feeder, log)); 
+
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
     }
     
+    //a - short shot distance
+    xb[1].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(8), null, shooter, log));         
+    xb[1].whenReleased(new ShooterIdle(shooter, log));
+    
+    //b - medium shot distance
+    xb[2].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), null, shooter, log));        
+    xb[2].whenReleased(new ShooterIdle(shooter, log));
 
-    xb[1].whenPressed(new ShootBall(0,BallColor.kBlue,shooter, uptake,feeder, log));//a -short
-    xb[2].whenPressed(new ShootBall(0,BallColor.kBlue, shooter,uptake, feeder, log));//b -medium
-    // xb[3].whenHeld();//x -auto?
-    xb[4].whenPressed(new ShootBall(0, BallColor.kBlue, shooter,uptake, feeder, log));//y -long
-    //xb[11].whenHeld(); //l1, turn turret left
-    //xb[12].whenHeld(); //r1, turn turret right
+    //y - long shot distance
+    xb[4].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(12), null, shooter, log));        
+    xb[4].whenReleased(new ShooterIdle(shooter, log));
+    
+    //x - use vision for distance
+    xb[3].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), pivisionhub, shooter, log)); 
+    xb[3].whenReleased(new ShooterIdle(shooter, log));
+
+    // LB = 5, RB = 6
+    //xb[5].whenHeld(new ShootSequenceSetup(false, shooter, limeLightGoal, led, log)); // close shot setup
+    //xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
+    //xb[6].whenHeld(new ShootSequenceSetup(true, shooter, limeLightGoal, led, log)); // normal and far shot setup
+    //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
+
+    // back = 7, start = 8 
     //xb[7].whenHeld(); //start, toggle rollers
     //xb[8].whenHeld(); //start, toggle lights
-    //xbPOVLeft.whenHeld();//climb
+
 
   }
 
   /**
-   * Define Joystick button mappings.
+   * Define drivers joystick button mappings.
    */
   public void configureJoystickButtons() {
     JoystickButton[] left = new JoystickButton[3];
@@ -229,15 +253,18 @@ public class RobotContainer {
       right[i] = new JoystickButton(rightJoystick, i);
     }
 
-    // joystick left button
+    // left joystick left button
     // left[1].whenPressed(new Wait(0));
-    // right[1].whenPressed(new Wait(0));
 
-    // joystick right button
-    // left[2].whenHeld(new VisionAssistSequence(driveTrain, limelightFront, log, shooter, feeder, led, hopper, intake));
+    // left joystick right button
+    left[2].whenHeld(new IntakeStop(intakeFront, log));
+
+    // right joystick left button
+    right[1].whenPressed(new IntakeBall(ballColor, intakeFront, uptake, log)); // toggle intake
+
+    // right joystick right button
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
-    // right[1].whenHeld(new DriveJogTurn(true,  driveTrain, log ));
-    // left[1].whenHeld(new DriveJogTurn(false,  driveTrain, log ));
+ 
   }
 
   /** 
@@ -323,7 +350,17 @@ public class RobotContainer {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
 
-    // Alliance alliance = DriverStation.getAlliance();
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      ballColor = BallColor.kBlue;
+      ejectColor = BallColor.kRed;
+    } else {
+      ballColor = BallColor.kRed;
+      ejectColor = BallColor.kBlue;
+    }
+
+
+    limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
+    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
 
     // TODO delete this line that disables the compressor!!!!  This is only here for testing.
     compressor.disable();
