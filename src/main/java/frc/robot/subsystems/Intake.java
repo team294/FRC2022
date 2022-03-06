@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.FileLog;
@@ -21,13 +22,11 @@ import frc.robot.utilities.Loggable;
 import static frc.robot.utilities.StringUtil.*;
 import static frc.robot.Constants.*;
 
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
-
 
 public class Intake extends SubsystemBase implements Loggable {
   protected final FileLog log;
   private final WPI_TalonFX motor;
-  private final DoubleSolenoid solenoid;
+  private final DoubleSolenoid intakePiston;
   
   protected boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
   private String subsystemName;    // subsystem name for use in file logging and Shuffleboard
@@ -48,7 +47,7 @@ public class Intake extends SubsystemBase implements Loggable {
     this.log = log; // save reference to the fileLog
     this.subsystemName = subsystemName;
     motor = new WPI_TalonFX(CANMotorPort);
-    solenoid = new DoubleSolenoid(Ports.CANPneumaticHub, PneumaticsModuleType.REVPH, solenoidForwardChannel, solenoidReverseChannel);
+    intakePiston = new DoubleSolenoid(Ports.CANPneumaticHub, PneumaticsModuleType.REVPH, solenoidForwardChannel, solenoidReverseChannel);
     // TODO implement solenoid code.
 
     // set Intake configuration
@@ -138,6 +137,22 @@ public class Intake extends SubsystemBase implements Loggable {
    */
   public double getMotorVelocity(){
     return motor.getSelectedSensorVelocity(0)*IntakeConstants.rawVelocityToRPM;
+  }
+
+  /**
+   * @param extend true = extend, false = retract
+   */
+  public void intakeSetPiston(boolean extend) {
+    if (extend) intakePiston.set(Value.kForward);
+    else if (!extend) intakePiston.set(Value.kReverse);
+  }
+
+  /**
+   * @return true = extended, false = retracted
+   */
+  public boolean intakeGetPiston() {
+    if (intakePiston.get() == Value.kForward) return true;
+    else return false;
   }
 
 

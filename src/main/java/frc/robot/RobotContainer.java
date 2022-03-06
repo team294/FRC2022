@@ -75,6 +75,7 @@ public class RobotContainer {
   private boolean rumbling = false;
 
   private BallColor ballColor;
+  private BallColor ejectColor;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -109,6 +110,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
+    SmartDashboard.putData("Shoot Red Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -120,8 +123,9 @@ public class RobotContainer {
     SmartDashboard.putData("Shoot Blue Ball Sequence", new FeedAndShootBall(shooter, feeder, uptake, log, BallColor.kRed));
 
     // Uptake subsystem and sequences
-    SmartDashboard.putData("Uptake Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
+    SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
+    SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.25, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
@@ -202,7 +206,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
 
     // right trigger shoots ball
-    xbRT.whenActive(new ShootBall(shooter, uptake, log)); 
+    xbRT.whenActive(new ShootBall(ejectColor, shooter, uptake, feeder, log)); 
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -348,8 +352,10 @@ public class RobotContainer {
 
     if (DriverStation.getAlliance() == Alliance.Blue) {
       ballColor = BallColor.kBlue;
+      ejectColor = BallColor.kRed;
     } else {
       ballColor = BallColor.kRed;
+      ejectColor = BallColor.kBlue;
     }
 
 
