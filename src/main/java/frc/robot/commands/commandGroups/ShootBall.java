@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.commandGroups;
 
 import org.ejml.equation.Sequence;
@@ -11,6 +7,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.BallCountAddBall;
 import frc.robot.commands.BallCountSubtractBall;
+import frc.robot.commands.ShooterIdle;
+import frc.robot.commands.UptakeSetPercentOutput;
+import frc.robot.commands.UptakeStop;
 import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.ShooterSetVelocity;
@@ -26,17 +25,18 @@ import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.BallCount;
 import frc.robot.utilities.FileLog;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootBall extends SequentialCommandGroup {
   /** Creates a new ShootBall. */
-  public ShootBall(double distance, BallColor ejectColor, Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
+  public ShootBall(BallColor ejectColor, Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ConditionalCommand(
+
+        // if there is a ball in the uptake
         new ConditionalCommand(
+
+          // if there are no balls in the uptake then shoot then stop the shooter
           sequence(
             new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(.25, feeder, log),
@@ -59,6 +59,8 @@ public class ShootBall extends SequentialCommandGroup {
               () -> feeder.isBallPresent()
               )
           ), 
+          
+          // if there are balls in the uptake then shoot, run the uptake to move the next ball into the shooter
           sequence(
             new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(0.25, feeder, log),
@@ -73,7 +75,10 @@ public class ShootBall extends SequentialCommandGroup {
           ),  
           () -> BallCount.getBallCount(BallLocation.kUptake) == 1
         ),
+
+        // if there was not a ball in the uptake
         new ConditionalCommand(
+          // if there is a ball in the uptake then move it to the shooter
           sequence(
             new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
             new FeederSetPercentOutput(0.25, feeder, log),
