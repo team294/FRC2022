@@ -25,7 +25,7 @@ public class Uptake extends SubsystemBase implements Loggable {
   private final FileLog log;
   private final WPI_TalonFX uptake; // Motor running most wheels in the uptake
   private final WPI_TalonFX eject;  // Motore that selects between uptaking and ejecting
-  public final ColorSensor colorSensor;   // Color sensor in uptake
+  private final ColorSensor colorSensor;   // Color sensor in uptake
   private DigitalInput ejectSensor = new DigitalInput(Ports.DIOEjectBallSensor) ; // Senses when a ball is ejected
 
   private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
@@ -80,6 +80,14 @@ public class Uptake extends SubsystemBase implements Loggable {
    */
   public String getName() {
     return subsystemName;
+  }
+
+  public boolean isBallPresent() {
+    return colorSensor.isBallPresent();
+  }
+
+  public BallColor getBallColor() {
+    return colorSensor.getBallColor();
   }
 
   /**
@@ -216,5 +224,6 @@ public class Uptake extends SubsystemBase implements Loggable {
     );
   }
 
+  
   
 }

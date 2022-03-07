@@ -29,7 +29,7 @@ public class IntakeBall extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new IntakeSetPercentOutput(0.25, intake, log)
-      .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
+      .perpetually().withInterrupt(uptake::isBallPresent), 
       new SetBallCount(1, BallLocation.kUptake, log),
       new ConditionalCommand( 
         new IntakeStop(intake, log),
@@ -52,7 +52,7 @@ public class IntakeBall extends SequentialCommandGroup {
           new SetBallCount(0, BallLocation.kUptake, log),
           new SetBallCount(1, BallLocation.kFeeder, log)
         ),
-      () -> uptake.colorSensor.getBallColor() == teamColor
+      () -> uptake.getBallColor() == teamColor
       )
     );
   }

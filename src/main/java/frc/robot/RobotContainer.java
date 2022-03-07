@@ -81,14 +81,30 @@ public class RobotContainer {
   public RobotContainer() {
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
+    configureSensorTriggers();
 
     driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
   }
 
   /**
+   * Configures any sensor triggers for the robot
+   */
+  private void configureSensorTriggers() {
+    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
+    colorSensorTrigger.whenActive(new UptakeSortBall(ballColor, uptake, feeder, log));
+
+    Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
+    ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
+
+    Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
+    feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+
+  }
+
+  /**
    * Define Shuffleboard mappings.
    */
-  public void configureShuffleboard() {
+  private void configureShuffleboard() {
 
     // display sticky faults
     RobotPreferences.showStickyFaults();
@@ -243,7 +259,7 @@ public class RobotContainer {
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
-    xbPOVRight.whenActive(new EjectBall(uptake, log));
+    xbPOVRight.whenActive(new UptakeEjectBall(uptake, log));
     xbPOVLeft.whenActive(new UptakeToFeeder(uptake, feeder, log));
     xbPOVDown.whenActive(new StopAllMotors(feeder, uptake, shooter, intakeFront));
   }

@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,8 +16,11 @@ public class IntakeUptakeBall extends CommandBase {
   private Feeder feeder;
   private FileLog log;
   private BallColor teamColor;
-  /** Creates a new IntakeUptakeBall. */
+
+
+
   /**
+   * 
    * 
    * @param teamColor our team color
    * @param intake intake subsystem
@@ -47,16 +46,16 @@ public class IntakeUptakeBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(uptake.colorSensor.isBallPresent()){
+    if(uptake.isBallPresent()){
       BallCount.setBallCount(1, BallLocation.kUptake, log);
-      if(uptake.colorSensor.getBallColor() == teamColor){
+      if(uptake.getBallColor() == teamColor){
         if(BallCount.getBallCount(BallLocation.kFeeder) == 0){
           // send ball to feeder
           CommandScheduler.getInstance().schedule(new UptakeToFeeder(uptake, feeder, log));
         }
       }
       else{
-        CommandScheduler.getInstance().schedule(new EjectBall(uptake, log));
+        CommandScheduler.getInstance().schedule(new UptakeEjectBall(uptake, log));
       }
     }
     if(BallCount.getTotalBallCount() == 2) {
