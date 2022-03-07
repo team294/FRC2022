@@ -8,6 +8,7 @@ import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeStop;
 import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FeederStop;
+import frc.robot.commands.FileLogWrite;
 import frc.robot.Constants.BallLocation;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Feeder;
@@ -39,7 +40,7 @@ public class ShootSequence extends SequentialCommandGroup {
           new FeederStop(feeder, log),                          // turn off the feeder
           new UptakeStop(uptake, log)                           // turn off the uptake
         ),
-        new WaitCommand(0.2),
+        new FileLogWrite(true, false, "ShootSequence", "Shooter not ready", log, "Shooter Velocity",shooter.getMotorVelocity()),
         () -> shooter.getMotorVelocity() > ShooterConstants.shooterDefaultRPM
       )
     );

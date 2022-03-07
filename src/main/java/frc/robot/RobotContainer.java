@@ -239,6 +239,7 @@ public class RobotContainer {
     // back = 7, start = 8 
     //xb[7].whenHeld(); //start, toggle rollers
     //xb[8].whenHeld(); //start, toggle lights
+    xb[9].whenPressed(new StopAllMotors(feeder, uptake, shooter, intakeFront));
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
@@ -260,13 +261,13 @@ public class RobotContainer {
     }
 
     // left joystick left button
-    // left[1].whenPressed(new Wait(0));
+    left[1].whenPressed(new IntakeSetPercentOutput(0.25, intakeFront, log));
 
     // left joystick right button
-    left[2].whenHeld(new IntakeStop(intakeFront, log));
+    left[2].whenPressed(new IntakeStop(intakeFront, log));
 
     // right joystick left button
-    right[1].whenPressed(new IntakeBall(ballColor, intakeFront, uptake, log)); // toggle intake
+    right[1].whenPressed(new IntakePistonToggle(intakeFront, log)); 
 
     // right joystick right button
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
