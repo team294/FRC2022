@@ -156,8 +156,7 @@ public class Intake extends SubsystemBase implements Loggable {
   }
 
   public void IntakeToggle(){
-    if(intakeGetPiston()) intakeSetPiston(false);
-    else intakeSetPiston(true);
+    intakeSetPiston(!intakeGetPiston());
   }
 
 

@@ -206,7 +206,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
 
     // right trigger shoots ball
-    xbRT.whenActive(new ShootBall(ejectColor, shooter, uptake, feeder, log)); 
+    xbRT.whenActive(new ShootSequence(shooter, uptake, feeder, log)); 
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -238,7 +238,11 @@ public class RobotContainer {
     //xb[7].whenHeld(); //start, toggle rollers
     //xb[8].whenHeld(); //start, toggle lights
 
-
+    // pov is the d-pad (up, down, left, right)
+    xbPOVUp.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
+    xbPOVRight.whenActive(new EjectBall(uptake, log));
+    xbPOVLeft.whenActive(new UptakeToFeeder(uptake, feeder, log));
+    xbPOVDown.whenActive(new StopAllMotors(feeder, uptake, shooter, intakeFront));
   }
 
   /**

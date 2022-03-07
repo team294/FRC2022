@@ -13,7 +13,6 @@ import frc.robot.utilities.BallCount;
 import frc.robot.utilities.FileLog;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
-import frc.robot.commands.BallCountAddBall;
 import frc.robot.commands.SetBallCount;
 import frc.robot.commands.IntakeSetPercentOutput;
 import frc.robot.commands.IntakeStop;
@@ -31,7 +30,7 @@ public class IntakeBall extends SequentialCommandGroup {
     addCommands(
       new IntakeSetPercentOutput(0.25, intake, log)
       .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
-      new BallCountAddBall(BallLocation.kUptake, log),
+      new SetBallCount(1, BallLocation.kUptake, log),
       new ConditionalCommand( 
         new IntakeStop(intake, log),
         new WaitCommand(0.2),

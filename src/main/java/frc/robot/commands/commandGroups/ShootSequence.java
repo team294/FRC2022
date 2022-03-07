@@ -19,13 +19,17 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
-public class ShootBall extends SequentialCommandGroup {
-  /** Creates a new ShootBall. */
-  public ShootBall(BallColor ejectColor, Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+public class ShootSequence extends SequentialCommandGroup {
+  /** Creates a new ShootSequence. */
+  /**
+   * 
+   * @param shooter shooter subsystem
+   * @param uptake uptake subsystem
+   * @param feeder feeder subsystem
+   * @param log
+   */
+  public ShootSequence(Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
     addCommands(
-      new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
       new FeederSetPercentOutput(feeder, log),
       new WaitCommand(2),
       new UptakeSetPercentOutput(0.25, false, uptake, log),
