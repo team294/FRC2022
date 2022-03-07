@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
 import frc.robot.commands.BallCountAddBall;
-import frc.robot.commands.BallCountSubtractBall;
+import frc.robot.commands.SetBallCount;
 import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.UptakeStop;
@@ -38,7 +38,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         sequence(
           new UptakeSetPercentOutput(0.15, 0, uptake, log)
           .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
-          new BallCountAddBall(BallLocation.kUptake, log)
+          new SetBallCount(1, BallLocation.kUptake, log)
         ),
         uptake.colorSensor::isBallPresent
       ),
@@ -50,7 +50,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
           new UptakeSetPercentOutput(0.25, true, uptake, log),
           new WaitCommand(2).perpetually().withInterrupt(uptake::isBallInEjector), 
           new WaitCommand(2).perpetually().withInterrupt(() -> !uptake.isBallInEjector()),
-          new BallCountSubtractBall(BallLocation.kUptake, log),
+          new SetBallCount(0, BallLocation.kUptake, log),
           new UptakeStop(uptake, log)
         ),
         // Load ball to feeder
@@ -61,8 +61,8 @@ public class UptakeSortBall extends SequentialCommandGroup {
             new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
             new UptakeStop(uptake, log),
             parallel(
-              new BallCountAddBall(BallLocation.kFeeder, log),
-              new BallCountSubtractBall(BallLocation.kUptake, log)
+              new SetBallCount(1, BallLocation.kFeeder, log),
+              new SetBallCount(0, BallLocation.kUptake, log)
             )  
             ),
           () -> feeder.isBallPresent()
