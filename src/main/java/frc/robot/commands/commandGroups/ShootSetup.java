@@ -25,7 +25,7 @@ public class ShootSetup extends SequentialCommandGroup {
             new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", vision == null ? "no":"yes" ),
             new ConditionalCommand(
               new ShooterSetVelocity(InputMode.kSpeedRPM, velocity, shooter, log),
-              new ShooterSetVelocity(InputMode.kDistFeet, vision.getDistance(), shooter, log),
+              new ShooterSetVelocity(InputMode.kDistFeet, (vision == null) ? velocity : vision.getDistance(), shooter, log),
               () -> (vision != null && vision.getDistance() != 0)
             )
             
