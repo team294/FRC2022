@@ -101,6 +101,8 @@ public class RobotContainer {
     SmartDashboard.putData("Intake Front Fwd", new IntakeSetPercentOutput(0.2, 0.2, intakeFront, log));
     SmartDashboard.putData("Intake Front Rev", new IntakeSetPercentOutput(-0.2, -0.2, intakeFront, log));
     SmartDashboard.putData("Intake Front Stop", new IntakeStop(intakeFront, log));
+    SmartDashboard.putData("Intake Front Deploy", new IntakePistonSetPosition(true, intakeFront, log));
+    SmartDashboard.putData("Intake Front Retract", new IntakePistonSetPosition(false, intakeFront, log));
 
     // Shooter subsystem
     SmartDashboard.putData("Shooter Stop", new ShooterStop(shooter, log));
@@ -125,7 +127,7 @@ public class RobotContainer {
     // Uptake subsystem and sequences
     SmartDashboard.putData("Uptake and Eject Run Upward", new UptakeSetPercentOutput(.25, false, uptake, log));
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
-    SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.25, 0, uptake, log));
+    SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.15, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
     SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));

@@ -191,7 +191,7 @@ public final class Constants {
         public static final double tLagTurn = 0.020;          // Lag time to start/stop turning, or just one cycle forcast through scheduler
         public static double kITurnEnd = 0.02;         // Value of kI to use after the trapezoid profile is finished
         public static double kPTurn = 0.001;         // PID terms  0.001
-        public static double kITurn = 0.01;
+        public static double kITurn = 0.000;
         public static double kDTurn = 0.000;
         public static double kSTurn = 0.012;       // Feed-forward terms
         public static double kVTurn = 0.00102;      
