@@ -99,6 +99,6 @@ while True:
     # TODO add x and y position?
     sd.putNumber("rv", rv)
     sd.putNumber("rw", rw)
-    sd.putNumber("rw", rx)
+    sd.putNumber("rx", rx)
 
     output.putFrame(input_img)
