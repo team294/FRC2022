@@ -25,7 +25,7 @@ public class IntakePistonToggle extends CommandBase {
   @Override
   public void initialize() {
     log.writeLog(false, intake.getName(), "Toggle");
-    intake.IntakeToggle();
+    intake.togglePistonExtended();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

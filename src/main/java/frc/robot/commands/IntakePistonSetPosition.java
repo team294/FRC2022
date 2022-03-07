@@ -32,7 +32,7 @@ public class IntakePistonSetPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.intakeSetPiston(deploy);
+    intake.setPistonExtended(deploy);
     log.writeLog(false, intake.getName(), "IntakeSetPiston", "IntakePiston", (deploy) ? "Deploy" : "Retract");
   }
 
