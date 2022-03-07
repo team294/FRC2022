@@ -216,19 +216,19 @@ public class RobotContainer {
     
     //a - short shot distance
     xb[1].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(8), null, shooter, log));         
-    xb[1].whenReleased(new ShooterIdle(shooter, log));
+    xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
     xb[2].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), null, shooter, log));        
-    xb[2].whenReleased(new ShooterIdle(shooter, log));
+    xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
     xb[4].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(12), null, shooter, log));        
-    xb[4].whenReleased(new ShooterIdle(shooter, log));
+    xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
     xb[3].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), pivisionhub, shooter, log)); 
-    xb[3].whenReleased(new ShooterIdle(shooter, log));
+    xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
     //xb[5].whenHeld(new ShootSequenceSetup(false, shooter, limeLightGoal, led, log)); // close shot setup
