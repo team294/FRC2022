@@ -93,11 +93,11 @@ public class RobotContainer {
     Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
     colorSensorTrigger.whenActive(new UptakeSortBall(ballColor, uptake, feeder, log));
 
-    Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
-    ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
+    // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
+    // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
 
-    Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
-    feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+    // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
+    // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
 
   }
 
@@ -310,11 +310,11 @@ public class RobotContainer {
     }
 
     // top row UP then DOWN, from LEFT to RIGHT
-    // coP[1].whenPressed(new ClimbPistonsSetPosition(true, climb, log)); // deploy climb pistons
-    // coP[2].whenPressed(new ClimbPistonsSetPosition(false, climb, log)); // retract climb pistons
+    coP[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log)); 
+    coP[2].whenPressed(new UptakeToFeeder(uptake, feeder, log)); 
 
-    // coP[3].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchHeight, climb, log)); // raise climb arms to default latching height
-    // coP[4].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchExtensionHeight, climb, log)); // raise climb arms to slightly above default latching height
+    coP[3].whenPressed(new UptakeEjectBall(uptake, log)); 
+    coP[4].whenPressed(new StopAllMotors(feeder, uptake, shooter, intakeFront)); 
 
     // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly
     // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly

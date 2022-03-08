@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.FileLog;
 
@@ -25,7 +26,15 @@ public class IntakePistonToggle extends CommandBase {
   @Override
   public void initialize() {
     log.writeLog(false, intake.getName(), "Toggle");
-    intake.togglePistonExtended();
+
+    // turn off/on intake before closing/opening intake
+    if (intake.getPistonExtended()) {
+      intake.setMotorPercentOutput(0);
+      intake.setPistonExtended(false);
+    } else {
+      intake.setPistonExtended(true);
+      intake.setMotorPercentOutput(IntakeConstants.intakeDefaultPercent);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

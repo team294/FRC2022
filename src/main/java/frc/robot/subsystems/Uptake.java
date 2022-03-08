@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.BallCount;
 import frc.robot.utilities.ColorSensor;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.Loggable;
@@ -191,6 +192,18 @@ public class Uptake extends SubsystemBase implements Loggable {
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);
+
+      if (colorSensor.isBallPresent()) {
+        BallCount.setBallCount(1, BallLocation.kUptake, log);
+      } else {
+        BallCount.setBallCount(0, BallLocation.kUptake, log);
+      }
+      
+      if (isBallInEjector()) {
+        BallCount.setBallCount(1, BallLocation.kEject, log);
+      } else {
+        BallCount.setBallCount(0, BallLocation.kEject, log);
+      }      
     }
   }
 

@@ -5,10 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.BallLocation;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Uptake;
-import frc.robot.utilities.BallCount;
 import frc.robot.utilities.FileLog;
 
 public class UptakeToFeeder extends CommandBase {
@@ -44,8 +42,6 @@ public class UptakeToFeeder extends CommandBase {
   public boolean isFinished() {
     if(feeder.isBallPresent()){
       uptake.setEjectPercentOutput(0);
-      BallCount.setBallCount(1, BallLocation.kFeeder, log);
-      BallCount.setBallCount(0, BallLocation.kUptake, log);
       return true;
     }
     else return false;
