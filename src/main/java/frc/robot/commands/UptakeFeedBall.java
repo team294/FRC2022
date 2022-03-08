@@ -26,13 +26,14 @@ public class UptakeFeedBall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    log.writeLog(false, "UptakeFeedBall", "Init");
  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    uptake.setUptakePercentOutput(0.25);
+    uptake.setEjectPercentOutput(-0.25);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,7 +44,7 @@ public class UptakeFeedBall extends CommandBase {
   @Override
   public boolean isFinished() {
     if(feeder.isBallPresent()){
-      uptake.setUptakePercentOutput(0);
+      uptake.setEjectPercentOutput(0);
       return true;
     }
     else return false;

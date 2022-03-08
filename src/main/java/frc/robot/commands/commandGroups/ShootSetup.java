@@ -21,17 +21,20 @@ public class ShootSetup extends SequentialCommandGroup {
   public ShootSetup(double velocity, PiVisionHub vision, Shooter shooter, FileLog log) {
 
     addCommands(
-          sequence(
-            new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", vision == null ? "no":"yes" ),
-            new ConditionalCommand(
-              new ShooterSetVelocity(InputMode.kSpeedRPM, velocity, shooter, log),
-              new ShooterSetVelocity(InputMode.kDistFeet, (vision == null) ? velocity : vision.getDistance(), shooter, log),
-              () -> (vision != null && vision.getDistance() != 0)
-            )
-            
-          )
-
-      
+      sequence(
+        new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", vision == null ? "no":"yes" ),
+        new ConditionalCommand(
+          sequence (
+            new ShooterSetVelocity(InputMode.kSpeedRPM, velocity, shooter, log),
+            new FileLogWrite(false, false, "ShootSetup", "Setup", log, "rpm", velocity)
+          ),
+          sequence (
+            new ShooterSetVelocity(InputMode.kSpeedRPM, (vision == null) ? velocity : vision.getDistance(), shooter, log),
+            new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "Vision", vision.getDistance())
+          ),
+          () -> (vision != null && vision.getDistance() != 0)
+        )
+      )
     );
   }
 }

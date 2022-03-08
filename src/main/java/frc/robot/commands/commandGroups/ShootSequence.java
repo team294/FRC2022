@@ -31,17 +31,17 @@ public class ShootSequence extends SequentialCommandGroup {
       new ConditionalCommand( 
         // only shoot if the shooter is not at idle
         sequence(
-          new FeederSetPercentOutput(feeder, log),              // turn on feeder to send first ball to shooter
+          new FileLogWrite(true, false, "ShootSequence", "shooting", log,"Shooter Velocity", shooter.getMotorVelocity()),
+          new FeederSetPercentOutput(0.3, feeder, log),         // turn on feeder to send first ball to shooter
           new WaitCommand(1),                                   // wait for ball to shoot
-          new UptakeSetPercentOutput(0.25, false, uptake, log), // turn on uptake to send second ball to shooter
+          new UptakeSetPercentOutput(0.3, false, uptake, log),  // turn on uptake to send second ball to shooter
           new WaitCommand(2),                                   // wait for balls to shoot
-          new SetBallCount(0, BallLocation.kFeeder, log),       // zero feeder ball count
-          new SetBallCount(0, BallLocation.kUptake, log),       // zero update ball count
           new FeederStop(feeder, log),                          // turn off the feeder
           new UptakeStop(uptake, log)                           // turn off the uptake
         ),
         new FileLogWrite(true, false, "ShootSequence", "Shooter not ready", log, "Shooter Velocity",shooter.getMotorVelocity()),
-        () -> shooter.getMotorVelocity() > ShooterConstants.shooterDefaultRPM
+        () -> true
+        //shooter.getMotorVelocity() > ShooterConstants.shooterDefaultRPM
       )
     );
   }

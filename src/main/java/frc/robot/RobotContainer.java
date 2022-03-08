@@ -91,7 +91,7 @@ public class RobotContainer {
    */
   private void configureSensorTriggers() {
     Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
-    colorSensorTrigger.whenActive(new UptakeSortBall(ballColor, uptake, feeder, log));
+    colorSensorTrigger.whenActive(new UptakeSortBall(ejectColor, uptake, feeder, log));
 
     // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
     // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
@@ -231,15 +231,15 @@ public class RobotContainer {
     }
     
     //a - short shot distance
-    xb[1].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(8), null, shooter, log));         
+    xb[1].whenHeld(new ShootSetup(6000, null, shooter, log));         
     xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
-    xb[2].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), null, shooter, log));        
+    xb[2].whenHeld(new ShootSetup(7000, null, shooter, log));        
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(12), null, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(8000, null, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
