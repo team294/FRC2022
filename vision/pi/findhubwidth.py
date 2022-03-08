@@ -11,8 +11,8 @@ height = 480
 
 name = "shooter-cam"
 yTolerance = 100 # in pixels
-lower_threshold = np.array(56, 129, 65)
-upper_threshold = np.array(74, 255, 255)
+lower_threshold = np.array([56, 129, 65])
+upper_threshold = np.array([74, 255, 255])
 contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
 
 settings = [ { "name": "connect_verbose", "value": 1 }, { "name": "contrast", "value": 50 }, { "name": "saturation", "value": 60 }, { "name": "power_line_frequency", "value": 2 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ]
