@@ -74,11 +74,20 @@ public class RobotContainer {
 
   private boolean rumbling = false;
 
-  private BallColor ballColor;
   private BallColor ejectColor;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // set colors as they are used to configure the buttons
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      log.writeLogEcho(true, "EjectColor", "Red");
+      ejectColor = BallColor.kRed;
+    } else {
+      log.writeLogEcho(true, "EjectColor", "Blue");
+      ejectColor = BallColor.kBlue;
+    }
+    
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
     configureSensorTriggers();
@@ -373,13 +382,7 @@ public class RobotContainer {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
 
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      ballColor = BallColor.kBlue;
-      ejectColor = BallColor.kRed;
-    } else {
-      ballColor = BallColor.kRed;
-      ejectColor = BallColor.kBlue;
-    }
+
 
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight

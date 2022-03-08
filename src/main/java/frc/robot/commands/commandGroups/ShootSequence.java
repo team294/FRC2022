@@ -34,10 +34,9 @@ public class ShootSequence extends SequentialCommandGroup {
           new FileLogWrite(true, false, "ShootSequence", "shooting", log,"Shooter Velocity", shooter.getMotorVelocity()),
           new FeederSetPercentOutput(0.3, feeder, log),         // turn on feeder to send first ball to shooter
           new WaitCommand(1),                                   // wait for ball to shoot
-          new UptakeSetPercentOutput(0.3, false, uptake, log),  // turn on uptake to send second ball to shooter
+          new UptakeSetPercentOutput(0.3, false, uptake, log),  // make sure uptake is running to send second ball to shooter
           new WaitCommand(2),                                   // wait for balls to shoot
-          new FeederStop(feeder, log),                          // turn off the feeder
-          new UptakeStop(uptake, log)                           // turn off the uptake
+          new FeederSetPercentOutput(0, feeder, log)            // turn off the feeder
         ),
         new FileLogWrite(true, false, "ShootSequence", "Shooter not ready", log, "Shooter Velocity",shooter.getMotorVelocity()),
         () -> true

@@ -32,19 +32,23 @@ public class UptakeFeedBall extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() { 
+  public void execute() {
+    log.writeLog(false, "UptakeFeedBall", "Execute"); 
     uptake.setEjectPercentOutput(-0.25);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    log.writeLog(false, "UptakeFeedBall", "End", "Interrupted", interrupted);
+    uptake.setEjectPercentOutput(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if(feeder.isBallPresent()){
-      uptake.setEjectPercentOutput(0);
+      log.writeLog(false, "UptakeFeedBall", "Detected ball in feeder");
       return true;
     }
     else return false;

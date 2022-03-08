@@ -23,7 +23,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
   public UptakeSortBall(BallColor ejectColor, Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
-      new FileLogWrite(true, false, "UptakeSortBall", "start", log),
+      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log),
       new ConditionalCommand(
         // if it is the wrong color, eject the ball
         sequence(
@@ -44,7 +44,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         ),
       () -> uptake.getBallColor().equals(ejectColor)
       ),
-      new FileLogWrite(true, false, "UptakeSortBall", "end", log)
+      new FileLogWrite(true, false, "UptakeSortBall", "end sequence", log)
     );
   }
 }
