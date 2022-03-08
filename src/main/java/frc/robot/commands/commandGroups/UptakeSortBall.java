@@ -2,12 +2,10 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
 import frc.robot.commands.FileLogWrite;
 import frc.robot.commands.UptakeEjectBall;
-import frc.robot.commands.UptakeSetPercentOutput;
-import frc.robot.commands.UptakeToFeeder;
+import frc.robot.commands.UptakeFeedBall;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
