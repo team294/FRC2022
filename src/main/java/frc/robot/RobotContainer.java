@@ -264,13 +264,13 @@ public class RobotContainer {
     // back = 7, start = 8 
     //xb[7].whenHeld(); //start, toggle rollers
     //xb[8].whenHeld(); //start, toggle lights
-    xb[9].whenPressed(new StopAllMotors(feeder, uptake, shooter, intakeFront));
+    xb[9].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
     xbPOVRight.whenActive(new UptakeEjectBall(uptake, log));
     xbPOVLeft.whenActive(new UptakeToFeeder(uptake, feeder, log));
-    xbPOVDown.whenActive(new StopAllMotors(feeder, uptake, shooter, intakeFront));
+    xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
   /**
@@ -323,7 +323,7 @@ public class RobotContainer {
     coP[2].whenPressed(new UptakeToFeeder(uptake, feeder, log)); 
 
     coP[3].whenPressed(new UptakeEjectBall(uptake, log)); 
-    coP[4].whenPressed(new StopAllMotors(feeder, uptake, shooter, intakeFront)); 
+    coP[4].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly
     // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly
