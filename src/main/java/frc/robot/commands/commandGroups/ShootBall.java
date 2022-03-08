@@ -1,7 +1,5 @@
 package frc.robot.commands.commandGroups;
 
-import org.ejml.equation.Sequence;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.EjectStop;

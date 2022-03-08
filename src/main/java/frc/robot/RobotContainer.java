@@ -323,23 +323,23 @@ public class RobotContainer {
     coP[2].whenPressed(new UptakeToFeeder(uptake, feeder, log)); 
 
     coP[3].whenPressed(new UptakeEjectBall(uptake, log)); 
-    coP[4].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
+    //coP[4].whenHeld(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly
     // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly
     
     // top row RED SWITCH
-    // coP[8].whenPressed(new ClimbLiftSequence(climb, led, log)); // climb lift sequence (rainbow LEDs and climb arms lower to lifting height)
+    coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
-    // coP[9].whenHeld(new ClimbLeftSetPercentOutput(0.4, climb, log)); // manually raise left climb arm, slowly
-    // coP[10].whenHeld(new ClimbLeftSetPercentOutput(-0.4, climb, log)); // manually lower left climb arm, slowly
+    coP[9].whenPressed(new IntakeSetPercentOutput(-0.25, -0.25, intakeFront, log)); // reverse intake and transfer
+    coP[10].whenPressed(new IntakeSetPercentOutput(0.25, 0.25, intakeFront, log)); // forward intake and transfer
 
-    // coP[11].whenHeld(new ClimbRightSetPercentOutput(0.4, climb, log)); // manually raise right climb arm, slowly
-    // coP[12].whenHeld(new ClimbRightSetPercentOutput(-0.4, climb, log)); // manually lower right climb arm, slowly
+    coP[11].whenPressed(new UptakeSetPercentOutput(-0.25, 0, uptake, log)); // reverse uptake
+    coP[12].whenPressed(new UptakeSetPercentOutput(0.25, 0, uptake, log)); // forward uptake
 
-    // coP[13].whenHeld(new ClimbSetPercentOutput(0.8, climb, log)); // manually raise climb arms, quickly
-    // coP[14].whenHeld(new ClimbSetPercentOutput(-0.8, climb, log)); // manually lower climb arms, quickly
+    coP[13].whenPressed(new FeederSetPercentOutput(-0.3, feeder, log)); // reverse feeder
+    coP[14].whenPressed(new FeederSetPercentOutput(0.3, feeder, log)); // forward feeder
 
     // middle row UP OR DOWN, fourth button
     // coP[7].whenPressed(new ShooterSetVoltage(0, shooter, log)); // stop shooter
