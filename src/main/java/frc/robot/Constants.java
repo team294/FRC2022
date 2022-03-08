@@ -153,7 +153,7 @@ public final class Constants {
         public static final double kS = 0.003;
         public static final double kV = 0.000154;
 
-        public static final int[][] distanceFromTargetToRPMTable = {{5,3500},{10, 4350},{15,2450},{20,2500},{25,2550}};         // Values in feet, RPM
+        public static final int[][] distanceFromTargetToRPMTable = {{5,3500},{10, 4350},{15,5200},{20,6050},{25,6900}};         // Values in feet, RPM
         public static final double shooterDefaultRPM = 2800;
 
     }
