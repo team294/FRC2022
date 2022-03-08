@@ -277,7 +277,7 @@ public class RobotContainer {
     }
 
     // left joystick left button
-    left[1].whenPressed(new IntakeSetPercentOutput(0.25, intakeFront, log));
+    left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
     left[2].whenPressed(new IntakeStop(intakeFront, log));
