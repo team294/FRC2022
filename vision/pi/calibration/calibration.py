@@ -3,16 +3,16 @@ from networktables import NetworkTablesInstance
 import cv2
 import numpy as np
 
-# TODO add on-raspberry-pi calibration? Save values to config file--don't base values on smart dashboard?
+# Allow smart dashboard input to change threshold
 
 # basic setting variables
 width = 680 
 height = 480
 
 name = "shooter-cam"
-yTolerance = 100 # in pixels
-lower_threshold = np.array([56, 129, 65])
-upper_threshold = np.array([74, 255, 255])
+yTolerance = 60 # in pixels
+lt = (56, 129, 65)
+ut = (74, 255, 255)
 contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
 
 settings = [ { "name": "connect_verbose", "value": 1 }, { "name": "contrast", "value": 50 }, { "name": "saturation", "value": 60 }, { "name": "power_line_frequency", "value": 2 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ]
@@ -20,12 +20,12 @@ settings = [ { "name": "connect_verbose", "value": 1 }, { "name": "contrast", "v
 # initialize network tables
 NetworkTablesInstance.getDefault().initialize(server='10.2.94.2')
 sd = NetworkTablesInstance.getDefault().getTable(name)
-# sd.putNumber("LowerThresholdH", 56)
-# sd.putNumber("LowerThresholdS", 129)
-# sd.putNumber("LowerThresholdV", 65)
-# sd.putNumber("UpperThresholdH", 74)
-# sd.putNumber("UpperThresholdS", 255)
-# sd.putNumber("UpperThresholdV", 255)
+sd.putNumber("LowerThresholdH", 56)
+sd.putNumber("LowerThresholdS", 129)
+sd.putNumber("LowerThresholdV", 65)
+sd.putNumber("UpperThresholdH", 74)
+sd.putNumber("UpperThresholdS", 255)
+sd.putNumber("UpperThresholdV", 255)
 sd.putNumber("rv", 1000)
 sd.putNumber("rx", 1000)
 sd.putNumber("ytol", yTolerance)
@@ -59,13 +59,14 @@ while True:
     
     # get threshold
     # # TODO may return erroneous values (may be why sometimes not detect)
-    # lower_threshold = np.array([sd.getNumber("LowerThresholdH", 0), sd.getNumber("LowerThresholdS", 0), sd.getNumber("LowerThresholdV", 0)])
-    # upper_threshold = np.array([sd.getNumber("UpperThresholdH", 255), sd.getNumber("UpperThresholdS", 255), sd.getNumber("UpperThresholdV", 255)])
+    lower_threshold = np.array([sd.getNumber("LowerThresholdH", lt[0]), sd.getNumber("LowerThresholdS", lt[1]), sd.getNumber("LowerThresholdV", lt[2])])
+    upper_threshold = np.array([sd.getNumber("UpperThresholdH", ut[0]), sd.getNumber("UpperThresholdS", ut[1]), sd.getNumber("UpperThresholdV", ut[2])])
     threshold = cv2.inRange(hsv, lower_threshold, upper_threshold)
 
     # erode and then dilate by 3 x 3 kernel of 1s
     kernel = np.ones((3, 3), np.uint8)
     threshold = cv2.morphologyEx(threshold, cv2.MORPH_OPEN, kernel)    
+    calibration = cv2.cvtColor(threshold, cv2.COLOR_GRAY2RGB)
 
     # get contours
     _, contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -98,7 +99,8 @@ while True:
         # finds median value and filters for all values within the y tolerance on smart dashboard
         filtered.sort(key=lambda c: c[1]) # sorts array by y-value
         median = filtered[int(len(filtered)/2)][1] # gets median y-value
-        filtered = list(filter(lambda f: abs(median-f[1]) < sd.getNumber("ytol", yTolerance), filtered)) # filters
+        # filtered = list(filter(lambda f: abs(median-f[1]) < yT, filtered)) # filters
+        filtered = list(filter(lambda f: abs(median-f[1]) < yT, yTolerance)) # filters
 
         # if there are any values left in filtered
         if len(filtered) > 0:
@@ -116,7 +118,7 @@ while True:
             rw = bx - fx
             rx = -0.0937486*(0.5*(bx+fx)-0.5*width) - 4.99446 # x in pixels converted to angle in degrees!
             # draws bounding rectangle
-            cv2.rectangle(input_img,(fx, fy),(bx, by),(0,255,0),2)
+            cv2.rectangle(calibration,(fx, fy),(bx, by),(0,255,0),2)
 
 
     # posts number of elements found, width of bounding box, and x-value in angle degrees
@@ -125,5 +127,5 @@ while True:
     sd.putNumber("rx", rx)
 
     # posts final image to stream
-    output.putFrame(input_img)
-    # output.putFrame(threshold)
+    # output.putFrame(cv2.resize(input_img, ))
+    output.putFrame(calibration)
