@@ -31,50 +31,54 @@ public class PiVision extends SubsystemBase implements Loggable {
     table = tableInstance.getTable(name);
 
     rw = table.getEntry("rw");
-    // rx = table.getEntry("rx");
+    rx = table.getEntry("rx");
     // ry = table.getEntry("ry");
     rv = table.getEntry("rv");
   }
 
   /**
-   * @return true when limelight sees a target, false when not seeing a target
+   * @return true when pivision sees a target, false when not seeing a target
    */
   public boolean seesTarget() {
-    return (targetExists==1);
+    return (targetExists>0);
   }
 
   /**
-   * @return true when limelight is connected & reading data
-   * false when limelight is disconnected or not reading any data   TODO when would x be 1064??
+   * @return true when pivision is connected & reading data
+   * false when pivisionhub is disconnected or not reading any data   TODO when would x be 1064??
    */
   public boolean isGettingData() {
     // return (x != (1000 * PiVisionConstants.angleMultiplier) && y != 1000);
-    return (width != 1000 && targetExists != 1000);
+    return (x != (1000 * PiVisionConstants.angleMultiplier) && width != 1000);
+  }
+
+  public double getXOffset() {
+    return x;
   }
 
   public void readData() {
     double xNew, yNew, targetExistsNew, widthNew; 
     targetExistsNew = rv.getDouble(1000.0);
     widthNew = rw.getDouble(1000.0);
-    // xNew = -rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
+    xNew = rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
     // yNew = ry.getDouble(1000.0);
     networkTableReadCounter = 0;
   
-    // Check if the Limelight updated the NetworkTable while we were reading values, to ensure that all
+    // Check if the pivision updated the NetworkTable while we were reading values, to ensure that all
     // of the data (targetExists, X, Y, etc) are from the same vision frame.
     do {
       targetExists = targetExistsNew;
       width = widthNew;
-      // x = xNew;
+      x = xNew;
       // y = yNew;
 
       targetExistsNew = rv.getDouble(1000.0);
       widthNew = rw.getDouble(1000.0);
-      // xNew = rx.getDouble(1000.0);
+      xNew = rx.getDouble(1000.0);
       // yNew = ry.getDouble(1000.0);
       networkTableReadCounter++;
     // } while(networkTableReadCounter<= 5 && (xNew != x || yNew != y));
-    } while(networkTableReadCounter<= 5 && (widthNew != width));
+    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width));
 
   }
 
@@ -89,17 +93,17 @@ public class PiVision extends SubsystemBase implements Loggable {
     if (log.getLogRotation() == log.PIVISION_CYCLE) {
 
       if(!isGettingData()) {
-        // TODO yeet
+        // TODO robot preferences
         // RobotPreferences.recordStickyFaults(name, log);
         log.writeLog(false, name, "Update Variables", "Failure", "NOT WORKING");
       }
 
       // SmartDashboard.putNumber(StringUtil.buildString(name, " area"), area);
       SmartDashboard.putNumber(StringUtil.buildString(name, " x"), x);
-      SmartDashboard.putNumber(StringUtil.buildString(name, " y"), y);
+      // SmartDashboard.putNumber(StringUtil.buildString(name, " y"), y);
       SmartDashboard.putNumber(StringUtil.buildString(name, " width"), width);
-      SmartDashboard.putBoolean(StringUtil.buildString(name, " Sees Target"), seesTarget());
-      // SmartDashboard.putBoolean(StringUtil.buildString(name, " Updating"), isGettingData());
+      SmartDashboard.putNumber(StringUtil.buildString(name, " targets"), targetExists);
+      SmartDashboard.putBoolean(StringUtil.buildString(name, " Updating"), isGettingData());
     }
   }
 
@@ -116,8 +120,9 @@ public class PiVision extends SubsystemBase implements Loggable {
     // TODO fix
     log.writeLog(logWhenDisabled, name, "Update Variables", 
       "Target Valid", seesTarget(),
+      "Target Width", width, 
       "Center Offset X", x, 
-      "Center Offset Y", y,
+      // "Center Offset Y", y,
       // "Target Area", area,
       // "Latency", latency,
       "Network Table Read Counter", networkTableReadCounter

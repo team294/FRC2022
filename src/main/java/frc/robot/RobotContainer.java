@@ -147,9 +147,9 @@ public class RobotContainer {
     SmartDashboard.putData("DriveTurnRight", new DriveSetPercentOutput(0.4, -0.4, driveTrain, log));
     SmartDashboard.putData("DriveStraightRel", new DriveStraight(3, TargetType.kRelative, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
     SmartDashboard.putData("DriveStraightAbs", new DriveStraight(3, TargetType.kAbsolute, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
-    SmartDashboard.putData("DriveStraightVis", new DriveStraight(3, TargetType.kVision, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("DriveStraightVis", new DriveStraight(3, TargetType.kVisionOnScreen, 0.0, 2.66, 3.8, true, driveTrain, limeLightFront, log));
     // SmartDashboard.putData("Drive Vision Assist", new VisionAssistSequence(driveTrain, limelightFront, log, shooter, feeder, led, hopper, intake));
-    SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 2, driveTrain, limeLightFront, log));
+    SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVisionOnScreen, 0, 90, 100, true, 2, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnRelative", new DriveTurnGyro(TargetType.kRelative, 90, 90, 100, 1, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnCal Left Slow", new DriveTurnCalibrate(0.3, 35, 0.01, true, driveTrain, log));

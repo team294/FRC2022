@@ -57,7 +57,9 @@ public final class Constants {
     public enum TargetType {
         kRelative(0),
         kAbsolute(1),
-        kVision(2);
+        kVisionOnScreen(2),
+        kVisionScanLeft(3),
+        kVisionScanRight(4);
     
         @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final int value;
