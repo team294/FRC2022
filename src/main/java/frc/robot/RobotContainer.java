@@ -233,7 +233,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
 
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(shooter, uptake, feeder, log)); 
+    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
