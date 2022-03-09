@@ -78,17 +78,17 @@ public class AutoSelection {
 		// }
 
 		if (autoPlan == SHOOT_TAXI) {
-			log.writeLogEcho(true, "AutoSelect", "run ShootTaxi");
+			log.writeLogEcho(true, "AutoSelect", "run AutoShootTaxi");
 			autonomousCommand = new AutoShootTaxi(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
 		}
 		
 		if (autoPlan == TAXI) {
-			log.writeLogEcho(true, "AutoSelect", "run ShootTaxi");
+			log.writeLogEcho(true, "AutoSelect", "run AutoTaxi");
 			autonomousCommand = new AutoTaxi(waitTime, limeLight, driveTrain, log);
 		}
 
 		if (autoPlan == TWO_BALL) {
-			log.writeLogEcho(true, "AutoSelect", "run Two Ball");
+			log.writeLogEcho(true, "AutoSelect", "run AutoTwoBall");
 			autonomousCommand = new AutoTwoBall(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
 		}
 

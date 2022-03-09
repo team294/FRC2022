@@ -24,7 +24,7 @@ import frc.robot.Constants.DriveConstants;
 public class TrajectoryCache {
     private FileLog log;
    
-    private static int trajectoryCount = 3;
+    private static int trajectoryCount = 4;
     public Trajectory[] cache = new Trajectory[trajectoryCount];
 
     public enum TrajectoryType {
