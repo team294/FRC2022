@@ -9,14 +9,12 @@ import frc.robot.Constants.BallLocation;
 
 /** Add your docs here. */
 public class BallCount {
-    private static int[] count = new int[]{0, 0, 0, 0};
-    private static int ballCount = 0;
+    private static int[] count = new int[]{0, 0, 0};
     /**
      * 
      * @param ballLocation location where the ball is added to
      */
     public static void addBall(BallLocation ballLocation, FileLog log){
-        ballCount++;
         count[ballLocation.value]++;
         log.writeLog(false, "Ball Count", "Ball Added", "Location", ballLocation.name());
         updateShuffleboard();
@@ -27,10 +25,13 @@ public class BallCount {
      * @param ballLocation location where the ball is subtracted from
      */
     public static void subtractBall(BallLocation ballLocation, FileLog log){
-        ballCount--;
        count[ballLocation.value]--;
        log.writeLog(false, "Ball Count", "Ball Subtracted", "Location", ballLocation.name());
        updateShuffleboard();
+    }
+
+    public static void setBallCount(int numBalls, BallLocation ballLocation, FileLog log){
+        count[ballLocation.value] = numBalls;
     }
 
     /**
@@ -38,7 +39,7 @@ public class BallCount {
      * @return Total Balls in the robot
      */
     public static int getTotalBallCount(){
-        return ballCount;
+        return count[0] + count[1] + count[2];
     }
 
     /**
@@ -51,10 +52,9 @@ public class BallCount {
     }
 
     public static void updateShuffleboard(){
-        SmartDashboard.putNumber("Ball Count", ballCount);
-        SmartDashboard.putNumber("Balls in Intake", count[BallLocation.kIntake.value]);
+        SmartDashboard.putNumber("Balls in Eject", count[BallLocation.kEject.value]);
         SmartDashboard.putNumber("Balls in Uptake", count[BallLocation.kUptake.value]);     
-        SmartDashboard.putNumber("Balls in Shooter", count[BallLocation.kShooter.value]);
+        SmartDashboard.putNumber("Balls in Feeder", count[BallLocation.kFeeder.value]);
     }
 
    

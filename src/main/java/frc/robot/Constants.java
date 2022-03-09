@@ -40,10 +40,9 @@ public final class Constants {
      * Ball locations within the robot.
      */
     public enum BallLocation {
-        kIntake(0),
-        kUptake(1),
-        kFeeder(2),
-        kShooter(3);
+        kUptake(0),
+        kEject(1),
+        kFeeder(2);
 
         public final int value;
         BallLocation(int value){
@@ -155,7 +154,7 @@ public final class Constants {
         public static final double kS = 0.003;
         public static final double kV = 0.000154;
 
-        public static final int[][] distanceFromTargetToRPMTable = {{5,3500},{10, 4350},{15,2450},{20,2500},{25,2550}};         // Values in feet, RPM
+        public static final int[][] distanceFromTargetToRPMTable = {{5,3500},{10, 4350},{15,5200},{20,6050},{25,6900}};         // Values in feet, RPM
         public static final double shooterDefaultRPM = 2800;
 
     }
@@ -170,6 +169,7 @@ public final class Constants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
+        public static final double intakeDefaultPercent = 0.25;                     // Default on percentage
     }
 
     public static final class TurretConstants {

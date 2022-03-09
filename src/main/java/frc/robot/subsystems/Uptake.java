@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.BallCount;
 import frc.robot.utilities.ColorSensor;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.Loggable;
@@ -25,7 +26,7 @@ public class Uptake extends SubsystemBase implements Loggable {
   private final FileLog log;
   private final WPI_TalonFX uptake; // Motor running most wheels in the uptake
   private final WPI_TalonFX eject;  // Motore that selects between uptaking and ejecting
-  public final ColorSensor colorSensor;   // Color sensor in uptake
+  private final ColorSensor colorSensor;   // Color sensor in uptake
   private DigitalInput ejectSensor = new DigitalInput(Ports.DIOEjectBallSensor) ; // Senses when a ball is ejected
 
   private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
@@ -80,6 +81,14 @@ public class Uptake extends SubsystemBase implements Loggable {
    */
   public String getName() {
     return subsystemName;
+  }
+
+  public boolean isBallPresent() {
+    return colorSensor.isBallPresent();
+  }
+
+  public BallColor getBallColor() {
+    return colorSensor.getBallColor();
   }
 
   /**
@@ -183,6 +192,18 @@ public class Uptake extends SubsystemBase implements Loggable {
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);
+
+      if (colorSensor.isBallPresent()) {
+        BallCount.setBallCount(1, BallLocation.kUptake, log);
+      } else {
+        BallCount.setBallCount(0, BallLocation.kUptake, log);
+      }
+      
+      if (isBallInEjector()) {
+        BallCount.setBallCount(1, BallLocation.kEject, log);
+      } else {
+        BallCount.setBallCount(0, BallLocation.kEject, log);
+      }      
     }
   }
 
@@ -216,5 +237,6 @@ public class Uptake extends SubsystemBase implements Loggable {
     );
   }
 
+  
   
 }

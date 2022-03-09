@@ -37,7 +37,7 @@ public class ShooterSetVelocity extends CommandBase {
     this.shooter = shooter;
     this.log = log;
     this.mode = mode;
-    fromShuffleboard = true;
+    this.fromShuffleboard = true;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
 
@@ -59,11 +59,15 @@ public class ShooterSetVelocity extends CommandBase {
     this.shooter = shooter;
     this.log = log;
     this.mode = mode;
-    fromShuffleboard = false;
+    this.fromShuffleboard = false;
+    
+    log.writeLog(false, "Shooter", "SetVelocity", "mode", mode, "value", value,"fromShuffleboard", fromShuffleboard);
     if (mode == InputMode.kDistFeet) {
-      this.velocity = shooter.distanceFromTargetToRPM(value);
+      velocity = shooter.distanceFromTargetToRPM(value);
+      log.writeLog(false, "Shooter", "SetVelocity", "Velocity from distance", velocity);
     } else {
-      this.velocity = value;
+      velocity = value;
+      log.writeLog(false, "Shooter", "SetVelocity", "Velocity from rpm", velocity);
     }
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -78,12 +82,14 @@ public class ShooterSetVelocity extends CommandBase {
       if (mode==InputMode.kDistFeet) {
         double dist = SmartDashboard.getNumber("Shooter Distance Feet", 5.0);
         velocity = shooter.distanceFromTargetToRPM(dist);
+        log.writeLog(false, "Shooter SetVelocity", "Initialize", "VelocityFromShuffleboardDistance", velocity);
         SmartDashboard.putNumber("Shoter SetPoint RPM", velocity);
       } else {
         velocity = SmartDashboard.getNumber("Shooter SetPoint RPM", 0.0);
+        log.writeLog(false, "Shooter SetVelocity", "Initialize", "VelocityFromShuffleboardRPM", velocity);
       }
     } else {
-      SmartDashboard.putNumber("Shoter SetPoint RPM", velocity);
+      SmartDashboard.putNumber("Shooter SetPoint RPM", velocity);
     }
     
     if(velocity >= 2000){

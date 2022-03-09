@@ -74,21 +74,46 @@ public class RobotContainer {
 
   private boolean rumbling = false;
 
-  private BallColor ballColor;
   private BallColor ejectColor;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // set colors as they are used to configure the buttons
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      log.writeLogEcho(true, "EjectColor", "Red");
+      ejectColor = BallColor.kRed;
+    } else {
+      log.writeLogEcho(true, "EjectColor", "Blue");
+      ejectColor = BallColor.kBlue;
+    }
+    
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
+    configureSensorTriggers();
 
     driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
   }
 
   /**
+   * Configures any sensor triggers for the robot
+   */
+  private void configureSensorTriggers() {
+    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
+    colorSensorTrigger.whenActive(new UptakeSortBall(ejectColor, uptake, feeder, log));
+
+    // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
+    // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
+
+    // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
+    // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+
+  }
+
+  /**
    * Define Shuffleboard mappings.
    */
-  public void configureShuffleboard() {
+  private void configureShuffleboard() {
 
     // display sticky faults
     RobotPreferences.showStickyFaults();
@@ -208,27 +233,27 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
 
     // right trigger shoots ball
-    xbRT.whenActive(new ShootBall(ejectColor, shooter, uptake, feeder, log)); 
+    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
     }
     
     //a - short shot distance
-    xb[1].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(8), null, shooter, log));         
-    xb[1].whenReleased(new ShooterIdle(shooter, log));
+    xb[1].whenHeld(new ShootSetup(6000, null, shooter, log));         
+    xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
-    xb[2].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), null, shooter, log));        
-    xb[2].whenReleased(new ShooterIdle(shooter, log));
+    xb[2].whenHeld(new ShootSetup(7000, null, shooter, log));        
+    xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(12), null, shooter, log));        
-    xb[4].whenReleased(new ShooterIdle(shooter, log));
+    xb[4].whenHeld(new ShootSetup(8000, null, shooter, log));        
+    xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
     xb[3].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), pivisionhub, shooter, log)); 
-    xb[3].whenReleased(new ShooterIdle(shooter, log));
+    xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
     //xb[5].whenHeld(new ShootSequenceSetup(false, shooter, limeLightGoal, led, log)); // close shot setup
@@ -239,8 +264,13 @@ public class RobotContainer {
     // back = 7, start = 8 
     //xb[7].whenHeld(); //start, toggle rollers
     //xb[8].whenHeld(); //start, toggle lights
+    xb[9].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
-
+    // pov is the d-pad (up, down, left, right)
+    xbPOVUp.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
+    xbPOVRight.whenActive(new UptakeEjectBall(uptake, log));
+    xbPOVLeft.whenActive(new UptakeToFeeder(uptake, feeder, log));
+    xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
   /**
@@ -256,13 +286,13 @@ public class RobotContainer {
     }
 
     // left joystick left button
-    // left[1].whenPressed(new Wait(0));
+    left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
-    left[2].whenHeld(new IntakeStop(intakeFront, log));
+    left[2].whenPressed(new IntakeStop(intakeFront, log));
 
     // right joystick left button
-    right[1].whenPressed(new IntakeBall(ballColor, intakeFront, uptake, log)); // toggle intake
+    right[1].whenPressed(new IntakePistonToggle(intakeFront, log)); 
 
     // right joystick right button
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
@@ -289,27 +319,27 @@ public class RobotContainer {
     }
 
     // top row UP then DOWN, from LEFT to RIGHT
-    // coP[1].whenPressed(new ClimbPistonsSetPosition(true, climb, log)); // deploy climb pistons
-    // coP[2].whenPressed(new ClimbPistonsSetPosition(false, climb, log)); // retract climb pistons
+    coP[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log)); 
+    coP[2].whenPressed(new UptakeToFeeder(uptake, feeder, log)); 
 
-    // coP[3].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchHeight, climb, log)); // raise climb arms to default latching height
-    // coP[4].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchExtensionHeight, climb, log)); // raise climb arms to slightly above default latching height
+    coP[3].whenPressed(new UptakeEjectBall(uptake, log)); 
+    //coP[4].whenHeld(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly
     // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly
     
     // top row RED SWITCH
-    // coP[8].whenPressed(new ClimbLiftSequence(climb, led, log)); // climb lift sequence (rainbow LEDs and climb arms lower to lifting height)
+    coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
-    // coP[9].whenHeld(new ClimbLeftSetPercentOutput(0.4, climb, log)); // manually raise left climb arm, slowly
-    // coP[10].whenHeld(new ClimbLeftSetPercentOutput(-0.4, climb, log)); // manually lower left climb arm, slowly
+    coP[9].whenPressed(new IntakeSetPercentOutput(-0.25, -0.25, intakeFront, log)); // reverse intake and transfer
+    coP[10].whenPressed(new IntakeSetPercentOutput(0.25, 0.25, intakeFront, log)); // forward intake and transfer
 
-    // coP[11].whenHeld(new ClimbRightSetPercentOutput(0.4, climb, log)); // manually raise right climb arm, slowly
-    // coP[12].whenHeld(new ClimbRightSetPercentOutput(-0.4, climb, log)); // manually lower right climb arm, slowly
+    coP[11].whenPressed(new UptakeSetPercentOutput(-0.25, 0, uptake, log)); // reverse uptake
+    coP[12].whenPressed(new UptakeSetPercentOutput(0.25, 0, uptake, log)); // forward uptake
 
-    // coP[13].whenHeld(new ClimbSetPercentOutput(0.8, climb, log)); // manually raise climb arms, quickly
-    // coP[14].whenHeld(new ClimbSetPercentOutput(-0.8, climb, log)); // manually lower climb arms, quickly
+    coP[13].whenPressed(new FeederSetPercentOutput(-0.3, feeder, log)); // reverse feeder
+    coP[14].whenPressed(new FeederSetPercentOutput(0.3, feeder, log)); // forward feeder
 
     // middle row UP OR DOWN, fourth button
     // coP[7].whenPressed(new ShooterSetVoltage(0, shooter, log)); // stop shooter
@@ -352,13 +382,7 @@ public class RobotContainer {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
 
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      ballColor = BallColor.kBlue;
-      ejectColor = BallColor.kRed;
-    } else {
-      ballColor = BallColor.kRed;
-      ejectColor = BallColor.kBlue;
-    }
+
 
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
