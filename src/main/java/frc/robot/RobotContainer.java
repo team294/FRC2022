@@ -368,9 +368,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, 
-      // limelightFront, limeLightBall, led,
-      log );
+    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, uptake, limeLightFront, log);
   }
 
   /**

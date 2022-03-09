@@ -26,7 +26,7 @@ public class ShootSetup extends SequentialCommandGroup {
         new ConditionalCommand(
           // get velocity from vision if vision is available and can see the target
           sequence (
-            new FileLogWrite(false, false, "ShootSetup", "SetupWithVision", log, "Velocity", velocity, "Vision", vision.getDistance()),
+            new FileLogWrite(false, false, "ShootSetup", "SetupWithVision", log, "Velocity", velocity, "Vision", vision == null ? "0":vision.getDistance()),
             new ShooterSetVelocity(InputMode.kSpeedRPM, (vision == null) ? velocity : vision.getDistance(), shooter, log)
           ),
           // use velocity without vision
