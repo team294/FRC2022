@@ -67,7 +67,9 @@ public class RobotContainer {
   private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
 
   // Define controllers
-  private final Joystick xboxController = new Joystick(OIConstants.usbXboxController);//assuming usbxboxcontroller is int
+  // private final Joystick xboxController = new Joystick(OIConstants.usbXboxController); //assuming usbxboxcontroller is int
+  private final Joystick xboxController = new Joystick(OIConstants.usbXboxController); //assuming usbxboxcontroller is int
+  // private final XboxController xbC = new XboxController(OIConstants.usbXboxController); //assuming usbxboxcontroller is int
   private final Joystick leftJoystick = new Joystick(OIConstants.usbLeftJoystick);
   private final Joystick rightJoystick = new Joystick(OIConstants.usbRightJoystick);
   private final Joystick coPanel = new Joystick(OIConstants.usbCoPanel);
@@ -206,7 +208,7 @@ public class RobotContainer {
     
     Trigger xbLT = new AxisTrigger(xboxController, 2, 0.9);
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
-
+    
     // right trigger shoots ball
     xbRT.whenActive(new ShootBall(ejectColor, shooter, uptake, feeder, log)); 
 
@@ -231,6 +233,12 @@ public class RobotContainer {
     xb[3].whenReleased(new ShooterIdle(shooter, log));
 
     // LB = 5, RB = 6
+    xb[5].whenPressed(new TurretTurnAngle(TargetType.kRelative, -9, 2, turret, log));
+    xb[6].whenPressed(new TurretTurnAngle(TargetType.kRelative, 9, 2, turret, log));
+    // xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
+    // xb[6].whenHeld(new ShootSequenceSetup(true, shooter, limeLightGoal, led, log)); // normal and far shot setup
+    // XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
+
     //xb[5].whenHeld(new ShootSequenceSetup(false, shooter, limeLightGoal, led, log)); // close shot setup
     //xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
     //xb[6].whenHeld(new ShootSequenceSetup(true, shooter, limeLightGoal, led, log)); // normal and far shot setup
