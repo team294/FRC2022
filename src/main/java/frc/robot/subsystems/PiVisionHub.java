@@ -42,7 +42,6 @@ public class PiVisionHub extends PiVision {
   @Override
   public void periodic() {
     super.periodic();
-       // distance calculation using vision camera
     
     if (log.getLogRotation() == log.PIVISION_CYCLE) {
       SmartDashboard.putNumber("cam-shooter Distance", getDistance());
@@ -55,7 +54,8 @@ public class PiVisionHub extends PiVision {
   public void updateLimeLightLog(boolean logWhenDisabled) {
     log.writeLog(logWhenDisabled, name, "Update Variables", 
       "Target Valid", seesTarget(),
-      "width", y,
+      "Width", width,
+      "X Offset", x,
       // "Target Area", area,
       // "Latency", latency,
       "Network Table Read Counter", networkTableReadCounter,
