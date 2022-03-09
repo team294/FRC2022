@@ -127,12 +127,13 @@ public final class Constants {
         public static final int I2CcolorSensor = 0x52;       // According to REV docs, color sensor is at 0x52 = 82.  Rob had 39?
 
         // Pneumatic solenoid ports
-        public static final int SolIntakeFrontFwd = 1;
-        public static final int SolIntakeFrontRev = 2;
-        public static final int SolIntakeRearFwd = 3;
-        public static final int SolIntakeRearRev = 4;
-        public static final int SolClimbArm = 5;
-        public static final int SolClimbHook = 6;
+        public static final int SolIntakeFrontFwd = 5;
+        public static final int SolIntakeFrontRev = 6;
+        public static final int SolIntakeRearFwd = 4;
+        public static final int SolIntakeRearRev = 7;
+        public static final int SolClimbRaise = 3;
+        public static final int SolClimbArm = 2;
+        public static final int SolClimbHook = 1;
     }
    
     public static final class OIConstants {
