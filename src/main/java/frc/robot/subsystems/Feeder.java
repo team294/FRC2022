@@ -15,7 +15,9 @@ import static frc.robot.utilities.StringUtil.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.BallLocation;
 import frc.robot.Constants.Ports;
+import frc.robot.utilities.BallCount;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.Loggable;
 
@@ -105,6 +107,12 @@ public class Feeder extends SubsystemBase implements Loggable {
       updateLog(false);
       SmartDashboard.putNumber(buildString(subsystemName, " Voltage"), motor.getMotorOutputVoltage());
       SmartDashboard.putBoolean(buildString(subsystemName, " Is Ball Present"), isBallPresent());
+
+      if (isBallPresent()) {
+        BallCount.setBallCount(1, BallLocation.kFeeder, log);
+      } else {
+        BallCount.setBallCount(0, BallLocation.kFeeder, log);
+      }      
      
     }
   }

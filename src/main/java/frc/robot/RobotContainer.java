@@ -22,8 +22,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants.TargetType;
+import frc.robot.Constants.UptakeConstants;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.CoordType;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
@@ -56,6 +59,7 @@ public class RobotContainer {
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
   private final IntakeFront intakeFront = new IntakeFront(log);
+  private final Climber climber = new Climber("Climber", log);
   // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
@@ -76,21 +80,46 @@ public class RobotContainer {
 
   private boolean rumbling = false;
 
-  private BallColor ballColor;
   private BallColor ejectColor;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // set colors as they are used to configure the buttons
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      log.writeLogEcho(true, "EjectColor", "Red");
+      ejectColor = BallColor.kRed;
+    } else {
+      log.writeLogEcho(true, "EjectColor", "Blue");
+      ejectColor = BallColor.kBlue;
+    }
+    
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
+    configureSensorTriggers();
 
     driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
   }
 
   /**
+   * Configures any sensor triggers for the robot
+   */
+  private void configureSensorTriggers() {
+    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
+    colorSensorTrigger.whenActive(new UptakeSortBall(ejectColor, uptake, feeder, log));
+
+    // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
+    // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
+
+    // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
+    // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+
+  }
+
+  /**
    * Define Shuffleboard mappings.
    */
-  public void configureShuffleboard() {
+  private void configureShuffleboard() {
 
     // display sticky faults
     RobotPreferences.showStickyFaults();
@@ -210,45 +239,44 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootBall(ejectColor, shooter, uptake, feeder, log)); 
+    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
     }
     
     //a - short shot distance
-    xb[1].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(8), null, shooter, log));         
-    xb[1].whenReleased(new ShooterIdle(shooter, log));
+    xb[1].whenHeld(new ShootSetup(false, 3100, pivisionhub, shooter, log));         
+    xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
-    xb[2].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), null, shooter, log));        
-    xb[2].whenReleased(new ShooterIdle(shooter, log));
+    xb[2].whenHeld(new ShootSetup(false, 3500, pivisionhub, shooter, log));        
+    xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(12), null, shooter, log));        
-    xb[4].whenReleased(new ShooterIdle(shooter, log));
+    xb[4].whenHeld(new ShootSetup(false, 3900, pivisionhub, shooter, log));        
+    xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
-    xb[3].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), pivisionhub, shooter, log)); 
-    xb[3].whenReleased(new ShooterIdle(shooter, log));
+    xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
+    xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretTurnAngle(TargetType.kRelative, -9, 2, turret, log));
-    xb[6].whenPressed(new TurretTurnAngle(TargetType.kRelative, 9, 2, turret, log));
-    // xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
-    // xb[6].whenHeld(new ShootSequenceSetup(true, shooter, limeLightGoal, led, log)); // normal and far shot setup
-    // XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
-
-    //xb[5].whenHeld(new ShootSequenceSetup(false, shooter, limeLightGoal, led, log)); // close shot setup
+    xb[5].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
     //xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
-    //xb[6].whenHeld(new ShootSequenceSetup(true, shooter, limeLightGoal, led, log)); // normal and far shot setup
+    xb[6].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
     //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
 
     // back = 7, start = 8 
-    //xb[7].whenHeld(); //start, toggle rollers
-    //xb[8].whenHeld(); //start, toggle lights
+    xb[7].whenHeld(new ClimberSetExtended(true,climber, log)); 
+    xb[8].whenHeld(new ClimberSetExtended(false,climber, log)); 
+    xb[9].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
-
+    // pov is the d-pad (up, down, left, right)
+    xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, log));
+    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kRelative, 9, 2, turret, log));
+    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kRelative, -9, 2, turret, log));
+    //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
   /**
@@ -264,13 +292,13 @@ public class RobotContainer {
     }
 
     // left joystick left button
-    // left[1].whenPressed(new Wait(0));
+    left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
-    left[2].whenHeld(new IntakeStop(intakeFront, log));
+    left[2].whenPressed(new IntakeStop(intakeFront, log));
 
     // right joystick left button
-    right[1].whenPressed(new IntakeBall(ballColor, intakeFront, uptake, log)); // toggle intake
+    right[1].whenPressed(new IntakePistonToggle(intakeFront, uptake, log)); 
 
     // right joystick right button
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
@@ -297,34 +325,34 @@ public class RobotContainer {
     }
 
     // top row UP then DOWN, from LEFT to RIGHT
-    // coP[1].whenPressed(new ClimbPistonsSetPosition(true, climb, log)); // deploy climb pistons
-    // coP[2].whenPressed(new ClimbPistonsSetPosition(false, climb, log)); // retract climb pistons
+    coP[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log)); 
+    coP[2].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log)); 
 
-    // coP[3].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchHeight, climb, log)); // raise climb arms to default latching height
-    // coP[4].whenPressed(new ClimbSetVelocity(false, ClimbConstants.latchExtensionHeight, climb, log)); // raise climb arms to slightly above default latching height
+    coP[3].whenPressed(new UptakeToFeeder(uptake, feeder, log)); 
+    coP[4].whenPressed(new UptakeEjectBall(uptake, log)); 
 
     // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly
     // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly
     
     // top row RED SWITCH
-    // coP[8].whenPressed(new ClimbLiftSequence(climb, led, log)); // climb lift sequence (rainbow LEDs and climb arms lower to lifting height)
+    //coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
-    // coP[9].whenHeld(new ClimbLeftSetPercentOutput(0.4, climb, log)); // manually raise left climb arm, slowly
-    // coP[10].whenHeld(new ClimbLeftSetPercentOutput(-0.4, climb, log)); // manually lower left climb arm, slowly
+    coP[9].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer
+    coP[10].whenPressed(new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log)); // forward intake and transfer
 
-    // coP[11].whenHeld(new ClimbRightSetPercentOutput(0.4, climb, log)); // manually raise right climb arm, slowly
-    // coP[12].whenHeld(new ClimbRightSetPercentOutput(-0.4, climb, log)); // manually lower right climb arm, slowly
+    coP[11].whenPressed(new UptakeSetPercentOutput(-UptakeConstants.onPct, 0, uptake, log)); // reverse uptake
+    coP[12].whenPressed(new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)); // forward uptake
 
-    // coP[13].whenHeld(new ClimbSetPercentOutput(0.8, climb, log)); // manually raise climb arms, quickly
-    // coP[14].whenHeld(new ClimbSetPercentOutput(-0.8, climb, log)); // manually lower climb arms, quickly
+    coP[13].whenPressed(new FeederSetPercentOutput(-FeederConstants.onPct, feeder, log)); // reverse feeder
+    coP[14].whenPressed(new FeederSetPercentOutput(FeederConstants.onPct, feeder, log)); // forward feeder
 
     // middle row UP OR DOWN, fourth button
-    // coP[7].whenPressed(new ShooterSetVoltage(0, shooter, log)); // stop shooter
+    coP[7].whenPressed(new IntakePistonToggle(intakeFront, uptake, log)); 
 
     // bottom row UP then DOWN, from LEFT to RIGHT
-    // coP[15].whenPressed(new ClimbPistonUnlock(false, climb)); // lock climb lock
-    // coP[16].whenPressed(new ClimbPistonUnlock(true, climb)); // unlock climb lock
+    coP[15].whenPressed(new ClimberSetExtended(true,climber, log)); // climb extend
+    coP[16].whenPressed(new ClimberSetExtended(false,climber, log)); // climb retract
   }
 
 
@@ -346,9 +374,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, 
-      // limelightFront, limeLightBall, led,
-      log );
+    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, uptake, limeLightFront, log);
   }
 
   /**
@@ -360,19 +386,10 @@ public class RobotContainer {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
 
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      ballColor = BallColor.kBlue;
-      ejectColor = BallColor.kRed;
-    } else {
-      ballColor = BallColor.kRed;
-      ejectColor = BallColor.kBlue;
-    }
-
-
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    pivisionhub.ledOff();
 
-    // TODO delete this line that disables the compressor!!!!  This is only here for testing.
     compressor.disable();
   }
 
@@ -388,6 +405,10 @@ public class RobotContainer {
    */
   public void disabledInit() {
     log.writeLogEcho(true, "Disabled", "Robot disabled");   // Don't log the word "Init" here -- it affects the Excel macro
+
+    limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
+    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    pivisionhub.ledOff();
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }

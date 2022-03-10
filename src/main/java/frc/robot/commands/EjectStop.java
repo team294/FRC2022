@@ -5,25 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.BallLocation;
-import frc.robot.utilities.BallCount;
-import frc.robot.utilities.FileLog;
+import frc.robot.subsystems.Uptake;
 
-public class BallCountSubtractBall extends CommandBase {
-  /** Creates a new SubtractBall. */
-  private BallLocation location;
-  private FileLog log;
-
-  public BallCountSubtractBall(BallLocation location, FileLog log) {
-    this.location = location;
-    this.log = log;
+public class EjectStop extends CommandBase {
+  private Uptake uptake;
+  /** Creates a new EjectStop. */
+  public EjectStop(Uptake uptake) {
+    this.uptake = uptake;
+    addRequirements(uptake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    BallCount.addBall(location, log);
+    uptake.setEjectPercentOutput(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

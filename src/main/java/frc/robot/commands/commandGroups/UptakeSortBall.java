@@ -1,79 +1,59 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
-import frc.robot.Constants.BallLocation;
-import frc.robot.commands.BallCountAddBall;
-import frc.robot.commands.BallCountSubtractBall;
+import frc.robot.Constants.UptakeConstants;
+import frc.robot.commands.FileLogWrite;
+import frc.robot.commands.UptakeEjectBall;
+import frc.robot.commands.UptakeFeedBall;
 import frc.robot.commands.UptakeSetPercentOutput;
-import frc.robot.commands.UptakeSetPercentOutput;
-import frc.robot.commands.UptakeStop;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class UptakeSortBall extends SequentialCommandGroup {
 
   /**
-   * Uptakes a ball to the feeder.  Ejects the ball if it matches the ejectColor.
+   * Sequence to handle a ball once it hits the color sensor in the uptake
+   * Ejects the ball if it matches the ejectColor
+   * 
    * @param ejectColor Color to eject
-   * @param uptake
-   * @param log
+   * @param uptake uptake subsystem
+   * @param log logger
    */
   public UptakeSortBall(BallColor ejectColor, Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
-      // If there is not a ball in the uptake, then load the ball into the uptake
+      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log),
       new ConditionalCommand(
-        new WaitCommand(0.02),
+        // if it is the wrong color, eject the ball
         sequence(
-          new UptakeSetPercentOutput(0.15, 0, uptake, log)
-          .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
-          new BallCountAddBall(BallLocation.kUptake, log)
+          new FileLogWrite(true, false, "UptakeSortBall", "eject", log),
+          new UptakeEjectBall(uptake, log).withTimeout(1)
         ),
-        uptake.colorSensor::isBallPresent
-      ),
-
-      // Depending on color, either load or eject the ball
-      new ConditionalCommand(
-        // Eject ball
-        sequence(
-          new UptakeSetPercentOutput(0.25, true, uptake, log),
-          new WaitCommand(2).perpetually().withInterrupt(uptake::isBallInEjector), 
-          new WaitCommand(2).perpetually().withInterrupt(() -> !uptake.isBallInEjector()),
-          new BallCountSubtractBall(BallLocation.kUptake, log),
-          new UptakeStop(uptake, log)
-        ),
-        // Load ball to feeder
+        // if it is the right color then check if there is room in the feeder
         new ConditionalCommand(
-          new WaitCommand(0.2),
+          // if there is nothing in the feeder then feed it
           sequence(
-            new UptakeSetPercentOutput(0.25, false, uptake, log), 
-            new WaitCommand(2).perpetually().withInterrupt(feeder::isBallPresent), 
-            new UptakeStop(uptake, log),
-            parallel(
-              new BallCountAddBall(BallLocation.kFeeder, log),
-              new BallCountSubtractBall(BallLocation.kUptake, log)
-            )  
-            ),
-          () -> feeder.isBallPresent()
+            new FileLogWrite(true, false, "UptakeSortBall", "feed", log),
+            new UptakeFeedBall(uptake, feeder, log).withTimeout(1)
+            //new UptakeToFeeder(uptake, feeder, log).withTimeout(1)
+          ),
+          // if there is something in the feeder do nothing
+          new FileLogWrite(true, false, "UptakeSortBall", "hold", log),
+          () -> !feeder.isBallPresent()
         ),
-        () -> uptake.colorSensor.getBallColor() == ejectColor
+      () -> uptake.getBallColor().equals(ejectColor)
       ),
-
-      // Clear the ball out of the uptake
-      new WaitCommand(2.0).withInterrupt( () -> !uptake.colorSensor.isBallPresent()),
-      new WaitCommand(2),
-      new UptakeStop(uptake, log)
+      // turn off uptake if we have balls in feeder and uptake, otherwise turn it on
+      new ConditionalCommand(
+          new UptakeSetPercentOutput(0, 0, uptake, log),
+          new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log), 
+        () -> feeder.isBallPresent() && uptake.isBallPresent()),
+      new FileLogWrite(true, false, "UptakeSortBall", "end sequence", log)
     );
   }
 }
+
+
