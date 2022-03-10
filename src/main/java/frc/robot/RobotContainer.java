@@ -383,7 +383,7 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    pivisionhub.ledOff();
+    pivisionhub.setLEDState(false);
 
     compressor.disable();
   }
@@ -403,7 +403,7 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    pivisionhub.ledOff();
+    pivisionhub.setLEDState(false);
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }

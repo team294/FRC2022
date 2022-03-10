@@ -15,7 +15,6 @@ lt = (56, 129, 65)
 ut = (74, 255, 255)
 contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
 
-settings = [ { "name": "connect_verbose", "value": 1 }, { "name": "contrast", "value": 50 }, { "name": "saturation", "value": 60 }, { "name": "power_line_frequency", "value": 2 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ]
 
 # initialize network tables
 NetworkTablesInstance.getDefault().initialize(server='10.2.94.2')
@@ -81,7 +80,7 @@ while True:
     # bounding rect upper-right x, bounding-rect upper-right y-val, and area
     for c in contours:
         area = cv2.contourArea(c)
-        if (area < 15):
+        if (area < 25 or area > 500):
             continue
         rect = cv2.boundingRect(c)
         x,y,w,h = rect
@@ -104,7 +103,7 @@ while True:
         filtered = list(filter(lambda f: abs(median-f[1]) < yTolerance, filtered)) # filters
 
         # if there are any values left in filtered
-        if len(filtered) > 0:
+        if len(filtered) > 1:
             # sorts filtered array by contour area and caps it to at-most 4 elements
             filtered = sorted(filtered, key=lambda f: f[6])[-4:]
             rv = len(filtered) # gets the amount of contours found
@@ -121,7 +120,7 @@ while True:
             # draws bounding rectangle
             cv2.rectangle(input_img,(fx, fy),(bx, by),(0,255,0),2)
 
-    # final = cv2.resize(input_img, Size(160, 120)) # TODO TEST
+    final = cv2.resize(input_img, (160, 120)) # TODO TEST
 
     # posts number of elements found, width of bounding box, and x-value in angle degrees
     sd.putNumber("rv", rv)
