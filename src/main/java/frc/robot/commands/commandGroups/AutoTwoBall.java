@@ -2,7 +2,6 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TargetType;
 import frc.robot.commands.DriveStraight;
 import frc.robot.commands.DriveTurnGyro;
@@ -10,7 +9,6 @@ import frc.robot.commands.DriveZeroGyro;
 import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FileLogWrite;
 import frc.robot.commands.IntakePistonSetPosition;
-import frc.robot.commands.IntakeSetPercentOutput;
 import frc.robot.commands.ShooterSetVelocity;
 import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
@@ -55,16 +53,18 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
 
       // drive towards ball with intake deployed and on
       deadline(
-        new DriveStraight(1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log),
+        new DriveStraight(1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
         new IntakePistonSetPosition(true, intake, log),
         new IntakeToColorSensor(intake, uptake, log)
       ),
       
+      parallel (
       // turn towards hub
-      new DriveTurnGyro(TargetType.kAbsolute, 180, 90, 90, 5, driveTrain, limeLight, log).withTimeout(2),
+        new DriveTurnGyro(TargetType.kAbsolute, 180, 90, 90, 5, driveTrain, limeLight, log).withTimeout(2),
 
-      // start the shooter
-      new ShootSetup(8000, null, shooter, log),
+        // start the shooter
+        new ShootSetup(5000, null, shooter, log)
+      ),
 
       // shoot
       new ShootSequence(shooter, intake, uptake, feeder, log)

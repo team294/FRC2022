@@ -8,6 +8,7 @@ import frc.robot.commands.DriveStraight;
 import frc.robot.commands.DriveZeroGyro;
 import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FileLogWrite;
+import frc.robot.commands.IntakePistonSetPosition;
 import frc.robot.commands.ShooterSetVelocity;
 import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
@@ -49,7 +50,10 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
       new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log),  // turn off shooter
 
       // drive out backwards 
-      new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log)
+      new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
+
+      // deploy intake so we are ready to go in teleop
+      new IntakePistonSetPosition(true, intake, log)
 
     );
   }
