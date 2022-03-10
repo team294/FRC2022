@@ -1,6 +1,8 @@
 package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.FileLogWrite;
 import frc.robot.commands.IntakeSetPercentOutput;
 import frc.robot.commands.UptakeSetPercentOutput;
@@ -21,8 +23,8 @@ public class IntakeToColorSensor extends SequentialCommandGroup {
 public IntakeToColorSensor(Intake intake, Uptake uptake, FileLog log) {
     addCommands(
       new FileLogWrite(false, false, "IntakeToColorSensor", "starting", log),
-      new IntakeSetPercentOutput(0.10, 0.10, intake, log),
-      new UptakeSetPercentOutput(0.25, 0, uptake, log)
+      new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intake, log),
+      new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)
     );
   }
 }

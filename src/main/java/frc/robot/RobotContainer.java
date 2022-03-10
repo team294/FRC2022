@@ -22,8 +22,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants.TargetType;
+import frc.robot.Constants.UptakeConstants;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.CoordType;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
@@ -56,6 +59,7 @@ public class RobotContainer {
   private final Feeder feeder = new Feeder("Feeder", log);
   private final Uptake uptake = new Uptake("Uptake",log);
   private final IntakeFront intakeFront = new IntakeFront(log);
+  private final Climber climber = new Climber("Climber", log);
   // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
@@ -252,18 +256,18 @@ public class RobotContainer {
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
-    xb[3].whenHeld(new ShootSetup(shooter.distanceFromTargetToRPM(10), pivisionhub, shooter, log)); 
+    xb[3].whenHeld(new ShootSetup(3500, pivisionhub, shooter, log)); 
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
-    //xb[5].whenHeld(new ShootSequenceSetup(false, shooter, limeLightGoal, led, log)); // close shot setup
+    xb[5].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
     //xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
-    //xb[6].whenHeld(new ShootSequenceSetup(true, shooter, limeLightGoal, led, log)); // normal and far shot setup
+    xb[6].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
     //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
 
     // back = 7, start = 8 
-    //xb[7].whenHeld(); //start, toggle rollers
-    //xb[8].whenHeld(); //start, toggle lights
+    xb[7].whenHeld(new ClimberSetExtended(true,climber, log)); 
+    xb[8].whenHeld(new ClimberSetExtended(false,climber, log)); 
     xb[9].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // pov is the d-pad (up, down, left, right)
@@ -332,14 +336,14 @@ public class RobotContainer {
     coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
-    coP[9].whenPressed(new IntakeSetPercentOutput(-0.25, -0.25, intakeFront, log)); // reverse intake and transfer
-    coP[10].whenPressed(new IntakeSetPercentOutput(0.25, 0.25, intakeFront, log)); // forward intake and transfer
+    coP[9].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer
+    coP[10].whenPressed(new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log)); // forward intake and transfer
 
-    coP[11].whenPressed(new UptakeSetPercentOutput(-0.25, 0, uptake, log)); // reverse uptake
-    coP[12].whenPressed(new UptakeSetPercentOutput(0.25, 0, uptake, log)); // forward uptake
+    coP[11].whenPressed(new UptakeSetPercentOutput(-UptakeConstants.onPct, 0, uptake, log)); // reverse uptake
+    coP[12].whenPressed(new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)); // forward uptake
 
-    coP[13].whenPressed(new FeederSetPercentOutput(-0.3, feeder, log)); // reverse feeder
-    coP[14].whenPressed(new FeederSetPercentOutput(0.3, feeder, log)); // forward feeder
+    coP[13].whenPressed(new FeederSetPercentOutput(-FeederConstants.onPct, feeder, log)); // reverse feeder
+    coP[14].whenPressed(new FeederSetPercentOutput(FeederConstants.onPct, feeder, log)); // forward feeder
 
     // middle row UP OR DOWN, fourth button
     // coP[7].whenPressed(new ShooterSetVoltage(0, shooter, log)); // stop shooter
@@ -380,13 +384,10 @@ public class RobotContainer {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
 
-
-
-
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    pivisionhub.ledOff();
 
-    // TODO delete this line that disables the compressor!!!!  This is only here for testing.
     compressor.disable();
   }
 
@@ -402,6 +403,10 @@ public class RobotContainer {
    */
   public void disabledInit() {
     log.writeLogEcho(true, "Disabled", "Robot disabled");   // Don't log the word "Init" here -- it affects the Excel macro
+
+    limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
+    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    pivisionhub.ledOff();
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }
