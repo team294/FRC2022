@@ -101,7 +101,7 @@ while True:
         filtered.sort(key=lambda c: c[1]) # sorts array by y-value
         median = filtered[int(len(filtered)/2)][1] # gets median y-value
         # filtered = list(filter(lambda f: abs(median-f[1]) < yT, filtered)) # filters
-        filtered = list(filter(lambda f: abs(median-f[1]) < yT, yTolerance)) # filters
+        filtered = list(filter(lambda f: abs(median-f[1]) < yTolerance, filtered)) # filters
 
         # if there are any values left in filtered
         if len(filtered) > 0:
@@ -121,7 +121,7 @@ while True:
             # draws bounding rectangle
             cv2.rectangle(input_img,(fx, fy),(bx, by),(0,255,0),2)
 
-    final = cv2.resize(input_img, Size(160, 120)) # TODO TEST
+    # final = cv2.resize(input_img, Size(160, 120)) # TODO TEST
 
     # posts number of elements found, width of bounding box, and x-value in angle degrees
     sd.putNumber("rv", rv)
