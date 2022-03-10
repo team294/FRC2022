@@ -1,13 +1,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.commandGroups.IntakeToColorSensor;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
 
 public class IntakePistonToggle extends CommandBase {
   private Intake intake;
+  private Uptake uptake;
   private FileLog log;
 
   /**
@@ -16,8 +20,9 @@ public class IntakePistonToggle extends CommandBase {
    * @param intake intake subsystem
    * @param log
    */
-  public IntakePistonToggle(Intake intake, FileLog log) {
+  public IntakePistonToggle(Intake intake, Uptake uptake, FileLog log) {
     this.intake = intake;
+    this.uptake = uptake;
     this.log = log;
     addRequirements(intake);
   }
@@ -30,10 +35,11 @@ public class IntakePistonToggle extends CommandBase {
     // turn off/on intake before closing/opening intake
     if (intake.getPistonExtended()) {
       intake.setMotorPercentOutput(0);
+      uptake.setUptakePercentOutput(0);
       intake.setPistonExtended(false);
     } else {
       intake.setPistonExtended(true);
-      intake.setMotorPercentOutput(IntakeConstants.onPct);
+      CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
     }
   }
 
