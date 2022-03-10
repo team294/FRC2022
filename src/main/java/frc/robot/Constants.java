@@ -170,7 +170,7 @@ public final class Constants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
-        public static final double onPct = 0.25;                                    // Default on percentage
+        public static final double onPct = -0.25;                                    // Default on percentage
     }
 
     public static final class FeederConstants {

@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
     // set Intake configuration
     motor.configFactoryDefault();
-    motor.setInverted(false);
+    motor.setInverted(true);
     motor.setNeutralMode(NeutralMode.Brake);
     motor.configPeakOutputForward(1.0);
     motor.configPeakOutputReverse(-1.0);

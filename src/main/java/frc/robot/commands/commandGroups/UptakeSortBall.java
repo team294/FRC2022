@@ -2,6 +2,7 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.FileLogWrite;
@@ -46,6 +47,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         ),
       () -> uptake.getBallColor().equals(ejectColor)
       ),
+      new WaitCommand(0.5),
       // turn off uptake if we have balls in feeder and uptake, otherwise turn it on
       new ConditionalCommand(
           new UptakeSetPercentOutput(0, 0, uptake, log),
