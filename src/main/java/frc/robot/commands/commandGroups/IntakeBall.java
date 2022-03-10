@@ -13,8 +13,7 @@ import frc.robot.utilities.BallCount;
 import frc.robot.utilities.FileLog;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
-import frc.robot.commands.BallCountAddBall;
-import frc.robot.commands.BallCountSubtractBall;
+import frc.robot.commands.SetBallCount;
 import frc.robot.commands.IntakeSetPercentOutput;
 import frc.robot.commands.IntakeStop;
 import frc.robot.commands.UptakeSetPercentOutput;
@@ -30,8 +29,8 @@ public class IntakeBall extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new IntakeSetPercentOutput(0.25, intake, log)
-      .perpetually().withInterrupt(uptake.colorSensor::isBallPresent), 
-      new BallCountAddBall(BallLocation.kUptake, log),
+      .perpetually().withInterrupt(uptake::isBallPresent), 
+      new SetBallCount(1, BallLocation.kUptake, log),
       new ConditionalCommand( 
         new IntakeStop(intake, log),
         new WaitCommand(0.2),
@@ -45,15 +44,15 @@ public class IntakeBall extends SequentialCommandGroup {
           new UptakeStop(uptake, log)
           ),
           new WaitCommand(0.2),
-         () -> BallCount.getBallCount(BallLocation.kShooter) == 0
+         () -> BallCount.getBallCount(BallLocation.kFeeder) == 0
       ),
         sequence(
           new UptakeSetPercentOutput(0.25, false, uptake, log),
           new WaitCommand(2),
-          new BallCountSubtractBall(BallLocation.kUptake, log),
-          new BallCountAddBall(BallLocation.kShooter, log)
+          new SetBallCount(0, BallLocation.kUptake, log),
+          new SetBallCount(1, BallLocation.kFeeder, log)
         ),
-      () -> uptake.colorSensor.getBallColor() == teamColor
+      () -> uptake.getBallColor() == teamColor
       )
     );
   }

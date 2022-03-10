@@ -55,7 +55,7 @@ public class UptakeSetPercentOutput extends CommandBase {
     uptake.setUptakePercentOutput(uptakePercent);
     uptake.setEjectPercentOutput(ejectPercent);
 
-    log.writeLog(false, "Uptake Set Percent", "initialize", "Uptake Percent", uptakePercent, "Eject Percent", ejectPercent);
+    log.writeLog(false, "Uptake", "initialize", "Uptake Percent", uptakePercent, "Eject Percent", ejectPercent);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -111,6 +111,7 @@ public class Intake extends SubsystemBase implements Loggable {
 
   /**
    * Returns the Intake position
+   * 
    * @return position of Intake in raw units, without software zeroing
    */
   public double getMotorPositionRaw(){
@@ -140,19 +141,30 @@ public class Intake extends SubsystemBase implements Loggable {
   }
 
   /**
+   * Sets if the piston should be extended or not
+   * 
    * @param extend true = extend, false = retract
    */
-  public void intakeSetPiston(boolean extend) {
+  public void setPistonExtended(boolean extend) {
     if (extend) intakePiston.set(Value.kForward);
     else if (!extend) intakePiston.set(Value.kReverse);
   }
 
   /**
+   * Returns if intake piston is extended or not
    * @return true = extended, false = retracted
    */
-  public boolean intakeGetPiston() {
+  public boolean getPistonExtended() {
     if (intakePiston.get() == Value.kForward) return true;
     else return false;
+  }
+
+  /**
+   * Toggles the piston between retracted and deployed
+   */
+  public void togglePistonExtended(){
+    log.writeLog(false, subsystemName, "togglePiston", "from extended", getPistonExtended());
+    setPistonExtended(!getPistonExtended());
   }
 
 

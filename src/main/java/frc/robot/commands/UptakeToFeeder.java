@@ -5,30 +5,33 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.BallLocation;
-import frc.robot.utilities.BallCount;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
-public class BallCountSubtractBall extends CommandBase {
-  /** Creates a new SubtractBall. */
-  private BallLocation location;
+public class UptakeToFeeder extends CommandBase {
+  private Uptake uptake;
+  private Feeder feeder;
   private FileLog log;
-
-  public BallCountSubtractBall(BallLocation location, FileLog log) {
-    this.location = location;
+  /** Creates a new UptakeToFeeder. */
+  public UptakeToFeeder(Uptake uptake, Feeder feeder, FileLog log) {
+    this.uptake = uptake;
+    this.feeder = feeder;
     this.log = log;
+    addRequirements(uptake);
+    addRequirements(feeder);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    BallCount.addBall(location, log);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    uptake.setEjectPercentOutput(0.25);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -37,6 +40,10 @@ public class BallCountSubtractBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    if(feeder.isBallPresent()){
+      uptake.setEjectPercentOutput(0);
+      return true;
+    }
+    else return false;
   }
 }
