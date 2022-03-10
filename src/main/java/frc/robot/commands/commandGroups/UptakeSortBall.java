@@ -3,9 +3,11 @@ package frc.robot.commands.commandGroups;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.BallColor;
+import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.FileLogWrite;
 import frc.robot.commands.UptakeEjectBall;
 import frc.robot.commands.UptakeFeedBall;
+import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
@@ -44,6 +46,11 @@ public class UptakeSortBall extends SequentialCommandGroup {
         ),
       () -> uptake.getBallColor().equals(ejectColor)
       ),
+      // turn off uptake if we have balls in feeder and uptake, otherwise turn it on
+      new ConditionalCommand(
+          new UptakeSetPercentOutput(0, 0, uptake, log),
+          new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log), 
+        () -> feeder.isBallPresent() && uptake.isBallPresent()),
       new FileLogWrite(true, false, "UptakeSortBall", "end sequence", log)
     );
   }

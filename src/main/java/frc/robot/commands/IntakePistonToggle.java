@@ -33,7 +33,7 @@ public class IntakePistonToggle extends CommandBase {
       intake.setPistonExtended(false);
     } else {
       intake.setPistonExtended(true);
-      intake.setMotorPercentOutput(IntakeConstants.intakeDefaultPercent);
+      intake.setMotorPercentOutput(IntakeConstants.onPct);
     }
   }
 

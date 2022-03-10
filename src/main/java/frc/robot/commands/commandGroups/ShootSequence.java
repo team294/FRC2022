@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.UptakeSetPercentOutput;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FileLogWrite;
 import frc.robot.subsystems.Feeder;
@@ -29,9 +31,9 @@ public class ShootSequence extends SequentialCommandGroup {
         // only shoot if the shooter is not at idle
         sequence(
           new FileLogWrite(true, false, "ShootSequence", "shooting", log,"Shooter Velocity", shooter.getMotorVelocity()),
-          new FeederSetPercentOutput(0.3, feeder, log),         // turn on feeder to send first ball to shooter
+          new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send first ball to shooter
           new WaitCommand(1),                                   // wait for ball to shoot
-          new UptakeSetPercentOutput(0.3, false, uptake, log),  // make sure uptake is running to send second ball to shooter
+          new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to shooter
           new WaitCommand(2),                                   // wait for balls to shoot
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
           new IntakeToColorSensor(intake, uptake, log)          // turn on intake

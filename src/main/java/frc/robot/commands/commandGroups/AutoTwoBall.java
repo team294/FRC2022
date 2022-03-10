@@ -53,7 +53,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
 
       // drive towards ball with intake deployed and on
       deadline(
-        new DriveStraight(1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log),
+        new DriveStraight(1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
         new IntakePistonSetPosition(true, intake, log),
         new IntakeToColorSensor(intake, uptake, log)
       ),

@@ -32,7 +32,7 @@ public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, DriveTrain 
       new FileLogWrite(false, false, "AutoTaxi", "starting", log),
 
       // drive out backwards so we are ready to shoot preloaded ball
-      new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log),
+      new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
 
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log)
