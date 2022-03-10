@@ -41,7 +41,7 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
 
       new DriveZeroGyro(0, driveTrain, log),      
       new FileLogWrite(false, false, "AutoShootTaxi", "starting", log),
-      new ShooterSetVelocity(InputMode.kSpeedRPM, 3500, shooter, log),  // turn on the shooter
+      new ShooterSetVelocity(InputMode.kSpeedRPM, 3300, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       new WaitCommand(0.5),                                             // wait for ball to shoot
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
@@ -50,10 +50,12 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
       new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log),  // turn off shooter
 
       // drive out backwards 
-      new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
+      new DriveStraight(-1.0, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
 
       // deploy intake so we are ready to go in teleop
-      new IntakePistonSetPosition(true, intake, log)
+      new IntakePistonSetPosition(true, intake, log),
+
+      new IntakeToColorSensor(intake, uptake, log)
 
     );
   }

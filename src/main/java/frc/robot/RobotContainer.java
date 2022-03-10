@@ -240,7 +240,7 @@ public class RobotContainer {
     
     // right trigger shoots ball
     xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
-    
+
     // left trigger intake on
     // xbLT.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
 
@@ -261,7 +261,9 @@ public class RobotContainer {
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
-    xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
+    // xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
+    // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log)); 
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
