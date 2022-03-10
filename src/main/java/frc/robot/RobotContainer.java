@@ -240,15 +240,15 @@ public class RobotContainer {
     }
     
     //a - short shot distance
-    xb[1].whenHeld(new ShootSetup(6000, null, shooter, log));         
+    xb[1].whenHeld(new ShootSetup(3100, null, shooter, log));         
     xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
-    xb[2].whenHeld(new ShootSetup(7000, null, shooter, log));        
+    xb[2].whenHeld(new ShootSetup(3500, null, shooter, log));        
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(8000, null, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(3900, null, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance

@@ -21,7 +21,7 @@ public class IntakeToColorSensor extends SequentialCommandGroup {
 public IntakeToColorSensor(Intake intake, Uptake uptake, FileLog log) {
     addCommands(
       new FileLogWrite(false, false, "IntakeToColorSensor", "starting", log),
-      new IntakeSetPercentOutput(0.25, 0.25, intake, log),
+      new IntakeSetPercentOutput(0.10, 0.10, intake, log),
       new UptakeSetPercentOutput(0.25, 0, uptake, log)
     );
   }

@@ -84,7 +84,7 @@ public class AutoSelection {
 		
 		if (autoPlan == TAXI) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoTaxi");
-			autonomousCommand = new AutoTaxi(waitTime, limeLight, driveTrain, log);
+			autonomousCommand = new AutoTaxi(waitTime, limeLight, intake, driveTrain, log);
 		}
 
 		if (autoPlan == TWO_BALL) {
