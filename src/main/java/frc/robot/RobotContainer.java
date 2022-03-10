@@ -262,9 +262,8 @@ public class RobotContainer {
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
-    xb[5].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
-    //xb[5].whenReleased(new ShootSequence(shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
-    xb[6].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
+    xb[5].whenPressed(new TurretTurnAngle(TargetType.kRelative, -9, 2, turret, log));
+    xb[6].whenPressed(new TurretTurnAngle(TargetType.kRelative, 9, 2, turret, log));
     //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
 
     // back = 7, start = 8 
@@ -274,9 +273,9 @@ public class RobotContainer {
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, log));
-    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kRelative, 9, 2, turret, log));
-    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kRelative, -9, 2, turret, log));
-    //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
+    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 90, 2, turret, log));
+    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -90, 2, turret, log));
+    xbPOVDown.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
   }
 
   /**
