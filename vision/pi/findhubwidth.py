@@ -44,7 +44,7 @@ config = { "fps": 30, "height": 480, "pixel format": "mjpeg", "properties": [ { 
 
 
 camera = cs.startAutomaticCapture()
-camera.setExposureManual(0)
+camera.setExposureManual(7)
 camera.setWhiteBalanceManual(2800)
 # camera.setConfigJson(json.dumps(config))
 camera.setConfigJson(json.dumps(config))

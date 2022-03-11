@@ -48,7 +48,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A5");
+  private final FileLog log = new FileLog("A6");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -241,15 +241,15 @@ public class RobotContainer {
     }
     
     //a - short shot distance
-    xb[1].whenHeld(new ShootSetup(false, 2800, pivisionhub, shooter, log));         
+    xb[1].whenHeld(new ShootSetup(false, 3100, pivisionhub, shooter, log));         
     xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
-    xb[2].whenHeld(new ShootSetup(false, 3100, pivisionhub, shooter, log));        
+    xb[2].whenHeld(new ShootSetup(false, 3400, pivisionhub, shooter, log));        
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(false, 3400, pivisionhub, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(false, 3700, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
@@ -326,7 +326,7 @@ public class RobotContainer {
     coP[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log)); 
     coP[2].whenPressed(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log)); 
 
-    coP[3].whenPressed(new UptakeToFeeder(uptake, feeder, log)); 
+    coP[3].whenPressed(new UptakeFeedBall(uptake, feeder, log)); 
     coP[4].whenPressed(new UptakeEjectBall(uptake, log)); 
 
     // coP[5].whenHeld(new ClimbSetPercentOutput(0.4, climb, log)); // manually raise climb arms, slowly

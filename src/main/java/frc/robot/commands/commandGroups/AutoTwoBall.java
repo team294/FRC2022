@@ -51,18 +51,18 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new FeederSetPercentOutput(0, feeder, log),                       // turn off feeder
 
       // turn towards ball
-      new DriveTurnGyro(TargetType.kAbsolute, 180, 90, 90, 3, driveTrain, limeLight, log).withTimeout(2),
+      new DriveTurnGyro(TargetType.kAbsolute, 180, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(4),
 
       // deploy intake
       new IntakePistonSetPosition(true, intake, log),
       new IntakeToColorSensor(intake, uptake, log),
 
       // drive to second ball
-      new DriveStraight(AutoConstants.driveOneMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
+      new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(4),
       
       parallel (
       // turn towards hub
-        new DriveTurnGyro(TargetType.kAbsolute, -180, 90, 90, 3, driveTrain, limeLight, log).withTimeout(2),
+        new DriveTurnGyro(TargetType.kAbsolute, -180, 1200, 1200, 3, driveTrain, limeLight, log).withTimeout(4),
 
         // start the shooter
         new ShootSetup(false, ShooterConstants.ballTwoRPM, null, shooter, log)
