@@ -53,7 +53,7 @@ public class PiVision extends SubsystemBase implements Loggable {
   }
 
   public double getXOffset() {
-    return x;
+    return -x;
   }
 
   public void readData() {

@@ -144,10 +144,16 @@ public final class Constants {
         public static final int usbCoPanel = 3;
     }
 
+    public static final class AutoConstants {
+        public static final double driveOneMeters = 1.0;
+    }
+
     public static final class ShooterConstants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
+        public static final double ballOneRPM = 2800;
+        public static final double ballTwoRPM = 3300;
         public static final double pidErrorTolerance = 100; // in RPM
 
         public static final double kP = 0.02;        // PID terms

@@ -48,7 +48,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A2");
+  private final FileLog log = new FileLog("A3");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -162,6 +162,8 @@ public class RobotContainer {
 
     // Shooter camera subsystem
     SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubSetLEDState(2, pivisionhub));
+    SmartDashboard.putData("shooter-cam LEDOn", new PiVisionHubSetLEDState(1, pivisionhub));
+    SmartDashboard.putData("shooter-cam LEDOff", new PiVisionHubSetLEDState(0, pivisionhub));
 
     // buttons for testing drive code, not updating numbers from SmartDashboard
     SmartDashboard.putData("DriveForward", new DriveSetPercentOutput(0.4, 0.4, driveTrain, log));
@@ -232,6 +234,7 @@ public class RobotContainer {
 
     // left trigger intake on
     xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 1, turret, pivisionhub, log));
+    xbLT.whenInactive(new TurretStop(turret, log));
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -252,7 +255,8 @@ public class RobotContainer {
     //x - use vision for distance
     // xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
-    xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
+    xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
+    //xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
@@ -384,7 +388,7 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    pivisionhub.setLEDState(false);
+    pivisionhub.setLEDState(true);
 
     //compressor.disable();
     compressor.enabled();
@@ -405,7 +409,7 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    pivisionhub.setLEDState(false);
+    // pivisionhub.setLEDState(false);
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }
