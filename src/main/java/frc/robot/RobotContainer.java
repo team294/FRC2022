@@ -269,7 +269,9 @@ public class RobotContainer {
 
     // LB = 5, RB = 6
     xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
+    xb[5].whenReleased(new TurretStop(turret, log));
     xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
+    xb[6].whenReleased(new TurretStop(turret, log));
     //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
 
     // back = 7, start = 8 
