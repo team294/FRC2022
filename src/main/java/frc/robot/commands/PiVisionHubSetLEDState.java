@@ -7,11 +7,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PiVisionHub;
 
-public class PiVisionHubLEDOn extends CommandBase {
+public class PiVisionHubSetLEDState extends CommandBase {
   private PiVisionHub camera;
-  /** Creates a new PiVisionLEDOn. */
-  public PiVisionHubLEDOn(PiVisionHub camera) {
+  private int state;
+
+  /**
+   * Changes PiVision LED State
+   * @param val 0 for off, 1 for on, 2 for toggle
+   * @param camera
+   */
+  public PiVisionHubSetLEDState(int state, PiVisionHub camera) {
     this.camera = camera;
+    this.state = state;
     addRequirements(camera);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -19,8 +26,17 @@ public class PiVisionHubLEDOn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println(camera.ledState());
-    camera.ledOn();
+    switch (state) {
+      case 0:
+        camera.setLEDState(false);
+        break;
+      case 1:
+        camera.setLEDState(true);
+        break;
+      case 2:
+        camera.setLEDState(!camera.LEDState());
+        break;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

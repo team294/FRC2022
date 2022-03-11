@@ -2,7 +2,6 @@ from cscore import CameraServer, MjpegServer
 from networktables import NetworkTablesInstance
 import cv2
 import numpy as np
-import json
 
 # Allow smart dashboard input to change threshold
 
@@ -16,38 +15,26 @@ lt = (56, 129, 65)
 ut = (74, 255, 255)
 contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
 
+settings = [ { "name": "connect_verbose", "value": 1 }, { "name": "contrast", "value": 50 }, { "name": "saturation", "value": 60 }, { "name": "power_line_frequency", "value": 2 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ]
 
 # initialize network tables
 NetworkTablesInstance.getDefault().initialize(server='10.2.94.2')
 sd = NetworkTablesInstance.getDefault().getTable(name)
-# sd.putNumber("LowerThresholdH", 56)
-# sd.putNumber("LowerThresholdS", 129)
-# sd.putNumber("LowerThresholdV", 65)
-# sd.putNumber("UpperThresholdH", 74)
-# sd.putNumber("UpperThresholdS", 255)
-# sd.putNumber("UpperThresholdV", 255)
-# sd.putNumber("rv", 1000)
-# sd.putNumber("rx", 1000)
-# sd.putNumber("rx", 1000)
-# sd.putNumber("ytol", yTolerance)
+sd.putNumber("LowerThresholdH", 56)
+sd.putNumber("LowerThresholdS", 129)
+sd.putNumber("LowerThresholdV", 65)
+sd.putNumber("UpperThresholdH", 74)
+sd.putNumber("UpperThresholdS", 255)
+sd.putNumber("UpperThresholdV", 255)
+sd.putNumber("rv", 1000)
+sd.putNumber("rx", 1000)
+sd.putNumber("ytol", yTolerance)
 
 # initialize camera server
 cs = CameraServer.getInstance()
 cs.enableLogging()
 
-config = { "fps": 30, "height": 480, "pixel format": "mjpeg", "properties": [ { "name": "connect_verbose", "value": 1 }, { "name": "raw_brightness", "value": 30 }, { "name": "brightness", "value": 0 }, { "name": "raw_contrast", "value": 3 }, { "name": "contrast", "value": 31 }, { "name": "raw_saturation", "value": 100 }, { "name": "saturation", "value": 50 }, { "name": "white_balance_temperature_auto", "value": False }, { "name": "power_line_frequency", "value": 2 }, { "name": "white_balance_temperature", "value": 2800 }, { "name": "raw_sharpness", "value": 25 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "exposure_auto", "value": 1 }, { "name": "raw_exposure_absolute", "value": 5 }, { "name": "exposure_absolute", "value": 7 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ], "width": 680 }
-# try:
-#     with open("camerasettings.json", "rt", encoding="utf-8") as f:
-#         j = json.load(f)
-# except OSError as err:
-#     print("could not open '{}': {}".format(configFile, err), file=sys.stderr)
-
-
 camera = cs.startAutomaticCapture()
-camera.setExposureManual(0)
-camera.setWhiteBalanceManual(2800)
-# camera.setConfigJson(json.dumps(config))
-camera.setConfigJson(json.dumps(config))
 camera.setResolution(width, height)
 
 # initialize input and output instances
@@ -72,10 +59,8 @@ while True:
     
     # get threshold
     # # TODO may return erroneous values (may be why sometimes not detect)
-    lower_threshold = np.array([lt[0], lt[1], lt[2]])
-    # lower_threshold = np.array([sd.getNumber("LowerThresholdH", lt[0]), sd.getNumber("LowerThresholdS", lt[1]), sd.getNumber("LowerThresholdV", lt[2])])
-    upper_threshold = np.array([ut[0], ut[1], ut[2]])
-    # upper_threshold = np.array([sd.getNumber("UpperThresholdH", ut[0]), sd.getNumber("UpperThresholdS", ut[1]), sd.getNumber("UpperThresholdV", ut[2])])
+    lower_threshold = np.array([sd.getNumber("LowerThresholdH", lt[0]), sd.getNumber("LowerThresholdS", lt[1]), sd.getNumber("LowerThresholdV", lt[2])])
+    upper_threshold = np.array([sd.getNumber("UpperThresholdH", ut[0]), sd.getNumber("UpperThresholdS", ut[1]), sd.getNumber("UpperThresholdV", ut[2])])
     threshold = cv2.inRange(hsv, lower_threshold, upper_threshold)
 
     # erode and then dilate by 3 x 3 kernel of 1s
@@ -95,7 +80,7 @@ while True:
     # bounding rect upper-right x, bounding-rect upper-right y-val, and area
     for c in contours:
         area = cv2.contourArea(c)
-        if (area < 25 or area > 500):
+        if (area < 15):
             continue
         rect = cv2.boundingRect(c)
         x,y,w,h = rect
@@ -115,10 +100,10 @@ while True:
         filtered.sort(key=lambda c: c[1]) # sorts array by y-value
         median = filtered[int(len(filtered)/2)][1] # gets median y-value
         # filtered = list(filter(lambda f: abs(median-f[1]) < yT, filtered)) # filters
-        filtered = list(filter(lambda f: abs(median-f[1]) < yTolerance, filtered)) # filters
+        filtered = list(filter(lambda f: abs(median-f[1]) < yT, yTolerance)) # filters
 
         # if there are any values left in filtered
-        if len(filtered) > 1:
+        if len(filtered) > 0:
             # sorts filtered array by contour area and caps it to at-most 4 elements
             filtered = sorted(filtered, key=lambda f: f[6])[-4:]
             rv = len(filtered) # gets the amount of contours found
@@ -133,9 +118,8 @@ while True:
             rw = bx - fx
             rx = -0.0937486*(0.5*(bx+fx)-0.5*width) - 4.99446 # x in pixels converted to angle in degrees!
             # draws bounding rectangle
-            cv2.rectangle(input_img,(fx, fy),(bx, by),(0,255,0),2)
+            cv2.rectangle(calibration,(fx, fy),(bx, by),(0,255,0),2)
 
-    final = cv2.resize(input_img, (160, 120)) # TODO TEST
 
     # posts number of elements found, width of bounding box, and x-value in angle degrees
     sd.putNumber("rv", rv)
@@ -143,4 +127,5 @@ while True:
     sd.putNumber("rx", rx)
 
     # posts final image to stream
-    output.putFrame(final)
+    # output.putFrame(cv2.resize(input_img, ))
+    output.putFrame(calibration)

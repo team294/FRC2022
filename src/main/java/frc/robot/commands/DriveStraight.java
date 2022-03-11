@@ -52,7 +52,7 @@ public class DriveStraight extends CommandBase {
    * @param target distance to travel, in meters
    * @param angleType kRelative (angle is relative to current robot facing),
    *   kAbsolute (angle is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to drive towards the goal)
+   *   kVisionOnScreen (use limelight to drive towards the goal)
    * @param angle angle to drive along when driving straight (+ = left, - = right)
    * @param maxVel max velocity in meters/second, between 0 and kMaxSpeedMetersPerSecond in Constants
    * @param maxAccel max acceleration in meters/second2, between 0 and kMaxAccelerationMetersPerSecondSquared in Constants
@@ -82,7 +82,7 @@ public class DriveStraight extends CommandBase {
    * @param sweetSpot true = will initialize target to however far away the sweet spot is
    * @param angleType kRelative (angle is relative to current robot facing),
    *   kAbsolute (angle is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to drive towards the goal)
+   *   kVisionOnScreen (use limelight to drive towards the goal)
    * @param angle angle to drive along when driving straight (+ = left, - = right)
    * @param maxVel max velocity in meters/second, between 0 and kMaxSpeedMetersPerSecond in Constants
    * @param regenerate true = regenerate profile each cycle (to accurately reach target distance), false = don't regenerate (for debugging)
@@ -112,7 +112,7 @@ public class DriveStraight extends CommandBase {
    * Use this constructor when reading values from Shuffleboard
    * @param angleType kRelative (angle is relative to current robot facing),
    *   kAbsolute (angle is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to drive towards the goal)
+   *   kVisionOnScreen (use limelight to drive towards the goal)
    * @param regenerate true = regenerate profile each cycle (to accurately reach target distance), false = don't regenerate (for debugging)
    * @param driveTrain reference to the drive train subsystem
    * @param limelight reference to the LimeLight subsystem
@@ -167,7 +167,7 @@ public class DriveStraight extends CommandBase {
       case kAbsolute:
         angleTarget = driveTrain.normalizeAngle(angleInput);
         break;
-      case kVision:
+      case kVisionOnScreen:
         angleTarget = driveTrain.normalizeAngle(driveTrain.getGyroRotation() + limeLight.getXOffset());
     }
 
@@ -209,7 +209,7 @@ public class DriveStraight extends CommandBase {
 
     // Calculate correction to maintain angle
     double curAngle = driveTrain.getGyroRotation();
-    if (angleType == TargetType.kVision) {
+    if (angleType == TargetType.kVisionOnScreen) {
       angleTarget = driveTrain.normalizeAngle(curAngle + limeLight.getXOffset());
       if(limeLight.canTakeSnapshot()) {
         limeLight.setSnapshot(true);

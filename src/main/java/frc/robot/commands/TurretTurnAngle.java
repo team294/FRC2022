@@ -41,8 +41,10 @@ public class TurretTurnAngle extends CommandBase {
   private boolean regenerate;
   private boolean fromShuffleboard;
   private boolean encoderCalibrated = true;
+  private boolean continualTracking;
 
   // private LimeLight limeLight;     //TODO
+  private PiVisionHub piVisionHub;
   private PIDController pidAngVel;
   private double angleTolerance;
   private boolean feedbackUsingVision;
@@ -62,16 +64,16 @@ public class TurretTurnAngle extends CommandBase {
    * <p> This is the EASIEST constructor to use for the TurrentTurnAngle command.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)   //TODO0
-   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
-   * @param angleTolerance the tolerance to use for turn gyro
+   *   kVisionOnScreen (use limelight to turn towards the goal)   //TODO add more
+   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVisionOnScreen]
+   * @param angleTolerance the tolerance to use for turn gyro, negative angle = continuous tracking
    * @param turret turret subsystem
-   * @param limeLight limelight  //TODO (removed for now)
+   * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretTurnAngle(TargetType type, double target, double angleTolerance, Turret turret, FileLog log) {
-    // this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, limeLight, log);
-    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, log);
+  public TurretTurnAngle(TargetType type, double target, double angleTolerance, Turret turret, PiVisionHub piVisionHub, FileLog log) {
+    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, piVisionHub, log);
+    // this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, log);
   }
 
   /**
@@ -79,18 +81,18 @@ public class TurretTurnAngle extends CommandBase {
    * <p> This command DOES NOTHING if the turret is not calibrated.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)   //TODO
-   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
+   *   kVisionOnScreen (use limelight to turn towards the goal)   //TODO
+   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVisionOnScreen]
    * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
    * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
-   * @param angleTolerance the tolerance to use for turn gyro
+   * @param angleTolerance the tolerance to use for turn gyro, negative angle = continuous tracking
    * @param turret turret subsystem
-   * @param limeLight limelight  //TODO (removed for now)
+   * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, FileLog log) {
-    // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, limeLight, log);
-    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
+  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, PiVisionHub piVisionHub, FileLog log) {
+    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, piVisionHub, log);
+    // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
   }
 
   /**
@@ -98,19 +100,19 @@ public class TurretTurnAngle extends CommandBase {
    * <p> This command DOES NOTHING if the turret is not calibrated.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)     //TODO
+   *   kVisionOnScreen (use pivisionhub to turn towards the goal)     //TODO
    * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
    * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
    * @param regenerate true to regenerate profile while running
-   * @param angleTolerance the tolerance to use for turn gyro
+   * @param angleTolerance the tolerance to use for turn gyro, negative angle = continuous tracking
    * @param turret turret subsystem
-   * @param limeLight limelight   // TODO (removed for now)
+   * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, boolean regenerate, double angleTolerance, Turret turret, FileLog log) {
+  public TurretTurnAngle(TargetType type, double target, double maxVel, double maxAccel, boolean regenerate, double angleTolerance, Turret turret, PiVisionHub piVisionHub, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    // this.limeLight = limeLight;   //TOD
+    this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = MathBCR.normalizeAngle(target);
     this.targetType = type;
@@ -118,10 +120,12 @@ public class TurretTurnAngle extends CommandBase {
     this.maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, kMaxTurnAcceleration);
     this.regenerate = regenerate;
     this.fromShuffleboard = false;
+    continualTracking = angleTolerance < 0;
     this.angleTolerance = Math.abs(angleTolerance);
 
-    // addRequirements(turret, limeLight);    //TODO
-    addRequirements(turret);
+
+    addRequirements(turret, piVisionHub);
+    // addRequirements(turret);
 
     pidAngVel = new PIDController(kPTurn, 0, kDTurn);
   }
@@ -130,10 +134,10 @@ public class TurretTurnAngle extends CommandBase {
    * To be used when changing the target value directly from shuffleboard (not a pre-coded target)
    * @param fromShuffleboard true means the value is being changed from shuffleboard
    */
-  public TurretTurnAngle(TargetType type, boolean regenerate, Turret turret, FileLog log) {
+  public TurretTurnAngle(TargetType type, boolean regenerate, Turret turret, PiVisionHub piVisionHub, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    // this.limeLight = limeLight;   //TODO
+    this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = 0;
     this.targetType = type;
@@ -168,7 +172,8 @@ public class TurretTurnAngle extends CommandBase {
       maxAccel = SmartDashboard.getNumber("TurnTurret Manual MaxAccel", kMaxTurnAcceleration);
       maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, kMaxTurnAcceleration);
       angleTolerance = SmartDashboard.getNumber("TurnTurret Manual Tolerance", 0.5);
-      angleTolerance = Math.abs(angleTolerance);
+      continualTracking = angleTolerance < 0;
+      this.angleTolerance = Math.abs(angleTolerance);
     }
     // If constants were updated from Shuffleboard, then update PID
     pidAngVel.setPID(kPTurn, 0, kDTurn);
@@ -187,10 +192,33 @@ public class TurretTurnAngle extends CommandBase {
         if (target<softLimitRev) target = softLimitRev;
         targetRel = target - startAngle;
         break;
-      case kVision:
-        targetRel = target;
-        // targetRel = MathBCR.normalizeAngle(limeLight.getXOffset());   //TODO
-        // limeLight.enableFastLogging(true);
+      case kVisionOnScreen:
+        if (piVisionHub.seesTarget()) {
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+          piVisionHub.enableFastLogging(true);
+        } else { // no target is found; don't move
+          targetRel = startAngle;
+          continualTracking = false;
+          targetType = TargetType.kRelative;
+        }
+        break;
+      case kVisionScanLeft:
+        if (piVisionHub.seesTarget()) {
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+          piVisionHub.enableFastLogging(true);
+        } else { // no target is found; don't move
+          target = softLimitRev;
+          targetRel = target - startAngle;
+        }
+        break;
+      case kVisionScanRight:
+        if (piVisionHub.seesTarget()) {
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+          piVisionHub.enableFastLogging(true);
+        } else { // no target is found; don't move
+          target = softLimitFwd;
+          targetRel = target - startAngle;
+        }
         break;
     }
 
@@ -229,23 +257,20 @@ public class TurretTurnAngle extends CommandBase {
     currAngle = turret.getTurretPosition() - startAngle;
     currVelocity = turret.getTurretVelocity();
     
-    // if (targetType == TargetType.kVision) {  //TODO
-    //   targetRel = MathBCR.normalizeAngle(currAngle + limeLight.getXOffset());
-    //   tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
-    //   if(limeLight.canTakeSnapshot()) {
-    //     limeLight.setSnapshot(true);
-    //   }    
-    // }
+    if (piVisionHub.seesTarget() && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)) {  
+      targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset());
+      tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
+    }
 
     timeSinceStart = (double)(currProfileTime - profileStartTime) * 0.001;
     tStateNow = tProfile.calculate(timeSinceStart);        // This is where the robot should be now
     tStateForecast = tProfile.calculate(timeSinceStart + tLagTurn);  // This is where the robot should be next cycle (or farther in the future if the robot has lag or backlash)
 
-    // if(tProfile.isFinished(timeSinceStart) && targetType == TargetType.kVision){    //TODO
-    //   // If we completed the trapezoid profile and we are using vision, then
-    //   // fine-tune angle using feedback based on live camera feedback
-    //   feedbackUsingVision = true;
-    // }
+    if(tProfile.isFinished(timeSinceStart) && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)){  
+      // If we completed the trapezoid profile and we are using vision, then
+      // fine-tune angle using feedback based on live camera feedback
+      feedbackUsingVision = true;
+    }
 
     targetVel = tStateNow.velocity;
     targetAccel = tStateNow.acceleration;
@@ -263,11 +288,10 @@ public class TurretTurnAngle extends CommandBase {
       forecastAccel = 0.0;
       pFF = 0.0;
 
-      if (targetType == TargetType.kVision) {
+      if (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight) {
         // Live camera feedback
         // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
-        // pFB = 0.04 * Math.signum( MathBCR.normalizeAngle(limeLight.getXOffset()) );
-        pFB = kITurnEnd * Math.signum( targetRel - currAngle );
+        pFB = kITurnEnd * Math.signum( MathBCR.normalizeAngle(piVisionHub.getXOffset()) );
       } else {
         // Bang-bang control
         // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
@@ -294,7 +318,7 @@ public class TurretTurnAngle extends CommandBase {
       "posT", tStateNow.position, "velT", targetVel, "accT", targetAccel,
       "posF", tStateForecast.position, "velF", forecastVel, "accF", forecastAccel,
       "posA", currAngle, "velA", currVelocity, "pFF", pFF, "pFB", pFB, "pTotal", pFF+pFB+pDB
-      // , "LL x", limeLight.getXOffset(), "LL y", limeLight.getYOffset()
+      , "pi x", piVisionHub.getXOffset()
       );
   }
 
@@ -303,9 +327,9 @@ public class TurretTurnAngle extends CommandBase {
   public void end(boolean interrupted) {
     turret.stopMotor();
     
-    // if (targetType == TargetType.kVision) {      //TODO
-    //   limeLight.enableFastLogging(false);
-    // }
+    if (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight) {
+      piVisionHub.enableFastLogging(false);
+    }
     
     log.writeLog(false, "TurretTurnAngle", "End");
   }
@@ -315,14 +339,15 @@ public class TurretTurnAngle extends CommandBase {
   public boolean isFinished() {
     // Do not execute if the turret is not calibrated
     if (!encoderCalibrated) return true;
+    if (continualTracking) return false;
 
-    // if ((targetType != TargetType.kVision && Math.abs(targetRel - currAngle) < angleTolerance) || 
-    //     (targetType == TargetType.kVision && limeLight.seesTarget() && Math.abs(limeLight.getXOffset()) < angleTolerance) ||
-    //     (targetType == TargetType.kVision && !limeLight.seesTarget() && feedbackUsingVision) ) {
-    if (Math.abs(targetRel - currAngle) < angleTolerance) {
+    if (((targetType == TargetType.kAbsolute || targetType == TargetType.kRelative) && Math.abs(targetRel - currAngle) < angleTolerance) ||
+    ((targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight) 
+    && ((piVisionHub.seesTarget() && Math.abs(piVisionHub.getXOffset()) < angleTolerance) || (!piVisionHub.seesTarget() && feedbackUsingVision)))) {
+    // if (Math.abs(targetRel - currAngle) < angleTolerance) {
       accuracyCounter++;
       log.writeLog(false, "TurretTurnAngle", "WithinTolerance", "Target Ang", targetRel, "Actual Ang", currAngle, 
-        // "LimeLight Xoff", limeLight.getXOffset(), 
+        "piVisionHub Xoff", piVisionHub.getXOffset(), 
         "Counter", accuracyCounter);
     } else {
       accuracyCounter = 0;

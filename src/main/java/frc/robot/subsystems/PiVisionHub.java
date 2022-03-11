@@ -12,31 +12,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.FileLog;
 
 public class PiVisionHub extends PiVision {
-  private boolean setFlashAuto = true, ledOn = false;
+  private boolean setFlashAuto = true;
   private PowerDistribution pd;
   
   public PiVisionHub(PowerDistribution pd, FileLog log) {
-    super("Camera 0", log);
+    super("shooter-cam", log);
     this.pd = pd;
   }
 
-  public void ledOn() {
-    ledOn = true;
-    pd.setSwitchableChannel(ledOn);
+  public void setLEDState(boolean state) {
+    pd.setSwitchableChannel(state);
   }
 
-  public void ledOff() {
-    ledOn = false;
-    pd.setSwitchableChannel(ledOn);
-  }
-
-  public void ledToggle() {
-    ledOn = !ledOn;
-    pd.setSwitchableChannel(ledOn);
-  }
-
-  public boolean ledState() {
-    return ledOn;
+  public boolean LEDState() {
+    return pd.getSwitchableChannel();
   }
 
   /**
@@ -44,15 +33,15 @@ public class PiVisionHub extends PiVision {
    * @return distance from camera to target, on the floor, in feet
    */
   public double getDistance() {    //  TODO  this could return a erroneous value if vision misses a frame or is temporarily blocked.  Use avgrging or filtering
-    // double myDistance = (targetHeight - cameraHeight) / ((Math.tan(Math.toRadians(cameraAngle) + PiVisionConstants.hFov*y)));
-    // return myDistance;
-    return 0;
+    // if (50 < width && width < 300) return -1.3974*width+359.833;
+    // if (50 < width && width < 300) return -1.2336*width+327.002;
+    if (targetExists < 4) return targetExists;
+    return 27983.4/width-51.4736;  
   }
 
   @Override
   public void periodic() {
     super.periodic();
-       // distance calculation using vision camera
     
     if (log.getLogRotation() == log.PIVISION_CYCLE) {
       SmartDashboard.putNumber("cam-shooter Distance", getDistance());
@@ -65,7 +54,8 @@ public class PiVisionHub extends PiVision {
   public void updateLimeLightLog(boolean logWhenDisabled) {
     log.writeLog(logWhenDisabled, name, "Update Variables", 
       "Target Valid", seesTarget(),
-      "width", y,
+      "Width", width,
+      "X Offset", x,
       // "Target Area", area,
       // "Latency", latency,
       "Network Table Read Counter", networkTableReadCounter,

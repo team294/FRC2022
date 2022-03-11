@@ -35,8 +35,8 @@ public class AutoSelection {
 		this.trajectoryCache = trajectoryCache;
 
 		// auto selections
-		autoChooser.addOption("Two Ball", TWO_BALL);
-		autoChooser.setDefaultOption("Shoot then Taxi", SHOOT_TAXI);
+		autoChooser.setDefaultOption("Two Ball", TWO_BALL);
+		autoChooser.addOption("Shoot then Taxi", SHOOT_TAXI);
 		autoChooser.addOption("Taxi", TAXI);
 	
 		// show auto selection widget on Shuffleboard

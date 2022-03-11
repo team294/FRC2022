@@ -58,7 +58,7 @@ public class DriveTurnGyro extends CommandBase {
    * Turns the robot to a target angle.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)
+   *   kVisionOnScreen (use limelight to turn towards the goal)
    * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
    * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
    * @param regenerate true to regenerate profile while running
@@ -123,8 +123,8 @@ public class DriveTurnGyro extends CommandBase {
    * Turns the robot to a target angle.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
-   *   kVision (use limelight to turn towards the goal)
-   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVision]
+   *   kVisionOnScreen (use limelight to turn towards the goal)
+   * @param target degrees to turn from +180 (left) to -180 (right) [ignored for kVisionOnScreen]
    * @param maxVel max velocity in degrees/sec, between 0 and kMaxAngularVelocity in Constants
    * @param maxAccel max acceleration in degrees/sec2, between 0 and kMaxAngularAcceleration in Constants
    * @param angleTolerance the tolerance to use for turn gyro
@@ -167,7 +167,7 @@ public class DriveTurnGyro extends CommandBase {
       case kAbsolute:
         targetRel = driveTrain.normalizeAngle(target - startAngle);
         break;
-      case kVision:
+      case kVisionOnScreen:
         targetRel = driveTrain.normalizeAngle(limeLight.getXOffset());
         limeLight.enableFastLogging(true);
         break;
@@ -201,7 +201,7 @@ public class DriveTurnGyro extends CommandBase {
     currVelocity = driveTrain.getAngularVelocityFromWheels();
     currVelocityGyro = driveTrain.getAngularVelocity();
     
-    if (targetType == TargetType.kVision) {
+    if (targetType == TargetType.kVisionOnScreen) {
       targetRel = driveTrain.normalizeAngle(currAngle + limeLight.getXOffset());
       tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
       if(limeLight.canTakeSnapshot()) {
@@ -212,7 +212,7 @@ public class DriveTurnGyro extends CommandBase {
     tStateNow = tProfile.calculate(timeSinceStart);        // This is where the robot should be now
     tStateForecast = tProfile.calculate(timeSinceStart + tLagAngular);  // This is where the robot should be next cycle (or farther in the future if the robot has lag or backlash)
 
-    if(tProfile.isFinished(timeSinceStart) && targetType == TargetType.kVision){
+    if(tProfile.isFinished(timeSinceStart) && targetType == TargetType.kVisionOnScreen){
       // If we completed the trapezoid profile and we are using vision, then
       // fine-tune angle using feedback based on live camera feedback
       feedbackUsingVision = true;
@@ -234,7 +234,7 @@ public class DriveTurnGyro extends CommandBase {
       forecastAccel = 0.0;
       pFF = 0.0;
 
-      if (targetType == TargetType.kVision) {
+      if (targetType == TargetType.kVisionOnScreen) {
         // Live camera feedback
         // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
         pFB = 0.04 * Math.signum( driveTrain.normalizeAngle(limeLight.getXOffset()) );
@@ -276,7 +276,7 @@ public class DriveTurnGyro extends CommandBase {
     driveTrain.setDriveModeCoast(false);
     driveTrain.setOpenLoopRampLimit(true);
     
-    if (targetType == TargetType.kVision) {
+    if (targetType == TargetType.kVisionOnScreen) {
       limeLight.enableFastLogging(false);
     }
     
@@ -287,9 +287,9 @@ public class DriveTurnGyro extends CommandBase {
   @Override
   public boolean isFinished() {
     
-    if ((targetType != TargetType.kVision && Math.abs(targetRel - currAngle) < angleTolerance) || 
-        (targetType == TargetType.kVision && limeLight.seesTarget() && Math.abs(limeLight.getXOffset()) < angleTolerance) ||
-        (targetType == TargetType.kVision && !limeLight.seesTarget() && feedbackUsingVision) ) {
+    if ((targetType != TargetType.kVisionOnScreen && Math.abs(targetRel - currAngle) < angleTolerance) || 
+        (targetType == TargetType.kVisionOnScreen && limeLight.seesTarget() && Math.abs(limeLight.getXOffset()) < angleTolerance) ||
+        (targetType == TargetType.kVisionOnScreen && !limeLight.seesTarget() && feedbackUsingVision) ) {
       accuracyCounter++;
       log.writeLog(false, "DriveTurnGyro", "WithinTolerance", "Target Ang", targetRel, "Actual Ang", currAngle, 
         "LimeLight Xoff", limeLight.getXOffset(), "Counter", accuracyCounter);

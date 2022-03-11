@@ -56,7 +56,9 @@ public final class Constants {
     public enum TargetType {
         kRelative(0),
         kAbsolute(1),
-        kVision(2);
+        kVisionOnScreen(2),
+        kVisionScanLeft(3),
+        kVisionScanRight(4);
     
         @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final int value;
@@ -142,10 +144,16 @@ public final class Constants {
         public static final int usbCoPanel = 3;
     }
 
+    public static final class AutoConstants {
+        public static final double driveOneMeters = 1.0;
+    }
+
     public static final class ShooterConstants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
+        public static final double ballOneRPM = 2800;
+        public static final double ballTwoRPM = 3300;
         public static final double pidErrorTolerance = 100; // in RPM
 
         public static final double kP = 0.02;        // PID terms
@@ -183,8 +191,8 @@ public final class Constants {
         public static final double maxOutputCalibrated = 0.3;               // Max output power when turret is calibrated
         public static final double ticksPerDegree = 2048.0/360.0 * 4*170/16;         // Divide by this to convert raw ticks to turrent degrees  (4:1 versaplanetary, plus chain gear ratio 18:180)
         public static final double rawVelocityToDegPerSec = 10.0 / ticksPerDegree;   // Multiply by this to convert raw velocity (ticksPer100ms) to degrees per second
-        public static final double softLimitRev = -140.0;            // Reverse position soft limit, in turret degrees
-        public static final double softLimitFwd = 140.0;            // Forward position soft limit, in turret degrees
+        public static final double softLimitRev = -60.0;            // Reverse position soft limit, in turret degrees
+        public static final double softLimitFwd = 60.0;            // Forward position soft limit, in turret degrees
         public static final double limitSwitchRev = -145.0;            // Position of physical reverse limit switch, in turret degrees
         public static final double limitSwitchFwd = 147.0;            // Position of physical forward limit switch, in turret degrees
         public static final double calSwitch = 0.0;            // Position of starting calibration limit switch, in turret degrees
