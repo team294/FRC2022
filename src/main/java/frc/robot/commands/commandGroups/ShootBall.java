@@ -10,7 +10,6 @@ import frc.robot.commands.FeederStop;
 import frc.robot.commands.ShooterSetVelocity;
 import frc.robot.commands.ShooterStop;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
-import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
@@ -19,7 +18,7 @@ import frc.robot.utilities.FileLog;
 
 public class ShootBall extends SequentialCommandGroup {
   /** Creates a new ShootBall. */
-  public ShootBall(BallColor ejectColor, Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
+  public ShootBall(Shooter shooter, Uptake uptake, Feeder feeder, FileLog log) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

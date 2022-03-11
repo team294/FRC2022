@@ -20,14 +20,14 @@ public class UptakeSortBall extends SequentialCommandGroup {
    * Sequence to handle a ball once it hits the color sensor in the uptake
    * Ejects the ball if it matches the ejectColor
    * 
-   * @param ejectColor Color to eject
    * @param uptake uptake subsystem
+   * @param feeder feeder subsystem
    * @param log logger
    */
-  public UptakeSortBall(BallColor ejectColor, Uptake uptake, Feeder feeder, FileLog log) {
+  public UptakeSortBall(Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
-      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log),
+      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log, "ejectColor",uptake.getEjectColor()),
       new LogEnableFastLogging(true, uptake, log),
       new WaitCommand(0.1),
       new ConditionalCommand(
@@ -48,7 +48,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
           new FileLogWrite(true, false, "UptakeSortBall", "hold", log),
           () -> !feeder.isBallPresent()
         ),
-      () -> uptake.getBallColor().equals(ejectColor)
+      () -> uptake.getBallColor().equals(uptake.getEjectColor())
       ),
       new LogEnableFastLogging(false, uptake, log),
       new WaitCommand(0.5),

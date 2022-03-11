@@ -48,7 +48,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A1");
+  private final FileLog log = new FileLog("A2");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -64,7 +64,7 @@ public class RobotContainer {
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21S
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
-  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
+  // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
   // Define trajectories and auto selection
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
@@ -80,19 +80,10 @@ public class RobotContainer {
 
   private boolean rumbling = false;
 
-  private BallColor ejectColor;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // set colors as they are used to configure the buttons
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      log.writeLogEcho(true, "EjectColor", "Red");
-      ejectColor = BallColor.kRed;
-    } else {
-      log.writeLogEcho(true, "EjectColor", "Blue");
-      ejectColor = BallColor.kBlue;
-    }
+    log.writeLogEcho(true, "Alliance from DriverStation", DriverStation.getAlliance().name());
     
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
@@ -106,7 +97,7 @@ public class RobotContainer {
    */
   private void configureSensorTriggers() {
     Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
-    colorSensorTrigger.whenActive(new UptakeSortBall(ejectColor, uptake, feeder, log));
+    colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
 
     // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
     // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
@@ -143,8 +134,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
-    SmartDashboard.putData("Shoot Red Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
-    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -160,8 +151,8 @@ public class RobotContainer {
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
     SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.15, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
-    SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
-    SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
+    //SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
+    //SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
 
     // Turret subsystem
     SmartDashboard.putData("Turret Stop", new TurretStop(turret, log));
@@ -240,7 +231,7 @@ public class RobotContainer {
     xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
 
     // left trigger intake on
-    // xbLT.whenActive(new IntakeToColorSensor(intakeFront, uptake, log));
+    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 1, turret, pivisionhub, log));
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -261,7 +252,7 @@ public class RobotContainer {
     //x - use vision for distance
     // xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
-    xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log)); 
+    xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
@@ -276,9 +267,9 @@ public class RobotContainer {
     xb[8].whenHeld(new ClimberSetExtended(false,climber, log)); 
 
     // pov is the d-pad (up, down, left, right)
-    xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, log));
-    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, log));
-    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, log));
+    xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, pivisionhub, log));
+    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
+    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
     xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
@@ -384,13 +375,15 @@ public class RobotContainer {
    * Method called when robot is initialized.
    */
   public void robotInit() {
+    log.writeLogEcho(true, "Alliance from DriverStation in robotInit", DriverStation.getAlliance().name());
+
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
     }
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
-    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
     pivisionhub.setLEDState(false);
 
     //compressor.disable();
@@ -411,7 +404,7 @@ public class RobotContainer {
     log.writeLogEcho(true, "Disabled", "Robot disabled");   // Don't log the word "Init" here -- it affects the Excel macro
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
-    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
     pivisionhub.setLEDState(false);
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
@@ -435,6 +428,7 @@ public class RobotContainer {
    */
   public void autonomousInit() {
     log.writeLogEcho(true, "Auto", "Mode Init");
+    log.writeLogEcho(true, "Alliance from DriverStation in autonomousInit", DriverStation.getAlliance().name());
    
     driveTrain.setDriveModeCoast(false);
 
@@ -454,6 +448,7 @@ public class RobotContainer {
    */
   public void teleopInit() {
     log.writeLogEcho(true, "Teleop", "Mode Init");
+    log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", DriverStation.getAlliance().name());
 
     driveTrain.setDriveModeCoast(false);
   }
