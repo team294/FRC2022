@@ -47,10 +47,13 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
       new WaitCommand(0.5),                                             // wait for ball to shoot
       new FeederSetPercentOutput(0, feeder, log),                       // turn off feeder
-      new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log),  // turn off shooter
 
-      // drive out backwards 
-      new DriveStraight(-1.0, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
+      parallel(
+        new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log),  // turn off shooter
+
+        // drive out backwards 
+        new DriveStraight(-1.0, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2)
+      ),
 
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),

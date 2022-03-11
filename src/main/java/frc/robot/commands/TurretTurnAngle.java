@@ -58,6 +58,7 @@ public class TurretTurnAngle extends CommandBase {
 
   /**
    * Turns the robot to a target angle.
+   * <p> This command DOES NOTHING if the turret is not calibrated.
    * <p> This is the EASIEST constructor to use for the TurrentTurnAngle command.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
@@ -75,6 +76,7 @@ public class TurretTurnAngle extends CommandBase {
 
   /**
    * Turns the robot to a target angle.
+   * <p> This command DOES NOTHING if the turret is not calibrated.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
    *   kVision (use limelight to turn towards the goal)   //TODO
@@ -93,6 +95,7 @@ public class TurretTurnAngle extends CommandBase {
 
   /**
    * Turns the robot to a target angle.
+   * <p> This command DOES NOTHING if the turret is not calibrated.
    * @param type kRelative (target is an angle relative to current robot facing),
    *   kAbsolute (target is an absolute field angle; 0 = away from drive station),
    *   kVision (use limelight to turn towards the goal)     //TODO
