@@ -2,6 +2,7 @@ from cscore import CameraServer, MjpegServer
 from networktables import NetworkTablesInstance
 import cv2
 import numpy as np
+import json
 
 # Allow smart dashboard input to change threshold
 
@@ -34,7 +35,19 @@ sd = NetworkTablesInstance.getDefault().getTable(name)
 cs = CameraServer.getInstance()
 cs.enableLogging()
 
+config = { "fps": 30, "height": 480, "pixel format": "mjpeg", "properties": [ { "name": "connect_verbose", "value": 1 }, { "name": "raw_brightness", "value": 30 }, { "name": "brightness", "value": 0 }, { "name": "raw_contrast", "value": 3 }, { "name": "contrast", "value": 31 }, { "name": "raw_saturation", "value": 100 }, { "name": "saturation", "value": 50 }, { "name": "white_balance_temperature_auto", "value": False }, { "name": "power_line_frequency", "value": 2 }, { "name": "white_balance_temperature", "value": 2800 }, { "name": "raw_sharpness", "value": 25 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "exposure_auto", "value": 1 }, { "name": "raw_exposure_absolute", "value": 5 }, { "name": "exposure_absolute", "value": 7 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ], "width": 680 }
+# try:
+#     with open("camerasettings.json", "rt", encoding="utf-8") as f:
+#         j = json.load(f)
+# except OSError as err:
+#     print("could not open '{}': {}".format(configFile, err), file=sys.stderr)
+
+
 camera = cs.startAutomaticCapture()
+camera.setExposureManual(0)
+camera.setWhiteBalanceManual(2800)
+# camera.setConfigJson(json.dumps(config))
+camera.setConfigJson(json.dumps(config))
 camera.setResolution(width, height)
 
 # initialize input and output instances
@@ -59,8 +72,10 @@ while True:
     
     # get threshold
     # # TODO may return erroneous values (may be why sometimes not detect)
-    lower_threshold = np.array([sd.getNumber("LowerThresholdH", lt[0]), sd.getNumber("LowerThresholdS", lt[1]), sd.getNumber("LowerThresholdV", lt[2])])
-    upper_threshold = np.array([sd.getNumber("UpperThresholdH", ut[0]), sd.getNumber("UpperThresholdS", ut[1]), sd.getNumber("UpperThresholdV", ut[2])])
+    lower_threshold = np.array([lt[0], lt[1], lt[2]])
+    # lower_threshold = np.array([sd.getNumber("LowerThresholdH", lt[0]), sd.getNumber("LowerThresholdS", lt[1]), sd.getNumber("LowerThresholdV", lt[2])])
+    upper_threshold = np.array([ut[0], ut[1], ut[2]])
+    # upper_threshold = np.array([sd.getNumber("UpperThresholdH", ut[0]), sd.getNumber("UpperThresholdS", ut[1]), sd.getNumber("UpperThresholdV", ut[2])])
     threshold = cv2.inRange(hsv, lower_threshold, upper_threshold)
 
     # erode and then dilate by 3 x 3 kernel of 1s
