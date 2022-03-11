@@ -81,19 +81,10 @@ public class RobotContainer {
 
   private boolean rumbling = false;
 
-  private BallColor ejectColor;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // set colors as they are used to configure the buttons
-    if (DriverStation.getAlliance() == Alliance.Blue) {
-      log.writeLogEcho(true, "EjectColor", "Red");
-      ejectColor = BallColor.kRed;
-    } else {
-      log.writeLogEcho(true, "EjectColor", "Blue");
-      ejectColor = BallColor.kBlue;
-    }
+    log.writeLogEcho(true, "Alliance from DriverStation", DriverStation.getAlliance().name());
     
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
@@ -107,7 +98,7 @@ public class RobotContainer {
    */
   private void configureSensorTriggers() {
     Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
-    colorSensorTrigger.whenActive(new UptakeSortBall(ejectColor, uptake, feeder, log));
+    colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
 
     // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
     // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
@@ -144,8 +135,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
-    SmartDashboard.putData("Shoot Red Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
-    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(ejectColor, shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -161,8 +152,8 @@ public class RobotContainer {
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
     SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.15, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
-    SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
-    SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
+    //SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
+    //SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
 
     // Turret subsystem
     SmartDashboard.putData("Turret Stop", new TurretStop(turret, log));
@@ -387,6 +378,8 @@ public class RobotContainer {
    * Method called when robot is initialized.
    */
   public void robotInit() {
+    log.writeLogEcho(true, "Alliance from DriverStation in robotInit", DriverStation.getAlliance().name());
+
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
@@ -438,6 +431,7 @@ public class RobotContainer {
    */
   public void autonomousInit() {
     log.writeLogEcho(true, "Auto", "Mode Init");
+    log.writeLogEcho(true, "Alliance from DriverStation in autonomousInit", DriverStation.getAlliance().name());
    
     driveTrain.setDriveModeCoast(false);
 
@@ -457,6 +451,7 @@ public class RobotContainer {
    */
   public void teleopInit() {
     log.writeLogEcho(true, "Teleop", "Mode Init");
+    log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", DriverStation.getAlliance().name());
 
     driveTrain.setDriveModeCoast(false);
   }
