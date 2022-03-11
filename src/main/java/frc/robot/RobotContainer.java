@@ -49,7 +49,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A1");
+  private final FileLog log = new FileLog("A2");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -65,7 +65,7 @@ public class RobotContainer {
   private final Turret turret = new Turret(log);
   private final PiVisionHub pivisionhub = new PiVisionHub(powerdistribution, log); //Pi ip: 10.2.94.21
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
-  private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
+  // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
   // Define trajectories and auto selection
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
@@ -386,7 +386,7 @@ public class RobotContainer {
     }
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
-    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
     pivisionhub.ledOff();
 
     //compressor.disable();
@@ -407,7 +407,7 @@ public class RobotContainer {
     log.writeLogEcho(true, "Disabled", "Robot disabled");   // Don't log the word "Init" here -- it affects the Excel macro
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
-    limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
+    // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
     pivisionhub.ledOff();
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
