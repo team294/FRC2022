@@ -10,6 +10,7 @@ import frc.robot.commands.IntakePistonSetPosition;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
 
@@ -24,7 +25,7 @@ public class AutoTaxi extends SequentialCommandGroup {
  * @param log file log
  * 
  */
-public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, DriveTrain driveTrain, FileLog log) {
+public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, Uptake uptake, DriveTrain driveTrain, FileLog log) {
     addCommands(
       new WaitCommand(waitTime),                                        
 
@@ -35,8 +36,9 @@ public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, DriveTrain 
       new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
 
       // deploy intake so we are ready to go in teleop
-      new IntakePistonSetPosition(true, intake, log)
+      new IntakePistonSetPosition(true, intake, log),
 
+      new IntakeToColorSensor(intake, uptake, log)
     );
   }
 }

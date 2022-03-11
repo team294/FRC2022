@@ -63,7 +63,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
         new DriveTurnGyro(TargetType.kAbsolute, 180, 90, 90, 5, driveTrain, limeLight, log).withTimeout(2),
 
         // start the shooter
-        new ShootSetup(5000, null, shooter, log)
+        new ShootSetup(false, 4000, null, shooter, log)
       ),
 
       // shoot

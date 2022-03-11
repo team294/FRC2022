@@ -35,8 +35,8 @@ public class AutoSelection {
 		this.trajectoryCache = trajectoryCache;
 
 		// auto selections
-		autoChooser.setDefaultOption("Two Ball", TWO_BALL);
-		autoChooser.addOption("Shoot then Taxi", SHOOT_TAXI);
+		autoChooser.addOption("Two Ball", TWO_BALL);
+		autoChooser.setDefaultOption("Shoot then Taxi", SHOOT_TAXI);
 		autoChooser.addOption("Taxi", TAXI);
 	
 		// show auto selection widget on Shuffleboard
@@ -84,7 +84,7 @@ public class AutoSelection {
 		
 		if (autoPlan == TAXI) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoTaxi");
-			autonomousCommand = new AutoTaxi(waitTime, limeLight, intake, driveTrain, log);
+			autonomousCommand = new AutoTaxi(waitTime, limeLight, intake, uptake, driveTrain, log);
 		}
 
 		if (autoPlan == TWO_BALL) {

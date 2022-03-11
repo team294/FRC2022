@@ -661,7 +661,7 @@ public class DriveTrain extends SubsystemBase {
    */
   public void updateDriveLog(boolean logWhenDisabled) {
     var translation = odometry.getPoseMeters().getTranslation();
-    log.writeLog(logWhenDisabled, "Drive", "updates", 
+    log.writeLog(logWhenDisabled, "Drive", "Update Variables", 
       "L1 Volts", leftMotor1.getMotorOutputVoltage(), "L2 Volts", leftMotor2.getMotorOutputVoltage(),
       "L1 Amps", leftMotor1.getSupplyCurrent(), "L2 Amps", leftMotor2.getSupplyCurrent(),
       "L1 Temp",leftMotor1.getTemperature(), "L2 Temp",leftMotor2.getTemperature(),

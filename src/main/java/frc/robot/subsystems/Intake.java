@@ -32,6 +32,7 @@ public class Intake extends SubsystemBase implements Loggable {
   private String subsystemName;    // subsystem name for use in file logging and Shuffleboard
 
   private double encoderZero = 0.0;     // Zero position for encoder
+  private boolean pistonExtended = false;     // Local copy of piston state to avoid CANbus delays when reading piston state right after setting it
   private int timeoutMs = 0; // was 30, changed to 0 for testing
 
   
@@ -48,11 +49,10 @@ public class Intake extends SubsystemBase implements Loggable {
     this.subsystemName = subsystemName;
     motor = new WPI_TalonFX(CANMotorPort);
     intakePiston = new DoubleSolenoid(Ports.CANPneumaticHub, PneumaticsModuleType.REVPH, solenoidForwardChannel, solenoidReverseChannel);
-    // TODO implement solenoid code.
 
     // set Intake configuration
     motor.configFactoryDefault();
-    motor.setInverted(false);
+    motor.setInverted(true);
     motor.setNeutralMode(NeutralMode.Brake);
     motor.configPeakOutputForward(1.0);
     motor.configPeakOutputReverse(-1.0);
@@ -146,8 +146,8 @@ public class Intake extends SubsystemBase implements Loggable {
    * @param extend true = extend, false = retract
    */
   public void setPistonExtended(boolean extend) {
-    if (extend) intakePiston.set(Value.kForward);
-    else if (!extend) intakePiston.set(Value.kReverse);
+    pistonExtended = extend;
+    intakePiston.set(extend ? Value.kForward : Value.kReverse);
   }
 
   /**
@@ -155,8 +155,7 @@ public class Intake extends SubsystemBase implements Loggable {
    * @return true = extended, false = retracted
    */
   public boolean getPistonExtended() {
-    if (intakePiston.get() == Value.kForward) return true;
-    else return false;
+    return pistonExtended;
   }
 
   /**
@@ -207,7 +206,8 @@ public class Intake extends SubsystemBase implements Loggable {
       "Amps", motor.getSupplyCurrent(),
       "Temperature", motor.getTemperature(),
       "Position", getMotorPosition(),
-      "Measured RPM", getMotorVelocity()
+      "Measured RPM", getMotorVelocity(),
+      "Piston extended", getPistonExtended()
     );
   }
 }

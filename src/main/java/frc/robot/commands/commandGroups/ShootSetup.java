@@ -11,6 +11,7 @@ import frc.robot.utilities.FileLog;
 
 /**
  * Set shooter velocity with vision or set point
+ * @param useVision true if vision should be used for determining velocity
  * @param velocity target rpm of the shooter if not using vision or if vision can't see target
  * @param vision vision subsystem to use for distance. Set to null when not using vision.
  * @param shooter shooter subsystem
@@ -18,13 +19,13 @@ import frc.robot.utilities.FileLog;
  */
 public class ShootSetup extends SequentialCommandGroup {
 
-  public ShootSetup(double velocity, PiVisionHub vision, Shooter shooter, FileLog log) {
+  public ShootSetup(boolean useVision, double velocity, PiVisionHub vision, Shooter shooter, FileLog log) {
 
     addCommands(
       sequence(
-        new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", vision == null ? "no":"yes" ),
+        new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", useVision ),
         new ConditionalCommand(
-          // get velocity from vision if vision is available and can see the target
+          // if get velocity from vision
           sequence (
             new FileLogWrite(false, false, "ShootSetup", "SetupWithVision", log, "Velocity", velocity, "Vision", vision == null ? "0":vision.getDistance()),
             new ShooterSetVelocity(InputMode.kSpeedRPM, (vision == null) ? velocity : shooter.distanceFromTargetToRPM(vision.getDistance()), shooter, log)
@@ -34,9 +35,9 @@ public class ShootSetup extends SequentialCommandGroup {
             new FileLogWrite(false, false, "ShootSetup", "SetupWithVelocity", log, "velocity", velocity),
             new ShooterSetVelocity(InputMode.kSpeedRPM, velocity, shooter, log)
           ),
-          () -> (vision != null && vision.getDistance() != 0)
-        )
-      )
-    );
+          () -> (useVision && vision != null)
+        ),
+        new FileLogWrite(false, false, "ShootSetup", "End", log, "Velocity", velocity, "useVision", useVision,"visionDistance", vision == null ? "null vision" : vision.getDistance()))
+      );
   }
 }
