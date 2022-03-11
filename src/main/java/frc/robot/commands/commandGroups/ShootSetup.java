@@ -23,9 +23,9 @@ public class ShootSetup extends SequentialCommandGroup {
 
     addCommands(
       sequence(
-        new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", vision == null ? "no":"yes" ),
+        new FileLogWrite(false, false, "ShootSetup", "Setup", log, "Velocity", velocity, "useVision", useVision ),
         new ConditionalCommand(
-          // get velocity from vision if vision is available and can see the target
+          // if get velocity from vision
           sequence (
             new FileLogWrite(false, false, "ShootSetup", "SetupWithVision", log, "Velocity", velocity, "Vision", vision == null ? "0":vision.getDistance()),
             new ShooterSetVelocity(InputMode.kSpeedRPM, (vision == null) ? velocity : shooter.distanceFromTargetToRPM(vision.getDistance()), shooter, log)
@@ -37,7 +37,7 @@ public class ShootSetup extends SequentialCommandGroup {
           ),
           () -> (useVision && vision != null)
         ),
-        new FileLogWrite(false, false, "ShootSetup", "End", log, "Velocity", velocity, "useVision", useVision,"visionDistance", vision == null ? vision.getDistance():"null vision"))
+        new FileLogWrite(false, false, "ShootSetup", "End", log, "Velocity", velocity, "useVision", useVision,"visionDistance", vision == null ? "null vision" : vision.getDistance()))
       );
   }
 }

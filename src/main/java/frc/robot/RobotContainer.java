@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants.TargetType;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.CoordType;
@@ -267,8 +268,10 @@ public class RobotContainer {
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretTurnAngle(TargetType.kRelative, -15, 2, turret, log));
-    xb[6].whenPressed(new TurretTurnAngle(TargetType.kRelative, 15, 2, turret, log));
+    xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
+    xb[5].whenReleased(new TurretStop(turret, log));
+    xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
+    xb[6].whenReleased(new TurretStop(turret, log));
     //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
 
     // back = 7, start = 8 

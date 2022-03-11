@@ -24,13 +24,13 @@ public class IntakePistonToggle extends CommandBase {
     this.intake = intake;
     this.uptake = uptake;
     this.log = log;
-    addRequirements(intake);
+    addRequirements(intake, uptake);
   }
    
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    log.writeLog(false, intake.getName(), "Toggle");
+    log.writeLog(false, intake.getName(), "Toggle", "Extended at start", intake.getPistonExtended());
 
     // turn off/on intake before closing/opening intake
     if (intake.getPistonExtended()) {

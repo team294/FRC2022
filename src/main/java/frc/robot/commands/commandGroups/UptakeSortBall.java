@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.FileLogWrite;
+import frc.robot.commands.LogEnableFastLogging;
 import frc.robot.commands.UptakeEjectBall;
 import frc.robot.commands.UptakeFeedBall;
 import frc.robot.commands.UptakeSetPercentOutput;
@@ -27,6 +28,8 @@ public class UptakeSortBall extends SequentialCommandGroup {
 
     addCommands(
       new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log),
+      new LogEnableFastLogging(true, uptake, log),
+      new WaitCommand(0.1),
       new ConditionalCommand(
         // if it is the wrong color, eject the ball
         sequence(
@@ -47,6 +50,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
         ),
       () -> uptake.getBallColor().equals(ejectColor)
       ),
+      new LogEnableFastLogging(false, uptake, log),
       new WaitCommand(0.5),
       // turn off uptake if we have balls in feeder and uptake, otherwise turn it on
       new ConditionalCommand(

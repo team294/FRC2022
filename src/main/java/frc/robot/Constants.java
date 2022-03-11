@@ -130,9 +130,9 @@ public final class Constants {
         public static final int SolIntakeFrontRev = 6;
         public static final int SolIntakeRearFwd = 4;
         public static final int SolIntakeRearRev = 7;
-        public static final int SolClimbLeft = 3;
+        public static final int SolClimbLeft = 1;
         public static final int SolClimbRight = 2;
-        public static final int SolClimbNA = 1;
+        public static final int SolClimbNA = 3;
     }
    
     public static final class OIConstants {

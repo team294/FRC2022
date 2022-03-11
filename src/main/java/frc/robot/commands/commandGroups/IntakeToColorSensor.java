@@ -30,8 +30,9 @@ public IntakeToColorSensor(Intake intake, Uptake uptake, FileLog log) {
           new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)
         ),
         new FileLogWrite(false, false, "IntakeToColorSensor", "intake not extended", log),
+        // () -> true
         () -> intake.getPistonExtended()
-      )
+        )
     );
   }
 }
