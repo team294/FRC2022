@@ -53,12 +53,12 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       // turn towards ball
       new DriveTurnGyro(TargetType.kAbsolute, 180, 90, 90, 3, driveTrain, limeLight, log).withTimeout(2),
 
-      // drive towards ball with intake deployed and on
-      deadline(
-        new DriveStraight(AutoConstants.driveOneMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
-        new IntakePistonSetPosition(true, intake, log),
-        new IntakeToColorSensor(intake, uptake, log)
-      ),
+      // deploy intake
+      new IntakePistonSetPosition(true, intake, log),
+      new IntakeToColorSensor(intake, uptake, log),
+
+      // drive to second ball
+      new DriveStraight(AutoConstants.driveOneMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
       
       parallel (
       // turn towards hub

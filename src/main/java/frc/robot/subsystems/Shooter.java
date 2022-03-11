@@ -105,6 +105,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param voltage voltage, + = forward (shoot out)
    */
   public void setVoltage(double voltage) {
+    log.writeLog(false,getName(), "SetVoltage", "Voltage", voltage);
     motor1.setVoltage(voltage);
     velocityControlOn = false;
     setpointRPM = 0.0;
@@ -115,6 +116,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param percent percent, + = forward (shoot out)
    */
   public void setMotorPercentOutput(double percent){
+    log.writeLog(false,getName(), "SetPercentOutput", "Percent", percent);
     motor1.set(ControlMode.PercentOutput, percent);
     velocityControlOn = false;
     setpointRPM = 0.0;
@@ -124,6 +126,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   * Stops the motor
   */
   public void stopMotor(){
+    log.writeLog(false,getName(), "StopMotor");
     setMotorPercentOutput(0);
     velocityControlOn = false;
     setpointRPM = 0.0;

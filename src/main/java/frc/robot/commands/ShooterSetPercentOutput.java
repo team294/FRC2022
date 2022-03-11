@@ -59,7 +59,7 @@ public class ShooterSetPercentOutput extends CommandBase {
       SmartDashboard.putNumber(buildString(shooter.getName(), " Percent"), percentOut);
     }
 
-    log.writeLog(false, shooter.getName(), "SetPercentOutput", "Percent", percentOut);
+    
     shooter.setMotorPercentOutput(percentOut);
   }
 

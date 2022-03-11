@@ -48,7 +48,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A3");
+  private final FileLog log = new FileLog("A4");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -274,7 +274,7 @@ public class RobotContainer {
     xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, pivisionhub, log));
     xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
     xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
-    xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
+    //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
   /**
@@ -333,7 +333,7 @@ public class RobotContainer {
     // coP[6].whenHeld(new ClimbSetPercentOutput(-0.4, climb, log)); // manually lower climb arms, slowly
     
     // top row RED SWITCH
-    //coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
+    coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
     coP[9].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer

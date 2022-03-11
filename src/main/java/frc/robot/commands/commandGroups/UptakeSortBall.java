@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.UptakeConstants;
+import frc.robot.commands.FeederSetPercentOutput;
 import frc.robot.commands.FileLogWrite;
 import frc.robot.commands.LogEnableFastLogging;
 import frc.robot.commands.UptakeEjectBall;
@@ -27,6 +28,8 @@ public class UptakeSortBall extends SequentialCommandGroup {
   public UptakeSortBall(Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
+      new FeederSetPercentOutput(0, feeder, log),   // turn off the feeder just in case so we don't shoot while intaking
+      
       new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log, "ejectColor",uptake.getEjectColor()),
       new LogEnableFastLogging(true, uptake, log),
       new WaitCommand(0.1),
