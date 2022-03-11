@@ -48,7 +48,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A4");
+  private final FileLog log = new FileLog("A5");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -241,15 +241,15 @@ public class RobotContainer {
     }
     
     //a - short shot distance
-    xb[1].whenHeld(new ShootSetup(false, 3100, pivisionhub, shooter, log));         
+    xb[1].whenHeld(new ShootSetup(false, 2800, pivisionhub, shooter, log));         
     xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
-    xb[2].whenHeld(new ShootSetup(false, 3500, pivisionhub, shooter, log));        
+    xb[2].whenHeld(new ShootSetup(false, 3100, pivisionhub, shooter, log));        
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(false, 3900, pivisionhub, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(false, 3400, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
