@@ -50,8 +50,8 @@ public class Uptake extends SubsystemBase implements Loggable {
     //allianceColor = DriverStation.getAlliance();
     log.writeLog(false, getName(), "Alliance", "From DriverStation", DriverStation.getAlliance());
     //SmartDashboard.putBoolean("Alliance is Blue", allianceColor == Alliance.Blue);
-    // allianceColor = Alliance.Blue;
-    allianceColor = Alliance.Red;
+    allianceColor = Alliance.Blue;
+    //allianceColor = Alliance.Red;
     log.writeLog(false, getName(), "Alliance", "Using color",allianceColor);
 
     // set uptake configuration

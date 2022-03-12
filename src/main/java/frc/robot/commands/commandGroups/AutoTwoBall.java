@@ -43,6 +43,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
 
       new DriveZeroGyro(0, driveTrain, log),      
       new FileLogWrite(false, false, "AutoTwoBall", "starting", log),
+
       new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.ballOneRPM, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       new WaitCommand(1),                                             // wait for ball to shoot
@@ -60,16 +61,16 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       // drive to second ball
       new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 1, 1, true, driveTrain, limeLight, log).withTimeout(4),
       
-      parallel (
-      // turn towards hub
-        new DriveTurnGyro(TargetType.kAbsolute, -180, 1200, 1200, 3, driveTrain, limeLight, log).withTimeout(4),
+      // turn back to hub
+      new DriveTurnGyro(TargetType.kAbsolute, 0, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(4),
 
-        // start the shooter
-        new ShootSetup(false, ShooterConstants.ballTwoRPM, null, shooter, log)
-      ),
-
-      // shoot
-      new ShootSequence(shooter, intake, uptake, feeder, log)
+      // shoot second ball
+      new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.ballTwoRPM, shooter, log),  // turn on the shooter
+      new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
+      new WaitCommand(0.5),                                             // wait for ball to shoot
+      new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
+      new WaitCommand(0.5),                                             // wait for ball to shoot
+      new FeederSetPercentOutput(0, feeder, log)                        // turn off feeder
 
     );
   }

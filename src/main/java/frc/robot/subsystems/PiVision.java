@@ -117,9 +117,8 @@ public class PiVision extends SubsystemBase implements Loggable {
    * @param logWhenDisabled true = log when disabled, false = discard the string
    */
   public void updatePiVisionLog(boolean logWhenDisabled) {
-    // TODO fix
     log.writeLog(logWhenDisabled, name, "Update Variables", 
-      "Target Valid", seesTarget(),
+      "Targets", targetExists, // number of targets
       "Target Width", width, 
       "Center Offset X", x, 
       // "Center Offset Y", y,
