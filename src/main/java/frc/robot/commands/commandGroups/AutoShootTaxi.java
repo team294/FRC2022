@@ -42,7 +42,7 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
 
       new DriveZeroGyro(0, driveTrain, log),      
       new FileLogWrite(false, false, "AutoShootTaxi", "starting", log),
-      new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.ballOneRPM, shooter, log), //#endregion, shooter, log),  // turn on the shooter
+      new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballOneRPM, shooter, log), //#endregion, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       new WaitCommand(1),                                             // wait for ball to shoot
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed

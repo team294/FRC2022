@@ -44,7 +44,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new DriveZeroGyro(0, driveTrain, log),      
       new FileLogWrite(false, false, "AutoTwoBall", "starting", log),
 
-      new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.ballOneRPM, shooter, log),  // turn on the shooter
+      new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballOneRPM, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       new WaitCommand(1),                                             // wait for ball to shoot
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
@@ -65,7 +65,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new DriveTurnGyro(TargetType.kAbsolute, 0, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(4),
 
       // shoot second ball
-      new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.ballTwoRPM, shooter, log),  // turn on the shooter
+      new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballTwoRPM, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       new WaitCommand(0.5),                                             // wait for ball to shoot
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
