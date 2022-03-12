@@ -46,7 +46,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("B2");
+  private final FileLog log = new FileLog("C2");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -85,7 +85,9 @@ public class RobotContainer {
     
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
-    configureSensorTriggers();
+
+    // don't configure triggers here as they interfere with autos. do it in teleopinit
+    //configureSensorTriggers();
 
     driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
   }
@@ -229,7 +231,7 @@ public class RobotContainer {
     
     // right trigger shoots ball
     xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log));
-    xbRT.whenInactive(new FeederSetPercentOutput(0, feeder, log));
+    xbRT.whenInactive(new FeederAndEjectSetPercentOutput(0, uptake, feeder, log));
 
     // left trigger aim turret
     xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
@@ -454,6 +456,9 @@ public class RobotContainer {
     log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", DriverStation.getAlliance().name());
 
     driveTrain.setDriveModeCoast(false);
+
+    // wait until teleop to set trigger as it interferes with autos
+    configureSensorTriggers();
   }
 
   /**
