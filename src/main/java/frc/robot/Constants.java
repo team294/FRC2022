@@ -145,7 +145,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double driveToBallTwoInMeters = 1.5;
+        public static final double driveToBallTwoInMeters = 0.8;
     }
 
     public static final class ShooterConstants {

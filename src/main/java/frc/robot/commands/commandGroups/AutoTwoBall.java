@@ -58,7 +58,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new IntakeToColorSensor(intake, uptake, log),
 
       // drive to second ball
-      new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(4),
+      new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 1, 1, true, driveTrain, limeLight, log).withTimeout(4),
       
       parallel (
       // turn towards hub

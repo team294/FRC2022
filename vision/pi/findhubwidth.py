@@ -12,7 +12,7 @@ height = 480
 
 name = "shooter-cam"
 yTolerance = 60 # in pixels
-lt = (56, 129, 65)
+lt = (56, 100, 65)
 ut = (74, 255, 255)
 contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
 
@@ -35,7 +35,7 @@ sd = NetworkTablesInstance.getDefault().getTable(name)
 cs = CameraServer.getInstance()
 cs.enableLogging()
 
-config = { "fps": 30, "height": 480, "pixel format": "mjpeg", "properties": [ { "name": "connect_verbose", "value": 1 }, { "name": "raw_brightness", "value": 30 }, { "name": "brightness", "value": 0 }, { "name": "raw_contrast", "value": 3 }, { "name": "contrast", "value": 31 }, { "name": "raw_saturation", "value": 100 }, { "name": "saturation", "value": 50 }, { "name": "white_balance_temperature_auto", "value": False }, { "name": "power_line_frequency", "value": 2 }, { "name": "white_balance_temperature", "value": 2800 }, { "name": "raw_sharpness", "value": 25 }, { "name": "sharpness", "value": 50 }, { "name": "backlight_compensation", "value": 0 }, { "name": "exposure_auto", "value": 1 }, { "name": "raw_exposure_absolute", "value": 5 }, { "name": "exposure_absolute", "value": 7 }, { "name": "pan_absolute", "value": 0 }, { "name": "tilt_absolute", "value": 0 }, { "name": "zoom_absolute", "value": 0 } ], "width": 680 }
+config = {     "fps": 30,     "height": 480,     "pixel format": "mjpeg",     "properties": [         {             "name": "connect_verbose",             "value": 1         },         {             "name": "exposure_auto",             "value": 1         },         {             "name": "exposure_absolute",             "value": 7         },         {             "name": "white_balance_temperature_auto",             "value": False         },         {             "name": "white_balance_temperature",             "value": 2800         },         {             "name": "raw_brightness",             "value": 30         },         {             "name": "brightness",             "value": 0         },         {             "name": "raw_contrast",             "value": 3         },         {             "name": "contrast",             "value": 30         },         {             "name": "raw_saturation",             "value": 100         },         {             "name": "saturation",             "value": 50         },         {             "name": "power_line_frequency",             "value": 2         },         {             "name": "raw_sharpness",             "value": 25         },         {             "name": "sharpness",             "value": 50         },         {             "name": "backlight_compensation",             "value": 0         },         {             "name": "raw_exposure_absolute",             "value": 5         },         {             "name": "pan_absolute",             "value": 0         },         {             "name": "tilt_absolute",             "value": 0         },         {             "name": "zoom_absolute",             "value": 0         }     ],     "width": 680 }
 # try:
 #     with open("camerasettings.json", "rt", encoding="utf-8") as f:
 #         j = json.load(f)
@@ -44,10 +44,10 @@ config = { "fps": 30, "height": 480, "pixel format": "mjpeg", "properties": [ { 
 
 
 camera = cs.startAutomaticCapture()
-camera.setExposureManual(7)
-camera.setWhiteBalanceManual(2800)
 # camera.setConfigJson(json.dumps(config))
 camera.setConfigJson(json.dumps(config))
+camera.setExposureManual(7)
+camera.setWhiteBalanceManual(4500)
 camera.setResolution(width, height)
 
 # initialize input and output instances
@@ -95,7 +95,7 @@ while True:
     # bounding rect upper-right x, bounding-rect upper-right y-val, and area
     for c in contours:
         area = cv2.contourArea(c)
-        if (area < 25 or area > 500):
+        if (area < 25 or area > 750):
             continue
         rect = cv2.boundingRect(c)
         x,y,w,h = rect

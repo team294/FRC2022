@@ -48,7 +48,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A6");
+  private final FileLog log = new FileLog("A8");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -232,8 +232,8 @@ public class RobotContainer {
     // right trigger shoots ball
     xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
 
-    // left trigger intake on
-    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 1, turret, pivisionhub, log));
+    // left trigger aim turret
+    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
     xbLT.whenInactive(new TurretStop(turret, log));
 
     for (int i = 1; i < xb.length; i++) {

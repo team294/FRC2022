@@ -47,8 +47,12 @@ public class Uptake extends SubsystemBase implements Loggable {
 
     
     // set colors as they are used to configure the buttons
-    allianceColor = DriverStation.getAlliance();
-    SmartDashboard.putBoolean("Alliance is Blue", allianceColor == Alliance.Blue);
+    //allianceColor = DriverStation.getAlliance();
+    log.writeLog(false, getName(), "Alliance", "From DriverStation", DriverStation.getAlliance());
+    //SmartDashboard.putBoolean("Alliance is Blue", allianceColor == Alliance.Blue);
+    // allianceColor = Alliance.Blue;
+    allianceColor = Alliance.Red;
+    log.writeLog(false, getName(), "Alliance", "Using color",allianceColor);
 
     // set uptake configuration
     uptake.configFactoryDefault();
