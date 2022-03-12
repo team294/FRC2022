@@ -46,7 +46,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("B1");
+  private final FileLog log = new FileLog("B2");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -228,7 +228,8 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log)); 
+    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log));
+    xbRT.whenInactive(new FeederSetPercentOutput(0, feeder, log));
 
     // left trigger aim turret
     xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
@@ -247,7 +248,7 @@ public class RobotContainer {
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(false, 3700, pivisionhub, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(false, 4500, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - use vision for distance
