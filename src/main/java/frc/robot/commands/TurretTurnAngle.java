@@ -159,9 +159,13 @@ public class TurretTurnAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    log.writeLog(false, "TurretTurnAngle", "initialize", "softLimitFwd", softLimitFwd, "softLimitRev", softLimitRev );
     // Do not execute if the turret is not calibrated
     encoderCalibrated = turret.isEncoderCalibrated();
-    if (!encoderCalibrated) return;
+    if (!encoderCalibrated) {
+      log.writeLog(false, "TurretTurnAngle", "initialize", "turret not calibrated" );
+      return;
+    }
     
     feedbackUsingVision = false;
 
@@ -194,9 +198,11 @@ public class TurretTurnAngle extends CommandBase {
         break;
       case kVisionOnScreen:
         if (piVisionHub.seesTarget()) {
+          log.writeLog(false, "TurretTurnAngle", "initialize", "vision sees target" );
           targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
           piVisionHub.enableFastLogging(true);
         } else { // no target is found; don't move
+          log.writeLog(false, "TurretTurnAngle", "initialize", "no target found" );
           targetRel = startAngle;
           continualTracking = false;
           targetType = TargetType.kRelative;
@@ -223,8 +229,15 @@ public class TurretTurnAngle extends CommandBase {
     }
 
     // Prevent turret from wrapping
-    if ( (startAngle + targetRel)>softLimitFwd )  targetRel = softLimitFwd - startAngle;
-    if ( (startAngle + targetRel)<softLimitRev )  targetRel = softLimitRev - startAngle;
+    if ( (startAngle + targetRel)>softLimitFwd )  {
+      targetRel = softLimitFwd - startAngle;
+      log.writeLog(false, "TurretTurnAngle", "initialize", "soft limit fwd set target angle", targetRel );
+    }
+
+    if ( (startAngle + targetRel)<softLimitRev )  {
+      targetRel = softLimitRev - startAngle;
+      log.writeLog(false, "TurretTurnAngle", "initialize", "soft limit rev set target angle", targetRel );
+    }
 
     // Set initial and final states
     tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0); // initialize goal state (degrees to turn)
@@ -241,7 +254,7 @@ public class TurretTurnAngle extends CommandBase {
     profileStartTime = System.currentTimeMillis(); // save starting time of profile
     currProfileTime = profileStartTime;
 
-    log.writeLog(false, "TurretTurnAngle", "initialize", "Total Time", tProfile.totalTime(), "StartAngleAbs", startAngle, "TargetAngleRel", targetRel);
+    log.writeLog(false, "TurretTurnAngle", "initialize", "Total Time", tProfile.totalTime(), "targetType", targetType, "StartAngleAbs", startAngle, "TargetAngleRel", targetRel);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

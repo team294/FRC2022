@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants.TargetType;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.CoordType;
@@ -48,7 +46,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("A9");
+  private final FileLog log = new FileLog("B1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -223,7 +221,7 @@ public class RobotContainer {
     //check povtrigger and axis trigger number bindings
     Trigger xbPOVUp = new POVTrigger(xboxController, 0);
     Trigger xbPOVRight = new POVTrigger(xboxController, 90);
-    Trigger xbPOVDown = new POVTrigger(xboxController, 180);
+    //Trigger xbPOVDown = new POVTrigger(xboxController, 180);
     Trigger xbPOVLeft = new POVTrigger(xboxController, 270);
     
     Trigger xbLT = new AxisTrigger(xboxController, 2, 0.9);
