@@ -146,7 +146,7 @@ public class TurretTurnAngle extends CommandBase {
     this.regenerate = regenerate;
     this.fromShuffleboard = true;
     this.angleTolerance = 0;
-    addRequirements(turret);
+    addRequirements(turret, piVisionHub);
 
     SmartDashboard.putNumber("TurnTurret Manual Target Ang", 45);
     SmartDashboard.putNumber("TurnTurret Manual MaxVel", 150);
