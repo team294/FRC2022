@@ -38,10 +38,9 @@ public class AutoShootTaxi extends SequentialCommandGroup {
  */
 public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, LimeLight limeLight, FileLog log) {
     addCommands(
-      new WaitCommand(waitTime),                                        // delay from shuffleboard
-
-      new DriveZeroGyro(0, driveTrain, log),      
       new FileLogWrite(false, false, "AutoShootTaxi", "starting", log),
+      new WaitCommand(waitTime),                                        // delay from shuffleboard
+      new DriveZeroGyro(0, driveTrain, log),      
       new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballOneRPM, shooter, log), //#endregion, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       new WaitCommand(1),                                             // wait for ball to shoot
@@ -59,7 +58,10 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),
 
-      new IntakeToColorSensor(intake, uptake, log)
+      // turn on intake
+      new IntakeToColorSensor(intake, uptake, log),
+
+      new FileLogWrite(false, false, "AutoShootTaxi", "end", log)
 
     );
   }

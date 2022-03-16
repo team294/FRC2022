@@ -41,7 +41,8 @@ public class ShootSequence extends SequentialCommandGroup {
         new FileLogWrite(true, false, "ShootSequence", "Shooter not ready", log, "Shooter Velocity",shooter.getMotorVelocity()),
         () -> true
         //shooter.getMotorVelocity() > ShooterConstants.shooterDefaultRPM
-      )
+      ),
+      new FileLogWrite(true, false, "ShootSequence", "end", log)
     );
   }
 }

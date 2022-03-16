@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -81,7 +82,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    log.writeLogEcho(true, "Alliance from DriverStation", DriverStation.getAlliance().name());
+    // don't try to get alliance here as not set yet
+    //log.writeLogEcho(true, "Alliance from DriverStation", DriverStation.getAlliance().name());
     
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
@@ -151,6 +153,7 @@ public class RobotContainer {
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
     SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.15, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
+    SmartDashboard.putData("Uptake Toggle Alliance", new UptakeToggleAlliance(uptake, log));
     //SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     //SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
 
@@ -231,7 +234,7 @@ public class RobotContainer {
     
     // right trigger shoots ball
     xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log));
-    xbRT.whenInactive(new FeederAndEjectSetPercentOutput(0, uptake, feeder, log));
+    xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
     xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
@@ -253,11 +256,8 @@ public class RobotContainer {
     xb[4].whenHeld(new ShootSetup(false, 4500, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
-    //x - use vision for distance
-    // xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
-    // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    //x - micro shot for use in the pit
     xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
-    //xb[3].whenHeld(new ShootSetup(true, 3500, pivisionhub, shooter, log)); 
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     // LB = 5, RB = 6
@@ -265,7 +265,6 @@ public class RobotContainer {
     xb[5].whenReleased(new TurretStop(turret, log));
     xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
     xb[6].whenReleased(new TurretStop(turret, log));
-    //XB[6].whenReleased(new ShootSequence(true, shooter, feeder, hopper, intake, limeLightGoal, led, log)); // shooting sequence
 
     // back = 7, start = 8 
     xb[7].whenHeld(new ClimberSetExtended(true,climber, log)); 
@@ -380,7 +379,8 @@ public class RobotContainer {
    * Method called when robot is initialized.
    */
   public void robotInit() {
-    log.writeLogEcho(true, "Alliance from DriverStation in robotInit", DriverStation.getAlliance().name());
+    // don't try to get alliance here as not set yet
+    //log.writeLogEcho(true, "Alliance from DriverStation in robotInit", DriverStation.getAlliance().name());
 
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
@@ -433,7 +433,11 @@ public class RobotContainer {
    */
   public void autonomousInit() {
     log.writeLogEcho(true, "Auto", "Mode Init");
-    log.writeLogEcho(true, "Alliance from DriverStation in autonomousInit", DriverStation.getAlliance().name());
+
+    // safe to get alliance here
+    Alliance alliance = DriverStation.getAlliance();
+    log.writeLogEcho(true, "Alliance from DriverStation in autonomousInit", alliance.name());
+    uptake.setAlliance(alliance);
    
     driveTrain.setDriveModeCoast(false);
 
@@ -453,7 +457,11 @@ public class RobotContainer {
    */
   public void teleopInit() {
     log.writeLogEcho(true, "Teleop", "Mode Init");
-    log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", DriverStation.getAlliance().name());
+
+    // safe to get alliance here
+    Alliance alliance = DriverStation.getAlliance();
+    log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", alliance.name());
+    uptake.setAlliance(alliance);
 
     driveTrain.setDriveModeCoast(false);
 
