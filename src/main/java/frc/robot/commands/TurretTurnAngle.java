@@ -205,7 +205,7 @@ public class TurretTurnAngle extends CommandBase {
           log.writeLog(false, "TurretTurnAngle", "initialize", "no target found" );
           targetRel = startAngle;
           continualTracking = false;
-          targetType = TargetType.kRelative;
+          //targetType = TargetType.kRelative;
         }
         break;
       case kVisionScanLeft:

@@ -223,6 +223,7 @@ public class Uptake extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Uptake Temperature C", uptake.getTemperature());
       SmartDashboard.putBoolean("Uptake Ball Present", colorSensor.isBallPresent());
       SmartDashboard.putBoolean("Eject Ball Present", isBallInEjector());
+      SmartDashboard.putString("Alliance Color", allianceColor.name());
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);

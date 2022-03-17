@@ -19,7 +19,7 @@ public class PiVision extends SubsystemBase implements Loggable {
   protected NetworkTable table;
   protected NetworkTableEntry rx, ry, rv, rw;
   protected FileLog log;
-  protected double x, y, width, targetExists;
+  protected double x, y, width, numberOfTargets;
   protected String name;
   protected int networkTableReadCounter = 0;
   protected boolean fastLogging = false;
@@ -40,7 +40,7 @@ public class PiVision extends SubsystemBase implements Loggable {
    * @return true when pivision sees a target, false when not seeing a target
    */
   public boolean seesTarget() {
-    return (targetExists>0);
+    return (numberOfTargets>0);
   }
 
   /**
@@ -57,8 +57,8 @@ public class PiVision extends SubsystemBase implements Loggable {
   }
 
   public void readData() {
-    double xNew, yNew, targetExistsNew, widthNew; 
-    targetExistsNew = rv.getDouble(1000.0);
+    double xNew, yNew, numberOfTargetsNew, widthNew; 
+    numberOfTargetsNew = rv.getDouble(1000.0);
     widthNew = rw.getDouble(1000.0);
     xNew = rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
     // yNew = ry.getDouble(1000.0);
@@ -67,12 +67,12 @@ public class PiVision extends SubsystemBase implements Loggable {
     // Check if the pivision updated the NetworkTable while we were reading values, to ensure that all
     // of the data (targetExists, X, Y, etc) are from the same vision frame.
     do {
-      targetExists = targetExistsNew;
+      numberOfTargets = numberOfTargetsNew;
       width = widthNew;
       x = xNew;
       // y = yNew;
 
-      targetExistsNew = rv.getDouble(1000.0);
+      numberOfTargetsNew = rv.getDouble(1000.0);
       widthNew = rw.getDouble(1000.0);
       xNew = rx.getDouble(1000.0);
       // yNew = ry.getDouble(1000.0);
@@ -102,7 +102,7 @@ public class PiVision extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(StringUtil.buildString(name, " x"), x);
       // SmartDashboard.putNumber(StringUtil.buildString(name, " y"), y);
       SmartDashboard.putNumber(StringUtil.buildString(name, " width"), width);
-      SmartDashboard.putNumber(StringUtil.buildString(name, " targets"), targetExists);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " targets"), numberOfTargets);
       SmartDashboard.putBoolean(StringUtil.buildString(name, " Updating"), isGettingData());
     }
   }
@@ -118,7 +118,7 @@ public class PiVision extends SubsystemBase implements Loggable {
    */
   public void updatePiVisionLog(boolean logWhenDisabled) {
     log.writeLog(logWhenDisabled, name, "Update Variables", 
-      "Targets", targetExists, // number of targets
+      "Number of Targets", numberOfTargets, // number of targets
       "Target Width", width, 
       "Center Offset X", x, 
       // "Center Offset Y", y,
