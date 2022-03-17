@@ -496,7 +496,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/cam-shooter Distance",
-              "_title": "SmartDashboard/cam-shooter Distance"
+              "_title": "/SmartDashboard/cam-shooter Distance"
             }
           }
         }
@@ -1323,7 +1323,7 @@
             "content": {
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/Uptake Toggle Alliance",
-              "_title": "SmartDashboard/Uptake Toggle Alliance"
+              "_title": "/SmartDashboard/Uptake Toggle Alliance"
             }
           },
           "2,0": {
@@ -1334,7 +1334,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Alliance Color",
-              "_title": "SmartDashboard/Alliance Color"
+              "_title": "/SmartDashboard/Alliance Color"
             }
           }
         }
