@@ -23,6 +23,7 @@ public class AutoSelection {
 	public static final int TAXI = 0;
 	public static final int SHOOT_TAXI = 1;
 	public static final int TWO_BALL = 2;
+	public static final int FOUR_BALL = 3;
 	
 	private TrajectoryCache trajectoryCache;
 	private SendableChooser<Integer> autoChooser = new SendableChooser<>();
@@ -36,6 +37,7 @@ public class AutoSelection {
 
 		// auto selections
 		autoChooser.setDefaultOption("Two Ball", TWO_BALL);
+		autoChooser.addOption("Four Ball", SHOOT_TAXI);
 		autoChooser.addOption("Shoot then Taxi", SHOOT_TAXI);
 		autoChooser.addOption("Taxi", TAXI);
 	
@@ -90,6 +92,11 @@ public class AutoSelection {
 		if (autoPlan == TWO_BALL) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoTwoBall");
 			autonomousCommand = new AutoTwoBall(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
+		}
+
+		if (autoPlan == FOUR_BALL) {
+			log.writeLogEcho(true, "AutoSelect", "run AutoFourBall");
+			autonomousCommand = new AutoFourBall(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
 		}
 
 		if (autonomousCommand == null) {
