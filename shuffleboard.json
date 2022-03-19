@@ -1231,10 +1231,10 @@
               "Crosshair/Crosshair color": "#FFFFFFFF",
               "Controls/Show controls": true,
               "Controls/Rotation": "NONE",
-              "compression": 10.59016393442623,
+              "compression": -1.0,
               "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           },
           "7,1": {
@@ -1252,8 +1252,8 @@
               "Controls/Rotation": "NONE",
               "compression": -1.0,
               "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           },
           "5,0": {
@@ -1271,12 +1271,12 @@
           },
           "6,0": {
             "size": [
-              3,
+              1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Preferences/problemSubsystem",
+              "_source0": "network_table:///SmartDashboard/shooter-cam width",
               "_title": "Problem Subsystem"
             }
           },
@@ -1335,6 +1335,28 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Alliance Color",
               "_title": "Alliance Color"
+            }
+          },
+          "8,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/cam-shooter Distance",
+              "_title": "SmartDashboard/cam-shooter Distance"
+            }
+          },
+          "7,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/shooter-cam width",
+              "_title": "SmartDashboard/shooter-cam width"
             }
           }
         }

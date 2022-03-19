@@ -16,7 +16,10 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -47,7 +50,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("C2");
+  private final FileLog log = new FileLog("D1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -133,7 +136,7 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
     SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
     SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, shooter, log));
-    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
+    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistInch, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
     SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
@@ -237,7 +240,16 @@ public class RobotContainer {
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
+    // xbLT.whenActive(new SequentialCommandGroup(
+    //   new PiVisionHubSetLEDState(1, pivisionhub),
+    //   new WaitCommand(0.07), // TODO change?
+    //   new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
+    // ));
     xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    // xbLT.whenInactive(new ParallelCommandGroup(
+    //   new TurretStop(turret, log),
+    //   new PiVisionHubSetLEDState(0, pivisionhub) 
+    // ));
     xbLT.whenInactive(new TurretStop(turret, log));
 
     for (int i = 1; i < xb.length; i++) {
@@ -253,7 +265,7 @@ public class RobotContainer {
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(false, 3700, pivisionhub, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(false, 4100, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - micro shot for use in the pit
@@ -264,9 +276,9 @@ public class RobotContainer {
     
 
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
+    xb[5].whenPressed(new TurretSetPercentOutput(-0.05, turret, log));
     xb[5].whenReleased(new TurretStop(turret, log));
-    xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
+    xb[6].whenPressed(new TurretSetPercentOutput(+0.05, turret, log));
     xb[6].whenReleased(new TurretStop(turret, log));
 
     // back = 7, start = 8 
@@ -392,7 +404,8 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    pivisionhub.setLEDState(true);
+    pivisionhub.setLEDState(false);
+    // pivisionhub.setLEDState(true);
 
     //compressor.disable();
     compressor.enabled();
@@ -413,7 +426,7 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    // pivisionhub.setLEDState(false);
+    pivisionhub.setLEDState(false);
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }
@@ -466,6 +479,7 @@ public class RobotContainer {
     log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", alliance.name());
     uptake.setAlliance(alliance);
 
+    pivisionhub.setLEDState(true);
     driveTrain.setDriveModeCoast(false);
 
     // wait until teleop to set trigger as it interferes with autos

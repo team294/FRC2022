@@ -9,7 +9,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.PiVisionConstants;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.Loggable;
 import frc.robot.utilities.StringUtil;
@@ -49,7 +48,7 @@ public class PiVision extends SubsystemBase implements Loggable {
    */
   public boolean isGettingData() {
     // return (x != (1000 * PiVisionConstants.angleMultiplier) && y != 1000);
-    return (x != (1000 * PiVisionConstants.angleMultiplier) && width != 1000);
+    return (x != (1000) && width != 1000 && numberOfTargets != 1000);
   }
 
   public double getXOffset() {
@@ -60,7 +59,8 @@ public class PiVision extends SubsystemBase implements Loggable {
     double xNew, yNew, numberOfTargetsNew, widthNew; 
     numberOfTargetsNew = rv.getDouble(1000.0);
     widthNew = rw.getDouble(1000.0);
-    xNew = rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
+    // xNew = rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
+    xNew = rx.getDouble(1000.0);
     // yNew = ry.getDouble(1000.0);
     networkTableReadCounter = 0;
   
@@ -78,7 +78,7 @@ public class PiVision extends SubsystemBase implements Loggable {
       // yNew = ry.getDouble(1000.0);
       networkTableReadCounter++;
     // } while(networkTableReadCounter<= 5 && (xNew != x || yNew != y));
-    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width));
+    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width || numberOfTargetsNew != numberOfTargets));
 
   }
 
