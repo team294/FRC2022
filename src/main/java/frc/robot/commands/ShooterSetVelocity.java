@@ -8,6 +8,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.PiVisionHub;
 import frc.robot.subsystems.Shooter;
 import frc.robot.utilities.FileLog;
 
@@ -19,6 +20,7 @@ public class ShooterSetVelocity extends CommandBase {
   }
   
   private Shooter shooter;
+  private PiVisionHub piVisionHub;
   private FileLog log;
   private boolean fromShuffleboard;
   private double velocity;
@@ -63,7 +65,32 @@ public class ShooterSetVelocity extends CommandBase {
     
     log.writeLog(false, "Shooter", "SetVelocity", "mode", mode, "value", value,"fromShuffleboard", fromShuffleboard);
     if (mode == InputMode.kDistInch) {
-      velocity = shooter.distanceFromTargetToRPM(value);
+      velocity = 0;
+      log.writeLog(false, "Shooter", "SetVelocity", "Velocity from distance", velocity);
+    } else {
+      velocity = value;
+      log.writeLog(false, "Shooter", "SetVelocity", "Velocity from rpm", velocity);
+    }
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(shooter);
+  }
+  /**
+   * Sets the shooter to a specific velocity using the PID controller.
+   * @param mode InputMode.kSpeedRPM or InputMode.kDistInch -- Defines units for "value" parameter
+   * @param value setpoint speed (in RMP) or distance (in feet)
+   * @param shooter shooter subsystem
+   * @param log log file
+   */
+  public ShooterSetVelocity(InputMode mode, double value, Shooter shooter, PiVisionHub pivisionhub, FileLog log) {
+    this.shooter = shooter;
+    this.log = log;
+    this.mode = mode;
+    this.fromShuffleboard = false;
+    
+    log.writeLog(false, "Shooter", "SetVelocity", "mode", mode, "value", value,"fromShuffleboard", fromShuffleboard);
+    if (mode == InputMode.kDistInch) {
+      velocity = 0;
       log.writeLog(false, "Shooter", "SetVelocity", "Velocity from distance", velocity);
     } else {
       velocity = value;
@@ -89,6 +116,10 @@ public class ShooterSetVelocity extends CommandBase {
         log.writeLog(false, "Shooter SetVelocity", "Initialize", "VelocityFromShuffleboardRPM", velocity);
       }
     } else {
+      if (mode == InputMode.kDistInch) {
+        velocity = shooter.distanceFromTargetToRPM(piVisionHub.getDistance());
+        log.writeLog(false, "Shooter SetVelocity", "Initialize", "VelocityFromVision", velocity);
+      } 
       SmartDashboard.putNumber("Shooter SetPoint RPM", velocity);
     }
     
