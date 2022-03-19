@@ -28,10 +28,11 @@ public class UptakeSortBall extends SequentialCommandGroup {
   public UptakeSortBall(Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
+      new LogEnableFastLogging(true, uptake, log),
+      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log, "ejectColor",uptake.getEjectColor()),
+
       new FeederSetPercentOutput(0, feeder, log),   // turn off the feeder just in case so we don't shoot while intaking
       
-      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log, "ejectColor",uptake.getEjectColor()),
-      new LogEnableFastLogging(true, uptake, log),
       new WaitCommand(0.1),
       new ConditionalCommand(
         // if it is the wrong color, eject the ball

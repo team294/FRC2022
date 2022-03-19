@@ -487,6 +487,17 @@
                 }
               ]
             }
+          },
+          "5,5": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/cam-shooter Distance",
+              "_title": "/SmartDashboard/cam-shooter Distance"
+            }
           }
         }
       }
@@ -1197,7 +1208,7 @@
       }
     },
     {
-      "title": "Camera",
+      "title": "Driver",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -1207,10 +1218,10 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "7,0": {
+          "0,1": {
             "size": [
-              6,
-              4
+              7,
+              5
             ],
             "content": {
               "_type": "Camera Stream",
@@ -1226,10 +1237,10 @@
               "imageHeight": -1
             }
           },
-          "0,0": {
+          "7,1": {
             "size": [
-              3,
-              2
+              6,
+              5
             ],
             "content": {
               "_type": "Camera Stream",
@@ -1245,142 +1256,85 @@
               "imageHeight": -1
             }
           },
-          "0,2": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Camera Stream",
-              "_source0": "camera_server://limelight-rear",
-              "_title": "limelight-rear",
-              "Crosshair/Show crosshair": true,
-              "Crosshair/Crosshair color": "#FFFFFFFF",
-              "Controls/Show controls": true,
-              "Controls/Rotation": "NONE",
-              "compression": -1.0,
-              "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
-            }
-          },
-          "5,2": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "shooter-cam",
-              "Layout/Label position": "LEFT",
-              "_children": [
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/LowerThresholdH",
-                  "_title": "LowerThresholdH"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/LowerThresholdS",
-                  "_title": "LowerThresholdS"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/LowerThresholdV",
-                  "_title": "LowerThresholdV"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/UpperThresholdH",
-                  "_title": "UpperThresholdH"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/UpperThresholdS",
-                  "_title": "UpperThresholdS"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/UpperThresholdV",
-                  "_title": "UpperThresholdV"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/rv",
-                  "_title": "rv"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/rw",
-                  "_title": "rw"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/rx",
-                  "_title": "rx"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///shooter-cam/ytol",
-                  "_title": "ytol"
-                }
-              ]
-            }
-          },
-          "3,2": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "Turret",
-              "Layout/Label position": "LEFT",
-              "_children": [
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Turret Position Deg",
-                  "_title": "Turret Position Deg"
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/TurnTurret Manual Target Ang",
-                  "_title": "TurnTurret Manual Target Ang"
-                },
-                {
-                  "_type": "Command",
-                  "_source0": "network_table:///SmartDashboard/Turret Turn to Angle",
-                  "_title": "Turret Turn to Angle"
-                }
-              ]
-            }
-          },
           "5,0": {
             "size": [
-              2,
-              2
+              1,
+              1
             ],
             "content": {
-              "_type": "List Layout",
-              "_title": "Camera Light",
-              "Layout/Label position": "LEFT",
-              "_children": [
-                {
-                  "_type": "Command",
-                  "_source0": "network_table:///SmartDashboard/shooter-cam LEDOn",
-                  "_title": "shooter-cam LEDOn"
-                },
-                {
-                  "_type": "Command",
-                  "_source0": "network_table:///SmartDashboard/shooter-cam LEDOff",
-                  "_title": "shooter-cam LEDOff"
-                },
-                {
-                  "_type": "Command",
-                  "_source0": "network_table:///SmartDashboard/shooter-cam ToggleLED",
-                  "_title": "shooter-cam ToggleLED"
-                }
-              ]
+              "_type": "Boolean Box",
+              "_source0": "network_table:///Preferences/problemExists",
+              "_title": "Preferences/problemExists",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "6,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Preferences/problemSubsystem",
+              "_title": "Preferences/problemSubsystem"
+            }
+          },
+          "0,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Autonomous routine",
+              "_title": "SmartDashboard/Autonomous routine"
+            }
+          },
+          "11,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Turret isCalibrated",
+              "_title": "SmartDashboard/Turret isCalibrated",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "9,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Clear Sticky Faults",
+              "_title": "SmartDashboard/Clear Sticky Faults"
+            }
+          },
+          "3,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Uptake Toggle Alliance",
+              "_title": "/SmartDashboard/Uptake Toggle Alliance"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Alliance Color",
+              "_title": "/SmartDashboard/Alliance Color"
             }
           }
         }

@@ -36,7 +36,7 @@ public class Uptake extends SubsystemBase implements Loggable {
 
   private int timeoutMs = 0; // was 30, changed to 0 for testing 
 
-  private Alliance allianceColor;
+  private Alliance allianceColor = Alliance.Blue; // will be reset when match starts from auto/teleop init
   
   public Uptake(String subsystemName, FileLog log) {
     this.log = log; // save reference to the fileLog
@@ -44,15 +44,6 @@ public class Uptake extends SubsystemBase implements Loggable {
     uptake = new WPI_TalonFX(Ports.CANUptake);
     eject = new WPI_TalonFX(Ports.CANEject);
     colorSensor = new ColorSensor(log);
-
-    
-    // set colors as they are used to configure the buttons
-    //allianceColor = DriverStation.getAlliance();
-    log.writeLog(false, getName(), "Alliance", "From DriverStation", DriverStation.getAlliance());
-    //SmartDashboard.putBoolean("Alliance is Blue", allianceColor == Alliance.Blue);
-    allianceColor = Alliance.Blue;
-    // allianceColor = Alliance.Red;
-    log.writeLog(false, getName(), "Alliance", "Using color",allianceColor);
 
     // set uptake configuration
     uptake.configFactoryDefault();
@@ -87,6 +78,17 @@ public class Uptake extends SubsystemBase implements Loggable {
     eject.setSensorPhase(false);
 
     stopMotor();
+  }
+
+  /**
+   * Set the alliance so the uptake knows which balls to eject
+   * This should be called from auto/teleop init
+   * 
+   * @param alliance
+   */
+  public void setAlliance(Alliance alliance) {
+    log.writeLog(false, getName(), "Setting Alliance", allianceColor.name());
+    this.allianceColor = alliance;
   }
 
   /**
@@ -209,7 +211,8 @@ public class Uptake extends SubsystemBase implements Loggable {
     if(fastLogging || log.getLogRotation() == log.UPTAKE_CYCLE) {
       updateLog(false);
 
-      allianceColor = (SmartDashboard.getBoolean("Alliance is Blue", allianceColor == Alliance.Blue)) ? Alliance.Blue : Alliance.Red;
+      // don't get color from shuffleboard, get it from driverstation
+      //allianceColor = (SmartDashboard.getBoolean("Alliance is Blue", allianceColor == Alliance.Blue)) ? Alliance.Blue : Alliance.Red;
       SmartDashboard.putNumber("Eject Voltage", eject.getMotorOutputVoltage());
       SmartDashboard.putNumber("Uptake Voltage", uptake.getMotorOutputVoltage());
       SmartDashboard.putNumber("Uptake Position Rev", getUptakePositionRaw());
@@ -220,6 +223,7 @@ public class Uptake extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Uptake Temperature C", uptake.getTemperature());
       SmartDashboard.putBoolean("Uptake Ball Present", colorSensor.isBallPresent());
       SmartDashboard.putBoolean("Eject Ball Present", isBallInEjector());
+      SmartDashboard.putString("Alliance Color", allianceColor.name());
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);
@@ -264,6 +268,7 @@ public class Uptake extends SubsystemBase implements Loggable {
       "Eject RPM", getEjectVelocity(),
       "Uptake Ball Present", colorSensor.isBallPresent(),
       "Eject Ball Present", isBallInEjector(),
+      "Alliance color", allianceColor.name(),
       "Uptake Ball color", colorSensor.getBallColorString()
     );
   }

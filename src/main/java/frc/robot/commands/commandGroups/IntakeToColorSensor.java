@@ -32,7 +32,8 @@ public IntakeToColorSensor(Intake intake, Uptake uptake, FileLog log) {
         new FileLogWrite(false, false, "IntakeToColorSensor", "intake not extended", log),
         // () -> true
         () -> intake.getPistonExtended()
-        )
+        ),
+        new FileLogWrite(false, false, "IntakeToColorSensor", "end", log)
     );
   }
 }

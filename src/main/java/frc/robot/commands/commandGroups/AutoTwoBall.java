@@ -3,7 +3,6 @@ package frc.robot.commands.commandGroups;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TargetType;
 import frc.robot.commands.DriveStraight;
 import frc.robot.commands.DriveTurnGyro;
@@ -39,14 +38,13 @@ public class AutoTwoBall extends SequentialCommandGroup {
  */
 public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, LimeLight limeLight, FileLog log) {
     addCommands(
-      new WaitCommand(waitTime),                                        // delay from shuffleboard
-
-      new DriveZeroGyro(0, driveTrain, log),      
       new FileLogWrite(false, false, "AutoTwoBall", "starting", log),
+      new WaitCommand(waitTime),                                        // delay from shuffleboard
+      new DriveZeroGyro(0, driveTrain, log),      
 
       new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballOneRPM, shooter, log),  // turn on the shooter
       new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
-      new WaitCommand(1),                                             // wait for ball to shoot
+      new WaitCommand(1),                                               // wait for ball to shoot
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
       new WaitCommand(0.5),                                             // wait for ball to shoot
       new FeederSetPercentOutput(0, feeder, log),                       // turn off feeder
@@ -70,7 +68,9 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new WaitCommand(0.5),                                             // wait for ball to shoot
       new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
       new WaitCommand(0.5),                                             // wait for ball to shoot
-      new FeederSetPercentOutput(0, feeder, log)                        // turn off feeder
+      new FeederSetPercentOutput(0, feeder, log),                       // turn off feeder
+
+      new FileLogWrite(false, false, "AutoTwoBall", "end", log)
 
     );
   }

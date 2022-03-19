@@ -27,10 +27,11 @@ public class AutoTaxi extends SequentialCommandGroup {
  */
 public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, Uptake uptake, DriveTrain driveTrain, FileLog log) {
     addCommands(
+      new FileLogWrite(false, false, "AutoTaxi", "starting", log),
       new WaitCommand(waitTime),                                        
 
       new DriveZeroGyro(0, driveTrain, log),      
-      new FileLogWrite(false, false, "AutoTaxi", "starting", log),
+      
 
       // drive out backwards so we are ready to shoot preloaded ball
       new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
@@ -38,7 +39,9 @@ public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, Uptake upta
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),
 
-      new IntakeToColorSensor(intake, uptake, log)
+      new IntakeToColorSensor(intake, uptake, log),
+      
+      new FileLogWrite(false, false, "AutoTaxi", "end", log)
     );
   }
 }

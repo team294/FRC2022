@@ -35,7 +35,7 @@ public class PiVisionHub extends PiVision {
   public double getDistance() {    //  TODO  this could return a erroneous value if vision misses a frame or is temporarily blocked.  Use avgrging or filtering
     // if (50 < width && width < 300) return -1.3974*width+359.833;
     // if (50 < width && width < 300) return -1.2336*width+327.002;
-    if (targetExists < 4) return targetExists;
+    if (numberOfTargets < 4) return numberOfTargets;
     return 27983.4/width-51.4736;  
   }
 
@@ -51,9 +51,10 @@ public class PiVisionHub extends PiVision {
    * Write information about limelight to fileLog.
    * @param logWhenDisabled true = log when disabled, false = discard the string
    */
-  public void updateLimeLightLog(boolean logWhenDisabled) {
+  @Override
+  public void updatePiVisionLog(boolean logWhenDisabled) {
     log.writeLog(logWhenDisabled, name, "Update Variables", 
-      "Target Valid", seesTarget(),
+      "Number of Targets", numberOfTargets,
       "Width", width,
       "X Offset", x,
       // "Target Area", area,
