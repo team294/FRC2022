@@ -3,16 +3,10 @@ package frc.robot.utilities;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.*;
 import frc.robot.commands.commandGroups.*;
 import frc.robot.subsystems.*;
-import frc.robot.utilities.TrajectoryCache.TrajectoryType;
-import frc.robot.Constants.CoordType;
-// import frc.robot.Constants.SearchType;
-import frc.robot.Constants.StopType;
 
 
 /**
@@ -66,20 +60,12 @@ public class AutoSelection {
 	 */
 	public Command getAutoCommand(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, LimeLight limeLight, FileLog log) {
 		Command autonomousCommand = null;
-		Trajectory trajectory;
 
 		// Get parameters from Shuffleboard
 		int autoPlan = autoChooser.getSelected();
 
-		boolean useVision = SmartDashboard.getBoolean("Autonomous use vision", false);
 		double waitTime = SmartDashboard.getNumber("Autonomous delay", 0);
 		waitTime = MathUtil.clamp(waitTime, 0, 15);		// make sure autoDelay isn't negative and is only active during auto
-
-		// if (autoPlan == OPPONENT_TRENCH_PICKUP && trajectoryCache.cache[TrajectoryType.opponentTrenchPickup.value] != null) {
-		// 	log.writeLogEcho(true, "AutoSelect", "run TrenchFromRight");
-		// 	trajectory = trajectoryCache.cache[TrajectoryType.opponentTrenchPickup.value];
-		// 	autonomousCommand = new AutoOpponentTrenchPickup(waitTime, useVision, trajectory, driveTrain, limeLightGoal, log, shooter, feeder, hopper, intake, led);
-		// }
 
 		if (autoPlan == SHOOT_TAXI) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoShootTaxi");
@@ -103,7 +89,7 @@ public class AutoSelection {
 
 		if (autoPlan == FIVE_BALL) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoFiveBall");
-			autonomousCommand = new AutoFiveBall(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
+			autonomousCommand = new AutoFiveBall(waitTime, trajectoryCache, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
 		}
 
 		if (autonomousCommand == null) {
