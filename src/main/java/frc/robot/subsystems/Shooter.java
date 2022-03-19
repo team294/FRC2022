@@ -222,8 +222,17 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public double distanceFromTargetToRPM(double distance) {
     int len = ShooterConstants.distanceFromTargetToRPMTable.length;
-    if(distance < ShooterConstants.distanceFromTargetToRPMTable[0][0]) return ShooterConstants.shooterDefaultRPM; /*return ShooterConstants.distanceFromTargetToRPMTable[0][1];*/
-    if(distance > ShooterConstants.distanceFromTargetToRPMTable[len-1][0]) return ShooterConstants.distanceFromTargetToRPMTable[len-1][1];
+
+    if (distance < ShooterConstants.distanceFromTargetToRPMTable[0][0]) { 
+      log.writeLog(false, subsystemName, "dist < min", "distance", distance );
+      return ShooterConstants.shooterDefaultRPM; 
+    }
+
+    if (distance > ShooterConstants.distanceFromTargetToRPMTable[len-1][0]) {
+      log.writeLog(false, subsystemName, "dist > max", "distance", distance );
+      return ShooterConstants.distanceFromTargetToRPMTable[len-1][1];
+    }
+
     int leftBound = 0;
 
     for(int i = len - 1; i >= 0; i--) {
@@ -241,6 +250,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     double upperDist = ShooterConstants.distanceFromTargetToRPMTable[leftBound + 1][0];
     double dRPMperFoot = (upperRPM - lowerRPM) / (upperDist - lowerDist);
     double targetRPM = ((distance - lowerDist) * (dRPMperFoot)) + lowerRPM;
+
+    log.writeLog(false, subsystemName, "dist rpm", "distance", distance, "rpm", targetRPM );
+
     return targetRPM;
   }
 

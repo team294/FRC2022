@@ -36,7 +36,7 @@ public class PiVisionHub extends PiVision {
     // if (50 < width && width < 300) return -1.3974*width+359.833;
     // if (50 < width && width < 300) return -1.2336*width+327.002;
     if (numberOfTargets < 4) return numberOfTargets;
-    return 27983.4/width-51.4736;  
+    return (27983.4 / (width-51.4736)) / 12;  
   }
 
   @Override

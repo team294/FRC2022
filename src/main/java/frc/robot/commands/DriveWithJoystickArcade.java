@@ -47,7 +47,7 @@ public class DriveWithJoystickArcade extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leftPercent = -leftJoystick.getY();
+    leftPercent = -leftJoystick.getY() * 0.5;
     rightPercent = rightJoystick.getX() * 0.5;
 
     if(log.getLogRotation() == log.DRIVE_CYCLE) {
