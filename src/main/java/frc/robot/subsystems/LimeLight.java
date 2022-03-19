@@ -231,9 +231,10 @@ public class LimeLight extends SubsystemBase implements Loggable {
     
     if (log.getLogRotation() == log.LIMELIGHT_CYCLE) {
 
-      if(!isGettingData()) {
-        RobotPreferences.recordStickyFaults(limelightName, log);
-      }
+      // turn off for 2022 as we are not using this for anything critical
+      // if(!isGettingData()) {
+      //   RobotPreferences.recordStickyFaults(limelightName, log);
+      // }
 
       // Invert X on SmartDashboard, since bars on SmartDashboard always go from - (left) to + (right)
       SmartDashboard.putNumber(StringUtil.buildString(limelightName, " area"), area);

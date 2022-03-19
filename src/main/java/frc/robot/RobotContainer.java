@@ -50,7 +50,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("C2");
+  private final FileLog log = new FileLog("D1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -265,12 +265,15 @@ public class RobotContainer {
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(false, 4500, pivisionhub, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(false, 3700, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - micro shot for use in the pit
-    xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
+    // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
+    // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    xb[3].whenHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    
 
     // LB = 5, RB = 6
     xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));

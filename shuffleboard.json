@@ -1264,9 +1264,9 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///Preferences/problemExists",
-              "_title": "Preferences/problemExists",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_title": "Problem Exists",
+              "Colors/Color when true": "#800000FF",
+              "Colors/Color when false": "#00FF00FF"
             }
           },
           "6,0": {
@@ -1277,7 +1277,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///Preferences/problemSubsystem",
-              "_title": "Preferences/problemSubsystem"
+              "_title": "Problem Subsystem"
             }
           },
           "0,0": {
@@ -1288,7 +1288,7 @@
             "content": {
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/Autonomous routine",
-              "_title": "SmartDashboard/Autonomous routine"
+              "_title": "Autonomous Routine"
             }
           },
           "11,0": {
@@ -1299,7 +1299,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Turret isCalibrated",
-              "_title": "SmartDashboard/Turret isCalibrated",
+              "_title": "Turret Calibrated",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
@@ -1312,7 +1312,7 @@
             "content": {
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/Clear Sticky Faults",
-              "_title": "SmartDashboard/Clear Sticky Faults"
+              "_title": "Clear Sticky Faults"
             }
           },
           "3,0": {
@@ -1323,7 +1323,7 @@
             "content": {
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/Uptake Toggle Alliance",
-              "_title": "/SmartDashboard/Uptake Toggle Alliance"
+              "_title": "Toggle Alliance"
             }
           },
           "2,0": {
@@ -1334,7 +1334,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Alliance Color",
-              "_title": "/SmartDashboard/Alliance Color"
+              "_title": "Alliance Color"
             }
           }
         }
