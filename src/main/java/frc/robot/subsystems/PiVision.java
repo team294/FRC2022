@@ -48,7 +48,7 @@ public class PiVision extends SubsystemBase implements Loggable {
    */
   public boolean isGettingData() {
     // return (x != (1000 * PiVisionConstants.angleMultiplier) && y != 1000);
-    return (x != (1000) && width != 1000 && targetExists != 1000);
+    return (x != (1000) && width != 1000 && numberOfTargets != 1000);
   }
 
   public double getXOffset() {
@@ -78,7 +78,7 @@ public class PiVision extends SubsystemBase implements Loggable {
       // yNew = ry.getDouble(1000.0);
       networkTableReadCounter++;
     // } while(networkTableReadCounter<= 5 && (xNew != x || yNew != y));
-    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width || targetExistsNew != targetExists));
+    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width || numberOfTargetsNew != numberOfTargets));
 
   }
 
