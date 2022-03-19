@@ -204,7 +204,7 @@ public class TurretTurnAngle extends CommandBase {
         } else { // no target is found; don't move
           log.writeLog(false, "TurretTurnAngle", "initialize", "no target found" );
           targetRel = startAngle;
-          continualTracking = false;
+          // continualTracking = false;
           //targetType = TargetType.kRelative;
         }
         break;
@@ -304,7 +304,7 @@ public class TurretTurnAngle extends CommandBase {
       if (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight) {
         // Live camera feedback
         // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
-        pFB = kITurnEnd * Math.signum( MathBCR.normalizeAngle(piVisionHub.getXOffset()) );
+        pFB = 0.5*kITurnEnd * Math.signum( MathBCR.normalizeAngle(piVisionHub.getXOffset()) );
       } else {
         // Bang-bang control
         // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
