@@ -84,6 +84,7 @@ public class ShooterSetVelocity extends CommandBase {
    */
   public ShooterSetVelocity(InputMode mode, double value, Shooter shooter, PiVisionHub pivisionhub, FileLog log) {
     this.shooter = shooter;
+    this.piVisionHub = pivisionhub;
     this.log = log;
     this.mode = mode;
     this.fromShuffleboard = false;
@@ -98,7 +99,7 @@ public class ShooterSetVelocity extends CommandBase {
     }
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    addRequirements(shooter, pivisionhub);
   }
 
   
@@ -116,7 +117,7 @@ public class ShooterSetVelocity extends CommandBase {
         log.writeLog(false, "Shooter SetVelocity", "Initialize", "VelocityFromShuffleboardRPM", velocity);
       }
     } else {
-      if (mode == InputMode.kDistInch) {
+      if (mode == InputMode.kDistInch && piVisionHub != null) {
         velocity = shooter.distanceFromTargetToRPM(piVisionHub.getDistance());
         log.writeLog(false, "Shooter SetVelocity", "Initialize", "VelocityFromVision", velocity);
       } 

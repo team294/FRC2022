@@ -1345,7 +1345,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/cam-shooter Distance",
-              "_title": "Distance"
+              "_title": "SmartDashboard/cam-shooter Distance"
             }
           },
           "7,0": {
@@ -1356,7 +1356,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/shooter-cam width",
-              "_title": "width"
+              "_title": "SmartDashboard/shooter-cam width"
             }
           }
         }
