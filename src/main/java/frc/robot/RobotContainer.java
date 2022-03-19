@@ -240,17 +240,17 @@ public class RobotContainer {
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
-    xbLT.whenActive(new SequentialCommandGroup(
-      new PiVisionHubSetLEDState(1, pivisionhub),
-      new WaitCommand(0.07), // TODO change?
-      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
-    ));
-      // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
-    xbLT.whenInactive(new ParallelCommandGroup(
-      new TurretStop(turret, log),
-      new PiVisionHubSetLEDState(0, pivisionhub) 
-    ));
-    // new TurretStop(turret, log));
+    // xbLT.whenActive(new SequentialCommandGroup(
+    //   new PiVisionHubSetLEDState(1, pivisionhub),
+    //   new WaitCommand(0.07), // TODO change?
+    //   new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
+    // ));
+    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    // xbLT.whenInactive(new ParallelCommandGroup(
+    //   new TurretStop(turret, log),
+    //   new PiVisionHubSetLEDState(0, pivisionhub) 
+    // ));
+    xbLT.whenInactive(new TurretStop(turret, log));
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -265,7 +265,7 @@ public class RobotContainer {
     xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
-    xb[4].whenHeld(new ShootSetup(false, 3700, pivisionhub, shooter, log));        
+    xb[4].whenHeld(new ShootSetup(false, 4100, pivisionhub, shooter, log));        
     xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - micro shot for use in the pit
@@ -276,9 +276,9 @@ public class RobotContainer {
     
 
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
+    xb[5].whenPressed(new TurretSetPercentOutput(-0.05, turret, log));
     xb[5].whenReleased(new TurretStop(turret, log));
-    xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
+    xb[6].whenPressed(new TurretSetPercentOutput(+0.05, turret, log));
     xb[6].whenReleased(new TurretStop(turret, log));
 
     // back = 7, start = 8 
@@ -479,6 +479,7 @@ public class RobotContainer {
     log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", alliance.name());
     uptake.setAlliance(alliance);
 
+    pivisionhub.setLEDState(true);
     driveTrain.setDriveModeCoast(false);
 
     // wait until teleop to set trigger as it interferes with autos

@@ -35,9 +35,9 @@ public class ShootSequence extends SequentialCommandGroup {
           new FileLogWrite(true, false, "ShootSequence", "shooting", log,"Shooter Velocity", shooter.getMotorVelocity()),
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send first ball to shooter
           new WaitCommand(1), 
-          new IntakeSetPercentOutput(0, -IntakeConstants.onPct, intake, log), // turn on transfer wheels for jams
+          new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intake, log), // turn on transfer wheels for jams
           new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to shooter
-          new WaitCommand(2),                                   // wait for balls to shoot
+          //new WaitCommand(1),                                   // wait for balls to shoot
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
           new IntakeToColorSensor(intake, uptake, log)          // turn on intake
         ),
