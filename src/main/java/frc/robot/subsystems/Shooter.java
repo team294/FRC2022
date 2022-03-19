@@ -221,27 +221,28 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return target RPM for shooter to make it into the target
    */
   public double distanceFromTargetToRPM(double distance) {
-    int len = ShooterConstants.distanceFromTargetToRPMTable.length;
-    if(distance < ShooterConstants.distanceFromTargetToRPMTable[0][0]) return ShooterConstants.shooterDefaultRPM; /*return ShooterConstants.distanceFromTargetToRPMTable[0][1];*/
-    if(distance > ShooterConstants.distanceFromTargetToRPMTable[len-1][0]) return ShooterConstants.distanceFromTargetToRPMTable[len-1][1];
-    int leftBound = 0;
+    return 12.5*distance + 2050;
+    // int len = ShooterConstants.distanceFromTargetToRPMTable.length;
+    // if(distance < ShooterConstants.distanceFromTargetToRPMTable[0][0]) return ShooterConstants.shooterDefaultRPM; /*return ShooterConstants.distanceFromTargetToRPMTable[0][1];*/
+    // if(distance > ShooterConstants.distanceFromTargetToRPMTable[len-1][0]) return ShooterConstants.distanceFromTargetToRPMTable[len-1][1];
+    // int leftBound = 0;
 
-    for(int i = len - 1; i >= 0; i--) {
-      if(distance > ShooterConstants.distanceFromTargetToRPMTable[i][0]) {
-        leftBound = i;
-        i = 0;
-      } else if (distance == ShooterConstants.distanceFromTargetToRPMTable[i][0]) {
-        return ShooterConstants.distanceFromTargetToRPMTable[i][1];
-      }
-    }
+    // for(int i = len - 1; i >= 0; i--) {
+    //   if(distance > ShooterConstants.distanceFromTargetToRPMTable[i][0]) {
+    //     leftBound = i;
+    //     i = 0;
+    //   } else if (distance == ShooterConstants.distanceFromTargetToRPMTable[i][0]) {
+    //     return ShooterConstants.distanceFromTargetToRPMTable[i][1];
+    //   }
+    // }
 
-    double lowerRPM = ShooterConstants.distanceFromTargetToRPMTable[leftBound][1];
-    double upperRPM = ShooterConstants.distanceFromTargetToRPMTable[leftBound + 1][1];
-    double lowerDist = ShooterConstants.distanceFromTargetToRPMTable[leftBound][0];
-    double upperDist = ShooterConstants.distanceFromTargetToRPMTable[leftBound + 1][0];
-    double dRPMperFoot = (upperRPM - lowerRPM) / (upperDist - lowerDist);
-    double targetRPM = ((distance - lowerDist) * (dRPMperFoot)) + lowerRPM;
-    return targetRPM;
+    // double lowerRPM = ShooterConstants.distanceFromTargetToRPMTable[leftBound][1];
+    // double upperRPM = ShooterConstants.distanceFromTargetToRPMTable[leftBound + 1][1];
+    // double lowerDist = ShooterConstants.distanceFromTargetToRPMTable[leftBound][0];
+    // double upperDist = ShooterConstants.distanceFromTargetToRPMTable[leftBound + 1][0];
+    // double dRPMperFoot = (upperRPM - lowerRPM) / (upperDist - lowerDist);
+    // double targetRPM = ((distance - lowerDist) * (dRPMperFoot)) + lowerRPM;
+    // return targetRPM;
   }
 
 

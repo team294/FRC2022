@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -131,7 +134,7 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
     SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
     SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, shooter, log));
-    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
+    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistInch, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
     SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
@@ -234,8 +237,17 @@ public class RobotContainer {
     xbRT.whenInactive(new FeederAndEjectSetPercentOutput(0, uptake, feeder, log));
 
     // left trigger aim turret
-    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
-    xbLT.whenInactive(new TurretStop(turret, log));
+    xbLT.whenActive(new SequentialCommandGroup(
+      new PiVisionHubSetLEDState(1, pivisionhub),
+      new WaitCommand(0.07), // TODO change?
+      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
+    ));
+      // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    xbLT.whenInactive(new ParallelCommandGroup(
+      new TurretStop(turret, log),
+      new PiVisionHubSetLEDState(0, pivisionhub) 
+    ));
+    // new TurretStop(turret, log));
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -389,7 +401,8 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    pivisionhub.setLEDState(true);
+    pivisionhub.setLEDState(false);
+    // pivisionhub.setLEDState(true);
 
     //compressor.disable();
     compressor.enabled();
@@ -410,7 +423,7 @@ public class RobotContainer {
 
     limeLightFront.setLedMode(1);     // Turn off LEDs on front limelight
     // limeLightRear.setLedMode(1);      // Turn off LEDs on rear limelight
-    // pivisionhub.setLEDState(false);
+    pivisionhub.setLEDState(false);
 
     driveTrain.setDriveModeCoast(true);     // When pushing a disabled robot by hand, it is a lot easier to push in Coast mode!!!!
   }

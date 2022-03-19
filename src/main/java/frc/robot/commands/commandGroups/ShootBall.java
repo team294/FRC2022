@@ -22,7 +22,7 @@ public class ShootBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ShooterSetVelocity(InputMode.kDistFeet, shooter, log),
+      new ShooterSetVelocity(InputMode.kDistInch, shooter, log),
       new FeederSetPercentOutput(feeder, log),
       new WaitCommand(2),
       new UptakeSetPercentOutput(0.25, false, uptake, log),
