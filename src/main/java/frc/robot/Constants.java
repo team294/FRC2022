@@ -257,7 +257,7 @@ public final class Constants {
         // for each robot, not in this code!
         // *******************************
 
-        public static double ticksPerInch = 1210.0; // TODO update for 2022
+        public static double ticksPerInch = 1043.0;   // Calibrated 3/20/22 = 1043.0
 
         // turnGyro constants
         public static double kMaxAngularVelocity = 1125; // degrees per second  // TODO update for 2022
@@ -274,15 +274,15 @@ public final class Constants {
         public static final double wheelInchesToGyroDegrees = 4.205; // converts from inches traveled by the wheels when spinning in place to degrees turned // TODO update for 2022
 
         // DriveStraight constants
-        public static double kMaxSpeedMetersPerSecond = 5.22;   // TODO update for 2022
-        public static double kMaxAccelerationMetersPerSecondSquared = 3.8;   // TODO update for 2022
-        public static double kVLinear = 0.187;  // [-1 to +1]/[m/s] TODO update for 2022 -- used for trajectories, DriveStraight
-        public static double kALinear = 0.025;  // [-1 to +1]/[m/s^2] TODO update for 2022 -- used for trajectories, DriveStraight
-        public static double kSLinear = 0.024;  // [-1 to +1]  TODO update for 2022 -- used for trajectories, DriveStraight
-        public static double kPLinear = 0.280;  // Talon PID constant  TODO update for 2022 -- used for trajectories, DriveStraight
-        public static double kILinear = 0;  // Talon PID constant  TODO update for 2022 -- used for trajectories, DriveStraight
-        public static double kDLinear = 0;  // Talon PID constant  TODO update for 2022 -- used for trajectories, DriveStraight
-        public static double kAngLinear = 0.030; // [-1 to +1]/[delta-angle in degrees] TODO update for 2022  -- used for DriveStraight
+        public static double kMaxSpeedMetersPerSecond = 5.42;   // Calculated 3/2/2022 = 5.42 (was 5.22 last year)
+        public static double kMaxAccelerationMetersPerSecondSquared = 5.0;   // Selectec 3/20/22 = 5.0  (was 3.8 last year)
+        public static double kVLinear = 0.180;  // [-1 to +1]/[m/s] used for trajectories, DriveStraight -- Calibrated 3/20/22 = 0.180 (was 0.187 last year)
+        public static double kALinear = 0.040;  // [-1 to +1]/[m/s^2] used for trajectories, DriveStraight -- Calibrated 3/20/22 = 0.040 (was 0.025 last year)
+        public static double kSLinear = 0.0268;  // [-1 to +1]  used for trajectories, DriveStraight  -- Calibrated 3/20/22 = 0.0268
+        public static double kPLinear = 0.280;  // Talon PID constant, used for trajectories, DriveStraight -- OK 3/20/22 = 0.280 (was 0.280 last year)
+        public static double kILinear = 0;  // Talon PID constant  
+        public static double kDLinear = 0;  // Talon PID constant  
+        public static double kAngLinear = 0.030; // [-1 to +1]/[delta-angle in degrees] -- OK 3/20/22 = 0.030 (was 0.030 last year)
 
         // Trajectory generation constants
         public static double kS = kSLinear * compensationVoltage; 

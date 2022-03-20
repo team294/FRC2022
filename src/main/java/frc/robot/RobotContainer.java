@@ -186,9 +186,11 @@ public class RobotContainer {
     SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightFront, log));
 
     // DriveTrain calibration
+    SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightFront, log));
     SmartDashboard.putData("Drive Cal Slow", new DriveCalibrate(0.3, 35, 0.01, CalibrateMode.kStraight, driveTrain, log));
     SmartDashboard.putData("Drive Cal Fast", new DriveCalibrate(0.5, 12, 0.05, CalibrateMode.kStraight, driveTrain, log));
 
+    SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnCal Left Slow", new DriveCalibrate(0.3, 35, 0.01, CalibrateMode.kTurnLeft, driveTrain, log));
     SmartDashboard.putData("TurnCal Right Slow", new DriveCalibrate(0.3, 35, 0.01, CalibrateMode.kTurnRight, driveTrain, log));
     SmartDashboard.putData("TurnCal Left Fast", new DriveCalibrate(0.3, 10, 0.05, CalibrateMode.kTurnLeft, driveTrain, log));
@@ -201,10 +203,6 @@ public class RobotContainer {
       new DriveCalibrate(0.3, 3, 15, CalibrateMode.kTurnLeft, driveTrain, log),
       new DriveCalibrate(0.3, 3, 15, CalibrateMode.kTurnRight, driveTrain, log)
     ) );
-
-    // drive profile calibration buttons
-    SmartDashboard.putData("TurnGyroManual", new DriveTurnGyro(TargetType.kRelative, false, driveTrain, limeLightFront, log));
-    SmartDashboard.putData("DriveStraightManual", new DriveStraight(TargetType.kRelative, true, driveTrain, limeLightFront, log));
 
     // Testing for autos and trajectories
     SmartDashboard.putData("ZeroGyro", new DriveZeroGyro(driveTrain, log));
