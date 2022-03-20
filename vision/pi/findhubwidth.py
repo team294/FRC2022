@@ -32,6 +32,7 @@ sd = NetworkTablesInstance.getDefault().getTable(name)
 # sd.putNumber("rx", 1000)
 # sd.putNumber("rx", 1000)
 # sd.putNumber("ytol", yTolerance)
+sd.putNumber("snapshot", 0)
 
 # initialize camera server
 cs = CameraServer.getInstance()
@@ -68,6 +69,11 @@ while True:
     if time == 0: # There is an error
         output.notifyError(sink.getError())
         continue
+
+    if (sd.getNumber("snapshot", 0) == 1):
+        timestr = time.strftime("%Y-%m-%d_%H-%M-%S")
+        cv2.imwrite(f"snapshot_{timestr}.png", input_img)
+        sd.putNumber("snapshot", 0)
 
     # convert image to hsv
     hsv = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
@@ -136,11 +142,6 @@ while True:
             rx = -0.0937486*(0.5*(bx+fx)-0.5*width) - 4.99446 # x in pixels converted to angle in degrees!
             # draws bounding rectangle
             cv2.rectangle(input_img,(fx, fy),(bx, by),(0,255,0),2)
-
-    if (sd.getNumber("snapshot", 0) == 1):
-        timestr = time.strftime("%Y-%m-%d_%H-%M-%S")
-        # cv2.imwrite()
-        sd.putNumber("snapshot", 0)
 
     final = cv2.resize(input_img, (160, 120)) # TODO TEST
 
