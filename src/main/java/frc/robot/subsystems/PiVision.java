@@ -51,10 +51,16 @@ public class PiVision extends SubsystemBase implements Loggable {
     return (x != (1000) && width != 1000 && numberOfTargets != 1000);
   }
 
+  /**
+   * @return offset of target in degrees from center, positive = clockwise
+   */
   public double getXOffset() {
     return -x;
   }
 
+  /**
+   * reads data from network tables
+   */
   public void readData() {
     double xNew, yNew, numberOfTargetsNew, widthNew; 
     numberOfTargetsNew = rv.getDouble(1000.0);

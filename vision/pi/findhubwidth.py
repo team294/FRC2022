@@ -3,6 +3,8 @@ from networktables import NetworkTablesInstance
 import cv2
 import numpy as np
 import json
+import os
+import time
 
 # Allow smart dashboard input to change threshold
 
@@ -30,6 +32,7 @@ sd = NetworkTablesInstance.getDefault().getTable(name)
 # sd.putNumber("rx", 1000)
 # sd.putNumber("rx", 1000)
 # sd.putNumber("ytol", yTolerance)
+sd.putNumber("snapshot", 0)
 
 # initialize camera server
 cs = CameraServer.getInstance()
@@ -66,6 +69,11 @@ while True:
     if time == 0: # There is an error
         output.notifyError(sink.getError())
         continue
+
+    if (sd.getNumber("snapshot", 0) == 1):
+        timestr = time.strftime("%Y-%m-%d_%H-%M-%S")
+        cv2.imwrite(f"snapshot_{timestr}.png", input_img)
+        sd.putNumber("snapshot", 0)
 
     # convert image to hsv
     hsv = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
