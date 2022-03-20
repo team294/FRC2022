@@ -35,6 +35,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.StopType;
 import frc.robot.commands.*;
 import frc.robot.commands.DriveFollowTrajectory.PIDType;
+import frc.robot.commands.DriveCalibrate.CalibrateMode;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
 import frc.robot.commands.commandGroups.*;
 import frc.robot.subsystems.*;
@@ -183,17 +184,22 @@ public class RobotContainer {
     SmartDashboard.putData("TurnVision", new DriveTurnGyro(TargetType.kVisionOnScreen, 0, 90, 100, true, 2, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnRelative", new DriveTurnGyro(TargetType.kRelative, 90, 90, 100, 1, driveTrain, limeLightFront, log));
     SmartDashboard.putData("TurnAbsolute", new DriveTurnGyro(TargetType.kAbsolute, 90, 90, 100, 1, driveTrain, limeLightFront, log));
-    SmartDashboard.putData("TurnCal Left Slow", new DriveTurnCalibrate(0.3, 35, 0.01, true, driveTrain, log));
-    SmartDashboard.putData("TurnCal Right Slow", new DriveTurnCalibrate(0.3, 35, 0.01, false, driveTrain, log));
-    SmartDashboard.putData("TurnCal Left Fast", new DriveTurnCalibrate(0.3, 10, 0.05, true, driveTrain, log));
-    SmartDashboard.putData("TurnCal Right Fast", new DriveTurnCalibrate(0.3, 10, 0.05, false, driveTrain, log));
-    SmartDashboard.putData("TurnCal Left Step0.2", new DriveTurnCalibrate(0.2, 6, 3, true, driveTrain, log));
-    SmartDashboard.putData("TurnCal Right Step0.2", new DriveTurnCalibrate(0.2, 6, 3, false, driveTrain, log));
-    SmartDashboard.putData("TurnCal Left Step0.3", new DriveTurnCalibrate(0.3, 6, 3, true, driveTrain, log));
-    SmartDashboard.putData("TurnCal Right Step0.3", new DriveTurnCalibrate(0.3, 6, 3, false, driveTrain, log));
+
+    // DriveTrain calibration
+    SmartDashboard.putData("Drive Cal Slow", new DriveCalibrate(0.3, 35, 0.01, CalibrateMode.kStraight, driveTrain, log));
+    SmartDashboard.putData("Drive Cal Fast", new DriveCalibrate(0.5, 12, 0.05, CalibrateMode.kStraight, driveTrain, log));
+
+    SmartDashboard.putData("TurnCal Left Slow", new DriveCalibrate(0.3, 35, 0.01, CalibrateMode.kTurnLeft, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Slow", new DriveCalibrate(0.3, 35, 0.01, CalibrateMode.kTurnRight, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Fast", new DriveCalibrate(0.3, 10, 0.05, CalibrateMode.kTurnLeft, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Fast", new DriveCalibrate(0.3, 10, 0.05, CalibrateMode.kTurnRight, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Step0.2", new DriveCalibrate(0.2, 6, 3, CalibrateMode.kTurnLeft, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Step0.2", new DriveCalibrate(0.2, 6, 3, CalibrateMode.kTurnRight, driveTrain, log));
+    SmartDashboard.putData("TurnCal Left Step0.3", new DriveCalibrate(0.3, 6, 3, CalibrateMode.kTurnLeft, driveTrain, log));
+    SmartDashboard.putData("TurnCal Right Step0.3", new DriveCalibrate(0.3, 6, 3, CalibrateMode.kTurnRight, driveTrain, log));
     SmartDashboard.putData("TurnCal Left-Right", new SequentialCommandGroup(
-      new DriveTurnCalibrate(0.3, 3, 15, true, driveTrain, log),
-      new DriveTurnCalibrate(0.3, 3, 15, false, driveTrain, log)
+      new DriveCalibrate(0.3, 3, 15, CalibrateMode.kTurnLeft, driveTrain, log),
+      new DriveCalibrate(0.3, 3, 15, CalibrateMode.kTurnRight, driveTrain, log)
     ) );
 
     // drive profile calibration buttons

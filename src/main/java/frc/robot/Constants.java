@@ -276,13 +276,13 @@ public final class Constants {
         // DriveStraight constants
         public static double kMaxSpeedMetersPerSecond = 5.22;   // TODO update for 2022
         public static double kMaxAccelerationMetersPerSecondSquared = 3.8;   // TODO update for 2022
-        public static double kVLinear = 0.187;  // TODO update for 2022
-        public static double kALinear = 0.025;  // TODO update for 2022
-        public static double kSLinear = 0.024;  // TODO update for 2022
-        public static double kPLinear = 0.280;  // TODO update for 2022
-        public static double kILinear = 0;
-        public static double kDLinear = 0; 
-        public static double kAngLinear = 0.030; // TODO update for 2022
+        public static double kVLinear = 0.187;  // [-1 to +1]/[m/s] TODO update for 2022 -- used for trajectories, DriveStraight
+        public static double kALinear = 0.025;  // [-1 to +1]/[m/s^2] TODO update for 2022 -- used for trajectories, DriveStraight
+        public static double kSLinear = 0.024;  // [-1 to +1]  TODO update for 2022 -- used for trajectories, DriveStraight
+        public static double kPLinear = 0.280;  // Talon PID constant  TODO update for 2022 -- used for trajectories, DriveStraight
+        public static double kILinear = 0;  // Talon PID constant  TODO update for 2022 -- used for trajectories, DriveStraight
+        public static double kDLinear = 0;  // Talon PID constant  TODO update for 2022 -- used for trajectories, DriveStraight
+        public static double kAngLinear = 0.030; // [-1 to +1]/[delta-angle in degrees] TODO update for 2022  -- used for DriveStraight
 
         // Trajectory generation constants
         public static double kS = kSLinear * compensationVoltage; 
