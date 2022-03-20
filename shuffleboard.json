@@ -3,7 +3,7 @@
     {
       "title": "SmartDashboard",
       "autoPopulate": false,
-      "autoPopulatePrefix": "SmartDashboard/",
+      "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
         "showGrid": true,
@@ -1135,11 +1135,164 @@
           "3,0": {
             "size": [
               3,
-              3
+              6
             ],
             "content": {
               "_type": "List Layout",
-              "_title": "Drive Train",
+              "_title": "Drive Train Data",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Drive isGyroReading",
+                  "_title": "Drive isGyroReading",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Odometry Y",
+                  "_title": "Drive Odometry Y"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Odometry X",
+                  "_title": "Drive Odometry X"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Gyro Rotation",
+                  "_title": "Drive Gyro Rotation"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Raw Gyro",
+                  "_title": "Drive Raw Gyro"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Left Enc",
+                  "_title": "Drive Left Enc"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Right Enc",
+                  "_title": "Drive Right Enc"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Average Dist in Meters",
+                  "_title": "Drive Average Dist in Meters"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/ZeroGyro",
+                  "_title": "ZeroGyro"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/ZeroEncoders",
+                  "_title": "ZeroEncoders"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/ZeroOdometry",
+                  "_title": "ZeroOdometry"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive AngVel",
+                  "_title": "Drive AngVel"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Left Velocity",
+                  "_title": "Drive Left Velocity"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Right Velocity",
+                  "_title": "Drive Right Velocity"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Bus Volt",
+                  "_title": "Drive Bus Volt"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motor Temp",
+                  "_title": "Drive Motor Temp"
+                }
+              ]
+            }
+          },
+          "9,0": {
+            "size": [
+              3,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Drive Calibration",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/Drive Cal Slow",
+                  "_title": "Drive Cal Slow"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/Drive Cal Fast",
+                  "_title": "Drive Cal Fast"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kS Linear",
+                  "_title": "Drive kS Linear"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kV Linear",
+                  "_title": "Drive kV Linear"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kA Linear",
+                  "_title": "Drive kA Linear"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kP Linear",
+                  "_title": "Drive kP Linear"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kI Linear",
+                  "_title": "Drive kI Linear"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kD Linear",
+                  "_title": "Drive kD Linear"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive kAng Linear",
+                  "_title": "Drive kAng Linear"
+                }
+              ]
+            }
+          },
+          "6,0": {
+            "size": [
+              3,
+              5
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Drive Controls",
               "Layout/Label position": "LEFT",
               "_children": [
                 {
@@ -1151,6 +1304,51 @@
                   "_type": "Command",
                   "_source0": "network_table:///SmartDashboard/DriveBackward",
                   "_title": "Drive Backward"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/DriveTurnLeft",
+                  "_title": "DriveTurnLeft"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/DriveTurnRight",
+                  "_title": "DriveTurnRight"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/DriveStraight Manual Target Dist",
+                  "_title": "DriveStraight Manual Target Dist"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/DriveStraight Manual Angle",
+                  "_title": "DriveStraight Manual Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/DriveStraight Manual MaxVel",
+                  "_title": "DriveStraight Manual MaxVel"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/DriveStraight Manual MaxAccel",
+                  "_title": "DriveStraight Manual MaxAccel"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/DriveStraightManual",
+                  "_title": "DriveStraightManual"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/DriveStraightRel",
+                  "_title": "DriveStraightRel"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/DriveStraightAbs",
+                  "_title": "DriveStraightAbs"
                 }
               ]
             }
@@ -1364,9 +1562,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.0,
-    "y": 2.0,
-    "width": 1934.0,
-    "height": 1045.0
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1936.0,
+    "height": 1056.0
   }
 }
