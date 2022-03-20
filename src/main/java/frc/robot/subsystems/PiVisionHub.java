@@ -20,10 +20,17 @@ public class PiVisionHub extends PiVision {
     this.pd = pd;
   }
 
+  /**
+   * Sets LED state
+   * @param state true for on, false for off
+   */
   public void setLEDState(boolean state) {
     pd.setSwitchableChannel(state);
   }
 
+  /**
+   * @return gets current LED state, false = off
+   */
   public boolean LEDState() {
     return pd.getSwitchableChannel();
   }
@@ -35,10 +42,10 @@ public class PiVisionHub extends PiVision {
   public double getDistance() {    //  TODO  this could return a erroneous value if vision misses a frame or is temporarily blocked.  Use avgrging or filtering
     // if (50 < width && width < 300) return -1.3974*width+359.833;
     // if (50 < width && width < 300) return -1.2336*width+327.002;
-    if (width == 0) return 0;
-    if (numberOfTargets < 4) return numberOfTargets;
-    // return 27983.4 / width - 51.4736;  
-    return 26691.7 / width - 60.0122;  
+    if (width == 0) return 0; // TODO change if certain width range or change if certain number of targets
+    double w = width * ((36.5)/(numberOfTargets*5+(numberOfTargets-1)*5.5));
+    // return 27983.4 / w - 51.4736;  
+    return 26691.7 / w - 60.0122;  
   }
 
   @Override
