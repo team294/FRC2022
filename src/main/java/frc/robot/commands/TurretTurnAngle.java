@@ -201,8 +201,9 @@ public class TurretTurnAngle extends CommandBase {
           log.writeLog(false, "TurretTurnAngle", "initialize", "vision sees target" );
           targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
           piVisionHub.enableFastLogging(true);
-        } else { // no target is found; don't move
-          log.writeLog(false, "TurretTurnAngle", "initialize", "no target found" );
+        } else { 
+          // no target is found; don't turn, just exit
+          log.writeLog(false, "TurretTurnAngle", "initialize", "no target found - exiting" );
           targetRel = startAngle;
           // continualTracking = false;
           //targetType = TargetType.kRelative;
@@ -210,18 +211,22 @@ public class TurretTurnAngle extends CommandBase {
         break;
       case kVisionScanLeft:
         if (piVisionHub.seesTarget()) {
+          log.writeLog(false, "TurretTurnAngle", "initialize", "vision sees target" );
           targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
           piVisionHub.enableFastLogging(true);
-        } else { // no target is found; don't move
+        } else {
+          log.writeLog(false, "TurretTurnAngle", "initialize", "no target found - scanning left" );
           target = softLimitRev;
           targetRel = target - startAngle;
         }
         break;
       case kVisionScanRight:
         if (piVisionHub.seesTarget()) {
+          log.writeLog(false, "TurretTurnAngle", "initialize", "vision sees target" );
           targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
           piVisionHub.enableFastLogging(true);
-        } else { // no target is found; don't move
+        } else {
+          log.writeLog(false, "TurretTurnAngle", "initialize", "no target found - scanning right" );
           target = softLimitFwd;
           targetRel = target - startAngle;
         }
@@ -330,7 +335,8 @@ public class TurretTurnAngle extends CommandBase {
     log.writeLog(false, "TurretTurnAngle", "profile", "target", targetRel, 
       "posT", tStateNow.position, "velT", targetVel, "accT", targetAccel,
       "posF", tStateForecast.position, "velF", forecastVel, "accF", forecastAccel,
-      "posA", currAngle, "velA", currVelocity, "pFF", pFF, "pFB", pFB, "pTotal", pFF+pFB+pDB
+      "posA", currAngle, "velA", currVelocity, "pFF", pFF, "pFB", pFB, "pTotal", pFF+pFB+pDB,
+      "counter", accuracyCounter
       , "pi x", piVisionHub.getXOffset()
       );
   }
