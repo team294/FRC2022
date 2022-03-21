@@ -3,7 +3,6 @@ from networktables import NetworkTablesInstance
 import cv2
 import numpy as np
 import json
-import os
 import time
 
 # Allow smart dashboard input to change threshold
@@ -16,8 +15,6 @@ name = "shooter-cam"
 yTolerance = 60 # in pixels
 lt = (56, 100, 65)
 ut = (74, 255, 255)
-contourType = [('x', int), ('y', int), ('left', int), ('right', int), ('top', int), ('bottom', int)]
-
 
 # initialize network tables
 NetworkTablesInstance.getDefault().initialize(server='10.2.94.2')
@@ -72,7 +69,7 @@ while True:
 
     if (sd.getNumber("snapshot", 0) == 1):
         timestr = time.strftime("%Y-%m-%d_%H-%M-%S")
-        cv2.imwrite(f"snapshot_{timestr}.png", input_img)
+        cv2.imwrite(f"/home/pi/snapshot_{timestr}.jpg", input_img)
         sd.putNumber("snapshot", 0)
 
     # convert image to hsv
@@ -125,11 +122,22 @@ while True:
         # filtered = list(filter(lambda f: abs(median-f[1]) < yT, filtered)) # filters
         filtered = list(filter(lambda f: abs(median-f[1]) < yTolerance, filtered)) # filters
 
+        
         # if there are any values left in filtered
         if len(filtered) > 1:
             # sorts filtered array by contour area and caps it to at-most 4 elements
             filtered = sorted(filtered, key=lambda f: f[6])[-4:]
+            
             rv = len(filtered) # gets the amount of contours found
+
+            if rv > 1:
+                longWidth = filtered[len(filtered)-1][3] - filtered[len(filtered)-1][2]
+                filtered = sorted(filtered, key=lambda c: c[0])
+                for i in range(len(filtered)-1, 0, -1):
+                    if (filtered[i][0]-filtered[i-1][0] > longWidth*3):
+                        rv+=1
+
+
 
             # gets lower-left-most x- and y-value and upper-right-most x- and y-value for final bounding box
             fx, fy, bx, by = filtered[0][2], filtered[0][4], filtered[0][3], filtered[0][5]
