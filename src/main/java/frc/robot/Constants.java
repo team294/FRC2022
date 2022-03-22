@@ -252,26 +252,21 @@ public final class Constants {
         public static final double kRamseteB = 2.0;
         public static final double kRamseteZeta = 0.70;
 
-        // *******************************
-        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
-        // for each robot, not in this code!
-        // *******************************
-
         public static double ticksPerInch = 1043.0;   // Calibrated 3/20/22 = 1043.0
 
         // turnGyro constants
-        public static double kMaxAngularVelocity = 1125; // degrees per second  // TODO update for 2022
-        public static double kMaxAngularAcceleration = 200; // degrees per second per second  // TODO update for 2022
-        public static double kVAngular = 0.00108;   // TODO update for 2022
-        public static double kAAngular = 0.00015;   // TODO update for 2022
-        public static double kSAngular = 0.01;      // TODO update for 2022
-        public static double kPAngular = 0.001;     // TODO update for 2022
+        public static double kMaxAngularVelocity = 200; // degrees per second
+        public static double kMaxAngularAcceleration = 200; // degrees per second per second
+        public static double kVAngular = 0.00110;   // [-1 to +1]/[deg/s]  used for DriveTurnGyro  -- Calibrated 3/21/2022 = 0.00110 (was 0.00108 last year)
+        public static double kAAngular = 0.00015;   // [-1 to +1]/[deg/s^2]  used for DriveTurnGyro  -- OK 3/21/2022 = 0.00015 (was 0.00015 last year)
+        public static double kSAngular = 0.082;     // [-1 to +1]  used for DriveTurnGyro  -- Calibrated 3/21/2022 = 0.082 (was 0.01 last year)
+        public static double kPAngular = 0.001;     // [-1 to +1]/[deg/s error]  used for DriveTurnGyro  -- OK 3/21/2022 = 0.001 (was 0.001 last year)
         public static double kDAngular = 0;
-        public static double kIAngular = 0.015;    // TODO update for 2022
+        public static double kIAngular = 0.015;    // [-1 to +1]/[deg error]  used for DriveTurnGyro  -- OK 3/21/2022 = 0.015 (was 0.015 last year)
         public static double tLagAngular = 0.020;          // Lag time to start/stop turning, or just one cycle forcast through scheduler
         public static final double maxSecondsForTurnGyro = 2.0; // max time to wait for turn gyro. use this in commands to timeout
 
-        public static final double wheelInchesToGyroDegrees = 4.205; // converts from inches traveled by the wheels when spinning in place to degrees turned // TODO update for 2022
+        public static final double wheelInchesToGyroDegrees = 4.090; // converts from inches traveled by the wheels when spinning in place to degrees turned  -- Calibrated 3/21/22 = 4.090 (was 4.205 last year)
 
         // DriveStraight constants
         public static double kMaxSpeedMetersPerSecond = 5.42;   // Calculated 3/2/2022 = 5.42 (was 5.22 last year)
@@ -289,7 +284,12 @@ public final class Constants {
         public static double kV = kVLinear * compensationVoltage; 
         public static double kA = kALinear * compensationVoltage; 
 
-        public static double TRACK_WIDTH = 0.71;   // in meters     // TODO update for 2022
+        public static double TRACK_WIDTH = 0.80;   // in meters, for Trajectories (not physical track width).  Calibrated 3/21/2022 = 0.80 (was 0.71 last year)
+
+        // *******************************
+        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
+        // for each robot, not in this code!
+        // *******************************
 
         public static void updateDerivedConstants() {
             kS = kSLinear * compensationVoltage; 
