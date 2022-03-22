@@ -43,7 +43,7 @@ public class DriveTurnGyro extends CommandBase {
   private LimeLight limeLight;
   private PIDController pidAngVel;
   private double angleTolerance;
-  private boolean feedbackUsingVision;
+  private boolean feedbackUsingVision, nearTargetAngle;
 
   private int accuracyCounter = 0;
 
@@ -139,7 +139,7 @@ public class DriveTurnGyro extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    nearTargetAngle = false;
     feedbackUsingVision = false;
     driveTrain.setDriveModeCoast(false);
     driveTrain.setOpenLoopRampLimit(false);
@@ -221,9 +221,14 @@ public class DriveTurnGyro extends CommandBase {
     targetVel = tStateNow.velocity;
     targetAccel = tStateNow.acceleration;
     double forecastVel = tStateForecast.velocity;
-    double forecastAccel = MathUtil.clamp((forecastVel-targetVel)/tLagAngular, -maxAccel, maxAccel);    
+    double forecastAccel = MathUtil.clamp((forecastVel-targetVel)/tLagAngular, -maxAccel, maxAccel);
 
-    if(!tProfile.isFinished(timeSinceStart)){
+    if (Math.abs(targetRel - currAngle) < 5) {
+      // We are within a few degrees (5 degrees was initial value above)
+      nearTargetAngle = true;
+    }
+
+    if(!tProfile.isFinished(timeSinceStart) && !nearTargetAngle){
       // Feed-forward percent voltage to drive motors
       pFF = (forecastVel * kVAngular) + (forecastAccel * kAAngular);
       // Normal feedback for following trapezoid profile
@@ -236,12 +241,12 @@ public class DriveTurnGyro extends CommandBase {
 
       if (targetType == TargetType.kVisionOnScreen) {
         // Live camera feedback
-        // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
-        pFB = 0.04 * Math.signum( driveTrain.normalizeAngle(limeLight.getXOffset()) );
+        // TODO make the fixed pFB speed below (0.01) a constant.  Increase value slowly if the robot is not moving.
+        pFB = 0.01 * Math.signum( driveTrain.normalizeAngle(limeLight.getXOffset()) );
       } else {
         // Bang-bang control
-        // TODO make the fixed pFB speed below (0.04) a constant.  Increase value slowly if the robot is not moving.
-        pFB = 0.04 * Math.signum( targetRel - currAngle );
+        // TODO make the fixed pFB speed below (0.01) a constant.  Increase value slowly if the robot is not moving.
+        pFB = 0.01 * Math.signum( targetRel - currAngle );
       }
     }
     
