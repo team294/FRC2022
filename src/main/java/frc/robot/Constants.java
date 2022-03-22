@@ -252,11 +252,6 @@ public final class Constants {
         public static final double kRamseteB = 2.0;
         public static final double kRamseteZeta = 0.70;
 
-        // *******************************
-        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
-        // for each robot, not in this code!
-        // *******************************
-
         public static double ticksPerInch = 1043.0;   // Calibrated 3/20/22 = 1043.0
 
         // turnGyro constants
@@ -289,7 +284,12 @@ public final class Constants {
         public static double kV = kVLinear * compensationVoltage; 
         public static double kA = kALinear * compensationVoltage; 
 
-        public static double TRACK_WIDTH = 0.71;   // in meters     // TODO update for 2022
+        public static double TRACK_WIDTH = 0.80;   // in meters, for Trajectories (not physical track width).  Calibrated 3/21/2022 = 0.80 (was 0.71 last year)
+
+        // *******************************
+        // The constants below are DEFAULT VALUES. Change these value in RobotPrefrences
+        // for each robot, not in this code!
+        // *******************************
 
         public static void updateDerivedConstants() {
             kS = kSLinear * compensationVoltage; 
