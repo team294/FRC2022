@@ -27,10 +27,12 @@ public class StopAllMotors extends SequentialCommandGroup {
 public StopAllMotors(Feeder feeder, Shooter shooter, Intake intake, Uptake uptake, FileLog log) {
     addCommands(
       new FileLogWrite(false, false, "StopAllMotors", "starting", log),
-      new IntakeSetPercentOutput(0, 0, intake, log),
-      new UptakeSetPercentOutput(0, 0, uptake, log),
-      new FeederStop(feeder, log),
-      new ShooterStop(shooter, log),
+      parallel(
+        new IntakeSetPercentOutput(0, 0, intake, log),
+        new UptakeSetPercentOutput(0, 0, uptake, log),
+        new FeederStop(feeder, log),
+        new ShooterStop(shooter, log)
+      ),
       new FileLogWrite(false, false, "StopAllMotors", "end", log)
     );
   }
