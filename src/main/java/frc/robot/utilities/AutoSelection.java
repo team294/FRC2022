@@ -58,7 +58,7 @@ public class AutoSelection {
 	 * @param led
 	 * @return the command to run
 	 */
-	public Command getAutoCommand(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, PiVisionHub pivisionhub, LimeLight limeLight, FileLog log) {
+	public Command getAutoCommand(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, Turret turret, PiVisionHub pivisionhub, LimeLight limeLight, FileLog log) {
 		Command autonomousCommand = null;
 
 		// Get parameters from Shuffleboard
@@ -84,7 +84,7 @@ public class AutoSelection {
 
 		if (autoPlan == FOUR_BALL) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoFourBall");
-			autonomousCommand = new AutoFourBall(waitTime, driveTrain, shooter, feeder, intake, uptake, trajectoryCache, pivisionhub, limeLight, log);
+			autonomousCommand = new AutoFourBall(waitTime, driveTrain, shooter, feeder, intake, uptake, turret, trajectoryCache, pivisionhub, limeLight, log);
 		}
 
 		if (autoPlan == FIVE_BALL) {
