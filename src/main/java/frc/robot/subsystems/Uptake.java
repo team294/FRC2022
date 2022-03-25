@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.AllianceSelection;
 import frc.robot.utilities.BallCount;
 import frc.robot.utilities.ColorSensor;
 import frc.robot.utilities.FileLog;
@@ -25,6 +26,7 @@ import static frc.robot.Constants.*;
 
 public class Uptake extends SubsystemBase implements Loggable {
   private final FileLog log;
+  private final AllianceSelection allianceSelection;
   private final WPI_TalonFX uptake; // Motor running most wheels in the uptake
   private final WPI_TalonFX eject;  // Motore that selects between uptaking and ejecting
   private final ColorSensor colorSensor;   // Color sensor in uptake
@@ -35,10 +37,10 @@ public class Uptake extends SubsystemBase implements Loggable {
 
   private int timeoutMs = 0; // was 30, changed to 0 for testing 
 
-  private Alliance allianceColor = Alliance.Blue; // will be reset when match starts from auto/teleop init
-  
-  public Uptake(String subsystemName, FileLog log) {
+  public Uptake(String subsystemName, AllianceSelection allianceSelection, FileLog log) {
     this.log = log; // save reference to the fileLog
+    this.allianceSelection = allianceSelection;
+
     this.subsystemName = subsystemName;
     uptake = new WPI_TalonFX(Ports.CANUptake);
     eject = new WPI_TalonFX(Ports.CANEject);
@@ -80,31 +82,20 @@ public class Uptake extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Set the alliance so the uptake knows which balls to eject
-   * This should be called from auto/teleop init
-   * 
-   * @param alliance
-   */
-  public void setAlliance(Alliance alliance) {
-    log.writeLog(false, getName(), "Setting Alliance", allianceColor.name());
-    this.allianceColor = alliance;
-  }
-
-  /**
-   * Toggle the alliance color in case we need to override what is coming from DriverStation
-   */
-  public void toggleAlliance() {
-    allianceColor = (allianceColor == Alliance.Blue) ? Alliance.Red : Alliance.Blue;
-    log.writeLog(false, getName(), "ToggleAlliance", "Alliance", allianceColor.name());
-  }
-
-  /**
    * Returns ball color to eject based on alliance color
    * 
-   * @return BallColor red or blue
+   * @return BallColor red, blue, or none
    */
   public BallColor getEjectColor() {
-    return (allianceColor == Alliance.Blue) ? BallColor.kRed : BallColor.kBlue;
+    BallColor ejectColor = BallColor.kNone;
+
+    switch (allianceSelection.getAlliance()) {
+      case Invalid: ejectColor = BallColor.kNone;
+      case Red: ejectColor = BallColor.kBlue;
+      case Blue: ejectColor = BallColor.kRed;
+    }
+
+    return ejectColor;
   }
 
   /**
@@ -222,7 +213,6 @@ public class Uptake extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber("Uptake Temperature C", uptake.getTemperature());
       SmartDashboard.putBoolean("Uptake Ball Present", colorSensor.isBallPresent());
       SmartDashboard.putBoolean("Eject Ball Present", isBallInEjector());
-      SmartDashboard.putString("Alliance Color", allianceColor.name());
 
       colorSensor.updateShuffleboard();
       colorSensor.updateLog(false);
@@ -267,7 +257,7 @@ public class Uptake extends SubsystemBase implements Loggable {
       "Eject RPM", getEjectVelocity(),
       "Uptake Ball Present", colorSensor.isBallPresent(),
       "Eject Ball Present", isBallInEjector(),
-      "Alliance color", allianceColor.name(),
+      "Eject color", getEjectColor(),
       "Uptake Ball color", colorSensor.getBallColorString()
     );
   }

@@ -36,10 +36,11 @@ public class FileLog {
     public final int DRIVE_CYCLE = 0;
 	public final int INTAKE_CYCLE = 1;
 	public final int SHOOTER_CYCLE = 2;
-	public final int FEEDER_CYCLE = 4;
-	public final int UPTAKE_CYCLE = 5;
-	public final int TURRET_CYCLE = 6;
+	public final int FEEDER_CYCLE = 3;
+	public final int UPTAKE_CYCLE = 4;
+	public final int TURRET_CYCLE = 5;
 
+	public final int ALLIANCE_CYCLE = 7;
 	public final int LIMELIGHT_CYCLE = 8;
 	public final int PIVISION_CYCLE = 9;
 
