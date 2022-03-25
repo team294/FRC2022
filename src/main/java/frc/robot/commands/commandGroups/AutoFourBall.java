@@ -4,21 +4,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.TargetType;
-import frc.robot.commands.DriveStraight;
-import frc.robot.commands.DriveTurnGyro;
-import frc.robot.commands.DriveZeroGyro;
-import frc.robot.commands.FeederSetPercentOutput;
-import frc.robot.commands.FileLogWrite;
-import frc.robot.commands.IntakePistonSetPosition;
-import frc.robot.commands.ShooterSetVelocity;
-import frc.robot.commands.UptakeSetPercentOutput;
+import frc.robot.commands.*;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LimeLight;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Uptake;
+import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 
 

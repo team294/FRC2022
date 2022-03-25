@@ -3,17 +3,11 @@ package frc.robot.commands.commandGroups;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.UptakeSetPercentOutput;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.UptakeConstants;
-import frc.robot.commands.FeederSetPercentOutput;
-import frc.robot.commands.FileLogWrite;
-import frc.robot.commands.IntakeSetPercentOutput;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Uptake;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 
 public class ShootSequence extends SequentialCommandGroup {

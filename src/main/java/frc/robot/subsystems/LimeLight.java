@@ -16,7 +16,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.Loggable;
-import frc.robot.utilities.RobotPreferences;
 import frc.robot.utilities.StringUtil;
 
 import static frc.robot.Constants.LimeLightConstants.*;

@@ -167,7 +167,7 @@ public class DriveTurnGyro extends CommandBase {
       case kAbsolute:
         targetRel = driveTrain.normalizeAngle(target - startAngle);
         break;
-      case kVisionOnScreen:
+      case kVisionOnScreen: case kVisionScanLeft: case kVisionScanRight:
         targetRel = driveTrain.normalizeAngle(limeLight.getXOffset());
         limeLight.enableFastLogging(true);
         break;
