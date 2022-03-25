@@ -37,7 +37,6 @@ public class DriveStraight extends CommandBase {
   private boolean fromShuffleboard;
   private double angleInput, angleTarget;   // angleTarget is an absolute gyro angle
   private FileLog log;
-  private boolean sweetSpot = false;
 
   private int accuracyCounter = 0;
 
@@ -77,36 +76,6 @@ public class DriveStraight extends CommandBase {
     addRequirements(driveTrain);
   }
 
-/**
-   * Use this constructor when going to the sweet spot
-   * @param sweetSpot true = will initialize target to however far away the sweet spot is
-   * @param angleType kRelative (angle is relative to current robot facing),
-   *   kAbsolute (angle is an absolute field angle; 0 = away from drive station),
-   *   kVisionOnScreen (use limelight to drive towards the goal)
-   * @param angle angle to drive along when driving straight (+ = left, - = right)
-   * @param maxVel max velocity in meters/second, between 0 and kMaxSpeedMetersPerSecond in Constants
-   * @param regenerate true = regenerate profile each cycle (to accurately reach target distance), false = don't regenerate (for debugging)
-   * @param driveTrain reference to the drive train subsystem
-   * @param limelight reference to the LimeLight subsystem
-   * @param log
-   */
-
-  public DriveStraight(boolean sweetSpot, TargetType angleType, double angle, double maxVel, double maxAccel, boolean regenerate, DriveTrain driveTrain, LimeLight limeLight, FileLog log) {
-    this.sweetSpot = sweetSpot;
-    this.target = 0.0;
-    this.driveTrain = driveTrain;
-    this.limeLight = limeLight;
-    this.log = log;
-    this.angleType = angleType;
-    angleInput = angle;
-    this.regenerate = regenerate;
-    this.fromShuffleboard = false;
-    this.maxVel = MathUtil.clamp(Math.abs(maxVel), 0, DriveConstants.kMaxSpeedMetersPerSecond);
-    this.maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, DriveConstants.kMaxAccelerationMetersPerSecondSquared);
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrain);
-  }
 
   /**
    * Use this constructor when reading values from Shuffleboard
@@ -167,7 +136,7 @@ public class DriveStraight extends CommandBase {
       case kAbsolute:
         angleTarget = driveTrain.normalizeAngle(angleInput);
         break;
-      case kVisionOnScreen:
+      case kVisionOnScreen: case kVisionScanLeft: case kVisionScanRight:
         angleTarget = driveTrain.normalizeAngle(driveTrain.getGyroRotation() + limeLight.getXOffset());
     }
 

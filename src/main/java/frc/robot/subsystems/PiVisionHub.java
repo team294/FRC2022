@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utilities.FileLog;
 
 public class PiVisionHub extends PiVision {
-  private boolean setFlashAuto = true;
   private PowerDistribution pd;
   
   public PiVisionHub(PowerDistribution pd, FileLog log) {

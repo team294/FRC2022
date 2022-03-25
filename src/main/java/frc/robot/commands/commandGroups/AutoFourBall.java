@@ -1,35 +1,13 @@
 package frc.robot.commands.commandGroups;
 
-import java.lang.annotation.Target;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.CoordType;
 import frc.robot.Constants.StopType;
 import frc.robot.Constants.TargetType;
-import frc.robot.commands.DriveFollowTrajectory;
-import frc.robot.commands.DriveResetPose;
-import frc.robot.commands.DriveStraight;
-import frc.robot.commands.DriveTurnGyro;
-import frc.robot.commands.DriveZeroGyro;
-import frc.robot.commands.FeederSetPercentOutput;
-import frc.robot.commands.FileLogWrite;
-import frc.robot.commands.IntakePistonSetPosition;
-import frc.robot.commands.PiVisionHubSetLEDState;
-import frc.robot.commands.ShooterSetVelocity;
-import frc.robot.commands.TurretTurnAngle;
-import frc.robot.commands.UptakeSetPercentOutput;
-import frc.robot.commands.DriveFollowTrajectory.PIDType;
-import frc.robot.commands.ShooterSetVelocity.InputMode;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LimeLight;
-import frc.robot.subsystems.PiVisionHub;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
-import frc.robot.subsystems.Uptake;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.TrajectoryCache;
 import frc.robot.utilities.TrajectoryCache.TrajectoryType;
