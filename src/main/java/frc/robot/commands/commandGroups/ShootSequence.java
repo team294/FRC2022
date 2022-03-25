@@ -35,7 +35,7 @@ public class ShootSequence extends SequentialCommandGroup {
           new WaitCommand(1), 
           new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intake, log), // turn on transfer wheels for jams
           new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to shooter
-          //new WaitCommand(1),                                   // wait for balls to shoot
+          new WaitCommand(0.5),                                 // wait for second ball to shoot
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
           new IntakeToColorSensor(intake, uptake, log)          // turn on intake
         ),
