@@ -3,6 +3,7 @@ package frc.robot.commands.commandGroups;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.BallColor;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -45,7 +46,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
           new FileLogWrite(true, false, "UptakeSortBall", "hold", log),
           () -> !feeder.isBallPresent()
         ),
-      () -> uptake.getBallColor().equals(uptake.getEjectColor())
+      () -> (uptake.getEjectColor() != BallColor.kNone) && (uptake.getBallColor() == uptake.getEjectColor())
       ),
 
       new LogEnableFastLogging(false, uptake, log),

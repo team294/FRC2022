@@ -25,11 +25,11 @@ public final class Constants {
      * Recognized ball colors from color sensor.
      */
     public enum BallColor {
-        kNone(0),
+        kNone(0),       // No ball found
         kBlue(1),
         kRed(2),
         kYellow(3),
-        kOther(4);
+        kOther(4);      // Ball found, color is not Blue, Red, or Yellow
     
         @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final int value;
