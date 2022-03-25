@@ -13,11 +13,7 @@ import frc.robot.utilities.BallCount;
 import frc.robot.utilities.FileLog;
 import frc.robot.Constants.BallColor;
 import frc.robot.Constants.BallLocation;
-import frc.robot.commands.SetBallCount;
-import frc.robot.commands.IntakeSetPercentOutput;
-import frc.robot.commands.IntakeStop;
-import frc.robot.commands.UptakeSetPercentOutput;
-import frc.robot.commands.UptakeStop;
+import frc.robot.commands.*;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

@@ -2,18 +2,10 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.EjectStop;
-import frc.robot.commands.SetBallCount;
-import frc.robot.commands.UptakeSetPercentOutput;
-import frc.robot.commands.FeederSetPercentOutput;
-import frc.robot.commands.FeederStop;
-import frc.robot.commands.ShooterSetVelocity;
-import frc.robot.commands.ShooterStop;
+import frc.robot.commands.*;
 import frc.robot.commands.ShooterSetVelocity.InputMode;
 import frc.robot.Constants.BallLocation;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Uptake;
+import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 
 public class ShootBall extends SequentialCommandGroup {
