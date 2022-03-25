@@ -240,7 +240,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log));
+    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, log));
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret

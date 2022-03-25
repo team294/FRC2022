@@ -79,7 +79,7 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
       // shoot second ball
       new ShootSetup(true, 500, pivisionhub, shooter, log),
-      new ShootSequence(shooter, intake, uptake, feeder, log),
+      new ShootSequence(intake, uptake, feeder, log),
       // new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballTwoRPM, shooter, log),  // turn on the shooter
       // new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
       // new WaitCommand(0.5),                                             // wait for ball to shoot
@@ -92,7 +92,7 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
       // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 1, turret, pivisionhub, log),
       new ShootSetup(true, 500, pivisionhub, shooter, log),
-      new ShootSequence(shooter, intake, uptake, feeder, log),
+      new ShootSequence(intake, uptake, feeder, log),
       
       // // turn back to loading station      new DriveTurnGyro(TargetType.kAbsolute, 0, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(2),
 
