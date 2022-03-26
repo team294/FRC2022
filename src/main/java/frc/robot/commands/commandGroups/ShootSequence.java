@@ -28,7 +28,7 @@ public class ShootSequence extends SequentialCommandGroup {
           new FileLogWrite(true, false, "ShootSequence", "shooting", log),
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send first ball to shooter
           new WaitCommand(1), 
-          new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intake, log), // turn on transfer wheels for jams
+          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intake, log), // turn on transfer wheels for jams
           new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to shooter
           new WaitCommand(0.5),                                 // wait for second ball to shoot
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
