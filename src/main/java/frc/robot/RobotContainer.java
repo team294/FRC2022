@@ -232,7 +232,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(shooter, intakeFront, uptake, feeder, log));
+    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, log));
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -382,7 +382,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, uptake, limeLightFront, log);
+    return autoSelection.getAutoCommand(driveTrain, shooter, feeder, intakeFront, uptake, turret, pivisionhub, limeLightFront, log);
   }
 
   /**

@@ -15,27 +15,26 @@ public class ShootSequence extends SequentialCommandGroup {
    * Shoot sequence triggers that action of shooting all the balls by running the feeder and uptake.
    * The aiming of the turret and the speed of the shooter should be set before this sequence is run.
    * 
-   * @param shooter shooter subsystem
    * @param intake intake subsystem
    * @param uptake uptake subsystem
    * @param feeder feeder subsystem
    * @param log
    */
-  public ShootSequence(Shooter shooter, Intake intake, Uptake uptake, Feeder feeder, FileLog log) {
+  public ShootSequence(Intake intake, Uptake uptake, Feeder feeder, FileLog log) {
     addCommands(
       new ConditionalCommand( 
         // only shoot if the shooter is not at idle
         sequence(
-          new FileLogWrite(true, false, "ShootSequence", "shooting", log,"Shooter Velocity", shooter.getMotorVelocity()),
+          new FileLogWrite(true, false, "ShootSequence", "shooting", log),
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send first ball to shooter
           new WaitCommand(1), 
           new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intake, log), // turn on transfer wheels for jams
           new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to shooter
-          //new WaitCommand(1),                                   // wait for balls to shoot
+          new WaitCommand(0.5),                                 // wait for second ball to shoot
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
           new IntakeToColorSensor(intake, uptake, log)          // turn on intake
         ),
-        new FileLogWrite(true, false, "ShootSequence", "Shooter not ready", log, "Shooter Velocity",shooter.getMotorVelocity()),
+        new FileLogWrite(true, false, "ShootSequence", "Shooter not ready", log),
         () -> true
         //shooter.getMotorVelocity() > ShooterConstants.shooterDefaultRPM
       ),
