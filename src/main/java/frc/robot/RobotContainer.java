@@ -134,11 +134,10 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
     SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
     SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, shooter, log));
-    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistInch, shooter, log));
+    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
-    SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
-    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Ball RPM from Distance", new ShootBall(shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -237,7 +236,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, log));
+    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log));
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -351,8 +350,8 @@ public class RobotContainer {
     coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
-    coP[9].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer
-    coP[10].whenPressed(new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log)); // forward intake and transfer
+    coP[9].whenPressed(new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log)); // forward intake and transfer
+    coP[10].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer
 
     coP[11].whenPressed(new UptakeSetPercentOutput(-UptakeConstants.onPct, 0, uptake, log)); // reverse uptake
     coP[12].whenPressed(new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)); // forward uptake
