@@ -122,7 +122,9 @@ public final class Constants {
         // Digital IO ports
         public static final int DIOTurretCalSwitch = 1;
         public static final int DIOFeederBallSensor = 2;
-        public static final int DIOEjectBallSensor = 3;
+        public static final int DIOUptakeTop = 3;           // Dead space between ball1 (in feeder) and ball2 (at color sensor)
+        public static final int DIOUptakeMid = 4;           // Next to color sensor
+        public static final int DIOUptakeFront = 5;         // Entry to Uptake (aka intake)
 
         // I2C ports
         public static final int I2CcolorSensor = 0x52;       // According to REV docs, color sensor is at 0x52 = 82.  Rob had 39?

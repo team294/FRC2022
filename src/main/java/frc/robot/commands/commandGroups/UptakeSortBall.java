@@ -56,7 +56,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
       new ConditionalCommand(
           new UptakeSetPercentOutput(0, 0, uptake, log),
           new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log), 
-        () -> feeder.isBallPresent() && uptake.isBallPresent()),
+        () -> feeder.isBallPresent() && uptake.isBallAtColorSensor()),
       new FileLogWrite(true, false, "UptakeSortBall", "end sequence", log)
     );
   }

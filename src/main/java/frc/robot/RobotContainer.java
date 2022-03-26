@@ -95,7 +95,7 @@ public class RobotContainer {
    * Configures any sensor triggers for the robot
    */
   private void configureSensorTriggers() {
-    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
+    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
     colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
 
     // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
