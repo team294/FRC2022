@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 
 /**
@@ -130,20 +131,20 @@ public class TrajectoryCache {
             new Pose2d(6.548, 6.761, new Rotation2d(Math.toRadians(180)))
         );
 
-        cache[TrajectoryType.centerBallToBackFourball.value] = calcTrajectory("CenterBall to Back Fourball", 0.3, 0.3, true,
-            new Pose2d(6.548, 6.761, new Rotation2d(Math.toRadians(180))), 
+        cache[TrajectoryType.centerBallToBackFourball.value] = calcTrajectory("CenterBall to Back Fourball", 0.4, 0.4, false,
+            new Pose2d(-AutoConstants.driveToBallTwoInMeters, 0, new Rotation2d(Math.toRadians(0))), 
             List.of(
-
+                
             ),
-            new Pose2d(10.528, 7.423, new Rotation2d(Math.toRadians(225)))
+            new Pose2d(-AutoConstants.driveToBallTwoInMeters-3.50, -1.57, new Rotation2d(Math.toRadians(-135)))
         );
 
         cache[TrajectoryType.backToCenterFourBall.value] = calcTrajectory("Back to Center Fourball", 0.4, 0.4, false,
-            new Pose2d(10.528, 7.423, new Rotation2d(Math.toRadians(255))), 
+            new Pose2d(-AutoConstants.driveToBallTwoInMeters-3.50,-1.57, new Rotation2d(Math.toRadians(-135))), 
             List.of(
 
             ),
-            new Pose2d(6.548, 6.761, new Rotation2d(Math.toRadians(180)))
+            new Pose2d(-AutoConstants.driveToBallTwoInMeters, 0, new Rotation2d(Math.toRadians(0)))
         );
         
         cache[TrajectoryType.leftToLeftBall.value] = calcTrajectory("Left to Left Ball", 0.3, 0.3, true,

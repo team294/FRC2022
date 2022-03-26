@@ -1,11 +1,8 @@
 package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.EjectStop;
-import frc.robot.commands.FeederSetPercentOutput;
-import frc.robot.commands.FileLogWrite;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Uptake;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 
 public class ShootSequenceStop extends SequentialCommandGroup {
