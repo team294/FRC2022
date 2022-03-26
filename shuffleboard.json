@@ -169,39 +169,6 @@
               ]
             }
           },
-          "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_PipelineName",
-              "_title": "limelight_PipelineName"
-            }
-          },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_Interface",
-              "_title": "limelight_Interface"
-            }
-          },
-          "0,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_Stream",
-              "_title": "limelight_Stream"
-            }
-          },
           "7,0": {
             "size": [
               2,
@@ -1008,7 +975,7 @@
               "imageHeight": 0
             }
           },
-          "7,0": {
+          "6,0": {
             "size": [
               1,
               1
@@ -1045,7 +1012,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "6,0": {
+          "5,0": {
             "size": [
               1,
               1
@@ -1056,7 +1023,7 @@
               "_title": "Clear Problem"
             }
           },
-          "11,0": {
+          "10,0": {
             "size": [
               1,
               1
@@ -1067,18 +1034,7 @@
               "_title": "ShotCm Distance"
             }
           },
-          "10,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/shooter-cam width",
-              "_title": "ShotCam width"
-            }
-          },
-          "8,0": {
+          "7,0": {
             "size": [
               2,
               1
@@ -1106,17 +1062,6 @@
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Alliance",
-              "_title": "Alliance"
-            }
-          },
-          "4,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Alliance Red",
               "_title": "Alliance Red",
@@ -1124,7 +1069,7 @@
               "Colors/Color when false": "#000000FF"
             }
           },
-          "5,0": {
+          "4,0": {
             "size": [
               1,
               1
@@ -1135,6 +1080,19 @@
               "_title": "Alliance Blue",
               "Colors/Color when true": "#0000FFFF",
               "Colors/Color when false": "#000000FF"
+            }
+          },
+          "11,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Drive isGyroReading",
+              "_title": "Gyro Is Reading",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
