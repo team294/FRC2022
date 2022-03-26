@@ -26,6 +26,7 @@ public class ShooterSetVelocity extends CommandBase {
   private double velocity;
   private InputMode mode;
 
+  private int toleranceCounter = 0;
   /**
    * Sets the shooter to a specific velocity using the PID controller.
    * The velocity is read from Shuffleboard, depending on the mode:
@@ -129,6 +130,8 @@ public class ShooterSetVelocity extends CommandBase {
     }
     log.writeLog(false, "Shooter SetVelocity", "Initialize", "Set Velocity", velocity);
     shooter.setMotorVelocity(velocity);
+
+    toleranceCounter =0; 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -139,15 +142,20 @@ public class ShooterSetVelocity extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.enableFastLogging(false);
+    log.writeLog(false, "Shooter SetVelocity", "Initialize", "Set Velocity", velocity);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
     if(Math.abs(shooter.getVelocityPIDError()) < ShooterConstants.pidErrorTolerance) {
       log.writeLogEcho(false, "Shooter SetVelocity", "Set RPM at speed", "Set Velocity", velocity, "Velocity", shooter.getMotorVelocity());
-      return true;
+      toleranceCounter ++;
+
+    } else {
+      toleranceCounter = 0;
     }
-      return false;
+      return (toleranceCounter >= 5);
   }
 }
