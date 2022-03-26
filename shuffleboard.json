@@ -169,39 +169,6 @@
               ]
             }
           },
-          "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_PipelineName",
-              "_title": "limelight_PipelineName"
-            }
-          },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_Interface",
-              "_title": "limelight_Interface"
-            }
-          },
-          "0,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_Stream",
-              "_title": "limelight_Stream"
-            }
-          },
           "7,0": {
             "size": [
               2,
@@ -214,15 +181,22 @@
               "_children": [
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Uptake Ball Present",
-                  "_title": "Uptake Ball Present",
+                  "_source0": "network_table:///SmartDashboard/Uptake Ball Entering",
+                  "_title": "Uptake Ball Entering",
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#8B0000FF"
                 },
                 {
                   "_type": "Boolean Box",
-                  "_source0": "network_table:///SmartDashboard/Eject Ball Present",
-                  "_title": "Eject Ball Present",
+                  "_source0": "network_table:///SmartDashboard/Uptake Ball at Color",
+                  "_title": "Uptake Ball at Color",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Uptake Ball to Feeder",
+                  "_title": "Uptake Ball to Feeder",
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#8B0000FF"
                 },
@@ -279,12 +253,19 @@
                 {
                   "_type": "Command",
                   "_source0": "network_table:///SmartDashboard/Uptake and Eject Run Upward",
-                  "_title": "Uptake and Eject Run Upward"
+                  "_title": "Uptake to Feeder"
                 },
                 {
                   "_type": "Command",
                   "_source0": "network_table:///SmartDashboard/Uptake Eject Ball",
                   "_title": "Uptake Eject Ball"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Color Ball Present",
+                  "_title": "Color Ball Present",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
                 },
                 {
                   "_type": "Text View",
@@ -994,7 +975,7 @@
               "imageHeight": 0
             }
           },
-          "5,0": {
+          "6,0": {
             "size": [
               1,
               1
@@ -1004,7 +985,7 @@
               "_source0": "network_table:///Preferences/problemExists",
               "_title": "Problem Exists",
               "Colors/Color when true": "#800000FF",
-              "Colors/Color when false": "#00FF00FF"
+              "Colors/Color when false": "#000000FF"
             }
           },
           "0,0": {
@@ -1018,9 +999,9 @@
               "_title": "Autonomous Routine"
             }
           },
-          "11,0": {
+          "12,0": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
@@ -1031,7 +1012,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "4,0": {
+          "5,0": {
             "size": [
               1,
               1
@@ -1042,29 +1023,7 @@
               "_title": "Clear Problem"
             }
           },
-          "3,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Uptake Toggle Alliance",
-              "_title": "Toggle Alliance"
-            }
-          },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Alliance Color",
-              "_title": "Alliance Color"
-            }
-          },
-          "9,0": {
+          "10,0": {
             "size": [
               1,
               1
@@ -1075,18 +1034,7 @@
               "_title": "ShotCm Distance"
             }
           },
-          "8,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/shooter-cam width",
-              "_title": "ShotCam width"
-            }
-          },
-          "6,0": {
+          "7,0": {
             "size": [
               2,
               1
@@ -1095,6 +1043,56 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/problemSubsystem",
               "_title": "Problem Subsystem"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Alliance Selection",
+              "_title": "Alliance Selection"
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Alliance Red",
+              "_title": "Alliance Red",
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#000000FF"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Alliance Blue",
+              "_title": "Alliance Blue",
+              "Colors/Color when true": "#0000FFFF",
+              "Colors/Color when false": "#000000FF"
+            }
+          },
+          "11,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Drive isGyroReading",
+              "_title": "Gyro Is Reading",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }

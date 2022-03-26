@@ -35,8 +35,8 @@ public class FeedAndShootBall extends SequentialCommandGroup {
                 new ConditionalCommand(
                   new WaitCommand(0.02),
                   new UptakeSetPercentOutput(0.25, false, uptake, log)
-                  .perpetually().withInterrupt(uptake::isBallPresent), 
-                  () -> uptake.isBallPresent()
+                  .perpetually().withInterrupt(uptake::isBallAtColorSensor), 
+                  () -> uptake.isBallAtColorSensor()
                 ),
                 new ConditionalCommand(
                   // Load ball to feeder

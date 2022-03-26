@@ -44,7 +44,7 @@ public class UptakeEjectTrigger extends CommandBase {
   @Override
   public boolean isFinished() {
     // check to see if ball is still in ejector
-    if (!uptake.isBallInEjector()){
+    if (!uptake.isBallGoingToFeeder()){
       return true;
     }
     else return false;

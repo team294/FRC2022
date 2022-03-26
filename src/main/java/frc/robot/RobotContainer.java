@@ -5,13 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,12 +50,13 @@ public class RobotContainer {
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  private final AllianceSelection allianceSelection = new AllianceSelection(log);
 
   // Define robot subsystems  
   private final DriveTrain driveTrain = new DriveTrain(log, tempCheck);
   private final Shooter shooter = new Shooter(log);
   private final Feeder feeder = new Feeder("Feeder", log);
-  private final Uptake uptake = new Uptake("Uptake",log);
+  private final Uptake uptake = new Uptake("Uptake", allianceSelection, log);
   private final IntakeFront intakeFront = new IntakeFront(log);
   private final Climber climber = new Climber("Climber", log);
   // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
@@ -66,7 +65,7 @@ public class RobotContainer {
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
   // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
-  // Define trajectories and auto selection
+  // Define final utilities
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
   private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
 
@@ -83,9 +82,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // don't try to get alliance here as not set yet
-    //log.writeLogEcho(true, "Alliance from DriverStation", DriverStation.getAlliance().name());
-    
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
 
@@ -99,7 +95,7 @@ public class RobotContainer {
    * Configures any sensor triggers for the robot
    */
   private void configureSensorTriggers() {
-    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
+    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
     colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
 
     // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
@@ -153,7 +149,6 @@ public class RobotContainer {
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
     SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.15, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
-    SmartDashboard.putData("Uptake Toggle Alliance", new UptakeToggleAlliance(uptake, log));
     //SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     //SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
 
@@ -393,9 +388,6 @@ public class RobotContainer {
    * Method called when robot is initialized.
    */
   public void robotInit() {
-    // don't try to get alliance here as not set yet
-    //log.writeLogEcho(true, "Alliance from DriverStation in robotInit", DriverStation.getAlliance().name());
-
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
@@ -415,6 +407,7 @@ public class RobotContainer {
    */
   public void robotPeriodic(){
     log.advanceLogRotation();
+    allianceSelection.periodic();
   }
 
   /**
@@ -449,11 +442,6 @@ public class RobotContainer {
   public void autonomousInit() {
     log.writeLogEcho(true, "Auto", "Mode Init");
 
-    // safe to get alliance here
-    Alliance alliance = DriverStation.getAlliance();
-    log.writeLogEcho(true, "Alliance from DriverStation in autonomousInit", alliance.name());
-    uptake.setAlliance(alliance);
-   
     driveTrain.setDriveModeCoast(false);
 
     // NOTE:  Do NOT reset the gyro or encoder here!!!!!
@@ -472,11 +460,6 @@ public class RobotContainer {
    */
   public void teleopInit() {
     log.writeLogEcho(true, "Teleop", "Mode Init");
-
-    // safe to get alliance here
-    Alliance alliance = DriverStation.getAlliance();
-    log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", alliance.name());
-    uptake.setAlliance(alliance);
 
     pivisionhub.setLEDState(true);
     driveTrain.setDriveModeCoast(false);
