@@ -22,28 +22,31 @@ public class UptakeSortBall extends SequentialCommandGroup {
   public UptakeSortBall(Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
-      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log, "ejectColor", uptake.getEjectColor()),
+      new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log),
       new LogEnableFastLogging(true, uptake, log),
 
       new FeederSetPercentOutput(0, feeder, log),   // turn off the feeder just in case so we don't shoot while intaking
-      new WaitCommand(0.1),       // Wait more than 60ms so that the color sensor stabilizes
+      new WaitCommand(0.15),       // Wait more than 100ms so that the color sensor stabilizes
 
       new ConditionalCommand(
         // if it is the wrong color, eject the ball
         sequence(
-          new FileLogWrite(true, false, "UptakeSortBall", "eject", log, "ball color", uptake.getBallColor()),
+          new FileLogWrite(true, false, "UptakeSortBall", "eject", log),
           new UptakeEjectBall(uptake, log).withTimeout(1)
         ),
         // if it is the right color then check if there is room in the feeder
         new ConditionalCommand(
           // if there is nothing in the feeder then feed it
           sequence(
-            new FileLogWrite(true, false, "UptakeSortBall", "feed", log, "ball color", uptake.getBallColor()),
+            new FileLogWrite(true, false, "UptakeSortBall", "feed", log),
             new UptakeFeedBall(uptake, feeder, log).withTimeout(1)
             //new UptakeToFeeder(uptake, feeder, log).withTimeout(1)
           ),
-          // if there is something in the feeder do nothing
-          new FileLogWrite(true, false, "UptakeSortBall", "hold", log),
+          // if there is something in the feeder, turn off the uptake and hold the 2nd ball in the uptake
+          sequence(
+            new FileLogWrite(true, false, "UptakeSortBall", "hold", log),
+            new UptakeStop(uptake, log)
+          ),
           () -> !feeder.isBallPresent()
         ),
       () -> (uptake.getEjectColor() != BallColor.kNone) && (uptake.getBallColor() == uptake.getEjectColor())
