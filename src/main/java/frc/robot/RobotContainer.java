@@ -46,7 +46,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("E1");
+  private final FileLog log = new FileLog("E5");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -275,7 +275,7 @@ public class RobotContainer {
     // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     xb[3].whenHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
-    xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    //xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
     xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
@@ -289,8 +289,10 @@ public class RobotContainer {
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, pivisionhub, log));
-    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
-    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
+    // xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
+    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kVisionScanRight, 45, -2, turret, pivisionhub, log));
+    // xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
+    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kVisionScanLeft, 45, -2, turret, pivisionhub, log));
     //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
