@@ -5,13 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,16 +46,17 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("D1");
+  private final FileLog log = new FileLog("E1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  private final AllianceSelection allianceSelection = new AllianceSelection(log);
 
   // Define robot subsystems  
   private final DriveTrain driveTrain = new DriveTrain(log, tempCheck);
   private final Shooter shooter = new Shooter(log);
   private final Feeder feeder = new Feeder("Feeder", log);
-  private final Uptake uptake = new Uptake("Uptake",log);
+  private final Uptake uptake = new Uptake("Uptake", allianceSelection, log);
   private final IntakeFront intakeFront = new IntakeFront(log);
   private final Climber climber = new Climber("Climber", log);
   // private final Intake intakeRear = new Intake("Intake-Rear", Ports.CANIntakeRear, Ports.SolIntakeRearFwd, Ports.SolIntakeRearRev, log);
@@ -66,7 +65,7 @@ public class RobotContainer {
   private final LimeLight limeLightFront = new LimeLight("limelight-front", log);
   // private final LimeLight limeLightRear = new LimeLight("limelight-rear", log);
 
-  // Define trajectories and auto selection
+  // Define final utilities
   private final TrajectoryCache trajectoryCache = new TrajectoryCache(log);
   private final AutoSelection autoSelection = new AutoSelection(trajectoryCache, log);
 
@@ -83,9 +82,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // don't try to get alliance here as not set yet
-    //log.writeLogEcho(true, "Alliance from DriverStation", DriverStation.getAlliance().name());
-    
     configureButtonBindings(); // configure button bindings
     configureShuffleboard(); // configure shuffleboard
 
@@ -99,7 +95,7 @@ public class RobotContainer {
    * Configures any sensor triggers for the robot
    */
   private void configureSensorTriggers() {
-    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallPresent());
+    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
     colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
 
     // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
@@ -134,11 +130,10 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
     SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
     SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, shooter, log));
-    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistInch, shooter, log));
+    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
-    SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
-    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Ball RPM from Distance", new ShootBall(shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -154,7 +149,6 @@ public class RobotContainer {
     SmartDashboard.putData("Uptake Eject Ball", new UptakeSetPercentOutput(.25, true, uptake, log));
     SmartDashboard.putData("Uptake Only Run Upward", new UptakeSetPercentOutput(0.15, 0, uptake, log));
     SmartDashboard.putData("Uptake Stop", new UptakeStop(uptake, log));
-    SmartDashboard.putData("Uptake Toggle Alliance", new UptakeToggleAlliance(uptake, log));
     //SmartDashboard.putData("Uptake Reject Blue", new UptakeSortBall(BallColor.kBlue, uptake, feeder, log));
     //SmartDashboard.putData("Uptake Reject Red", new UptakeSortBall(BallColor.kRed, uptake, feeder, log));
 
@@ -237,7 +231,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, log));
+    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log));
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -276,9 +270,9 @@ public class RobotContainer {
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretSetPercentOutput(-0.05, turret, log));
+    xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
     xb[5].whenReleased(new TurretStop(turret, log));
-    xb[6].whenPressed(new TurretSetPercentOutput(+0.05, turret, log));
+    xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
     xb[6].whenReleased(new TurretStop(turret, log));
 
     // back = 7, start = 8 
@@ -351,8 +345,8 @@ public class RobotContainer {
     coP[8].whenPressed(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
 
     // middle row UP then DOWN, from LEFT to RIGHT
-    coP[9].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer
-    coP[10].whenPressed(new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log)); // forward intake and transfer
+    coP[9].whenPressed(new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log)); // forward intake and transfer
+    coP[10].whenPressed(new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPct, intakeFront, log)); // reverse intake and transfer
 
     coP[11].whenPressed(new UptakeSetPercentOutput(-UptakeConstants.onPct, 0, uptake, log)); // reverse uptake
     coP[12].whenPressed(new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)); // forward uptake
@@ -394,9 +388,6 @@ public class RobotContainer {
    * Method called when robot is initialized.
    */
   public void robotInit() {
-    // don't try to get alliance here as not set yet
-    //log.writeLogEcho(true, "Alliance from DriverStation in robotInit", DriverStation.getAlliance().name());
-
     SmartDashboard.putBoolean("RobotPrefs Initialized", RobotPreferences.prefsExist());
     if(!RobotPreferences.prefsExist()) {
       RobotPreferences.recordStickyFaults("RobotPreferences", log);
@@ -416,6 +407,7 @@ public class RobotContainer {
    */
   public void robotPeriodic(){
     log.advanceLogRotation();
+    allianceSelection.periodic();
   }
 
   /**
@@ -450,11 +442,6 @@ public class RobotContainer {
   public void autonomousInit() {
     log.writeLogEcho(true, "Auto", "Mode Init");
 
-    // safe to get alliance here
-    Alliance alliance = DriverStation.getAlliance();
-    log.writeLogEcho(true, "Alliance from DriverStation in autonomousInit", alliance.name());
-    uptake.setAlliance(alliance);
-   
     driveTrain.setDriveModeCoast(false);
 
     // NOTE:  Do NOT reset the gyro or encoder here!!!!!
@@ -473,11 +460,6 @@ public class RobotContainer {
    */
   public void teleopInit() {
     log.writeLogEcho(true, "Teleop", "Mode Init");
-
-    // safe to get alliance here
-    Alliance alliance = DriverStation.getAlliance();
-    log.writeLogEcho(true, "Alliance from DriverStation in teleopInit", alliance.name());
-    uptake.setAlliance(alliance);
 
     pivisionhub.setLEDState(true);
     driveTrain.setDriveModeCoast(false);

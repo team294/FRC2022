@@ -26,13 +26,13 @@ public class ShootSetup extends SequentialCommandGroup {
           // if get velocity from vision
           sequence (
             new FileLogWrite(false, false, "ShootSetup", "SetupWithVision", log, "Velocity", velocity, "Vision", vision == null ? "0":vision.getDistance()),
-            new ShooterSetVelocity(InputMode.kDistInch, 0, shooter, vision, log)
+            new ShooterSetVelocity(shooter, vision, log)
             // new ShooterSetVelocity(InputMode.kDistInch, shooter.distanceFromTargetToRPM(vision.getDistance()), shooter, vision, log)
           ),
           // use velocity without vision
           sequence (
             new FileLogWrite(false, false, "ShootSetup", "SetupWithVelocity", log, "velocity", velocity),
-            new ShooterSetVelocity(InputMode.kSpeedRPM, velocity, shooter, vision, log)
+            new ShooterSetVelocity(InputMode.kSpeedRPM, velocity, shooter, log)
           ),
           () -> (useVision && vision != null)
         ),

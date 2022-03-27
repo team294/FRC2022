@@ -25,11 +25,11 @@ public final class Constants {
      * Recognized ball colors from color sensor.
      */
     public enum BallColor {
-        kNone(0),
+        kNone(0),       // No ball found
         kBlue(1),
         kRed(2),
         kYellow(3),
-        kOther(4);
+        kOther(4);      // Ball found, color is not Blue, Red, or Yellow
     
         @SuppressWarnings({"MemberName", "PMD.SingularField"})
         public final int value;
@@ -122,7 +122,9 @@ public final class Constants {
         // Digital IO ports
         public static final int DIOTurretCalSwitch = 1;
         public static final int DIOFeederBallSensor = 2;
-        public static final int DIOEjectBallSensor = 3;
+        public static final int DIOUptakeTop = 3;           // Dead space between ball1 (in feeder) and ball2 (at color sensor)
+        public static final int DIOUptakeMid = 4;           // Next to color sensor
+        public static final int DIOUptakeFront = 5;         // Entry to Uptake (aka intake)
 
         // I2C ports
         public static final int I2CcolorSensor = 0x52;       // According to REV docs, color sensor is at 0x52 = 82.  Rob had 39?
@@ -179,7 +181,7 @@ public final class Constants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
-        public static final double onPct = -0.25;                                    // Default on percentage
+        public static final double onPct = 0.25;                                    // Default on percentage
     }
 
     public static final class FeederConstants {
@@ -192,8 +194,8 @@ public final class Constants {
         public static final double maxOutputCalibrated = 0.3;               // Max output power when turret is calibrated
         public static final double ticksPerDegree = 2048.0/360.0 * 4*170/16;         // Divide by this to convert raw ticks to turrent degrees  (4:1 versaplanetary, plus chain gear ratio 18:180)
         public static final double rawVelocityToDegPerSec = 10.0 / ticksPerDegree;   // Multiply by this to convert raw velocity (ticksPer100ms) to degrees per second
-        public static final double softLimitRev = -60.0;            // Reverse position soft limit, in turret degrees
-        public static final double softLimitFwd = 60.0;            // Forward position soft limit, in turret degrees
+        public static final double softLimitRev = -90.0;            // Reverse position soft limit, in turret degrees
+        public static final double softLimitFwd = 90.0;            // Forward position soft limit, in turret degrees
         public static final double limitSwitchRev = -145.0;            // Position of physical reverse limit switch, in turret degrees
         public static final double limitSwitchFwd = 147.0;            // Position of physical forward limit switch, in turret degrees
         public static final double calSwitch = 0.0;            // Position of starting calibration limit switch, in turret degrees

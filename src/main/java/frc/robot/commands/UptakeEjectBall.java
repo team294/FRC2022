@@ -32,7 +32,7 @@ public class UptakeEjectBall extends CommandBase {
   @Override
   public void execute() { 
     uptake.setEjectPercentOutput(0.25);
-    if(uptake.isBallInEjector()){
+    if(uptake.isBallGoingToFeeder()){
       hasPassed = true;
     }
   }
@@ -47,7 +47,7 @@ public class UptakeEjectBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(hasPassed && !uptake.isBallInEjector()){
+    if(hasPassed && !uptake.isBallGoingToFeeder()){
       return true;
     }
     else return false;

@@ -46,7 +46,7 @@ public class IntakeUptakeBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(uptake.isBallPresent()){
+    if(uptake.isBallAtColorSensor()){
       BallCount.setBallCount(1, BallLocation.kUptake, log);
       if(uptake.getBallColor() == teamColor){
         if(BallCount.getBallCount(BallLocation.kFeeder) == 0){
