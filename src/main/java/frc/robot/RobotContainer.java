@@ -270,9 +270,9 @@ public class RobotContainer {
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretSetPercentOutput(-0.05, turret, log));
+    xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
     xb[5].whenReleased(new TurretStop(turret, log));
-    xb[6].whenPressed(new TurretSetPercentOutput(+0.05, turret, log));
+    xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
     xb[6].whenReleased(new TurretStop(turret, log));
 
     // back = 7, start = 8 

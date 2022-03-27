@@ -93,6 +93,15 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param voltage voltage, + = turn to the right
    */
   public void setVoltage(double voltage) {
+    // Soft limit for turret turning.
+    if (encoderCalibrated) {
+      if ( ( (getTurretPosition()>=TurretConstants.softLimitFwd) && (voltage>0) ) ||
+           ( (getTurretPosition()<=TurretConstants.softLimitRev) && (voltage<0) ) ) {
+        voltage = 0;
+        log.writeLog(false, "Turret", "Set voltage - Soft limit stop", "Position", getTurretPosition(), "Fwd Limt", isAtFwdLimit(), "Rev Limit", isAtRevLimit());
+      }
+    }
+
     motor.setVoltage(voltage);
   }
 
@@ -101,6 +110,15 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param percent percent -1.0 to +1.0, + = turn to the right
    */
   public void setPercentOutput(double percent){
+    // Soft limit for turret turning.
+    if (encoderCalibrated) {
+      if ( ( (getTurretPosition()>=TurretConstants.softLimitFwd) && (percent>0) ) ||
+           ( (getTurretPosition()<=TurretConstants.softLimitRev) && (percent<0) ) ) {
+        percent = 0;
+        log.writeLog(false, "Turret", "Set voltage - Soft limit stop", "Position", getTurretPosition(), "Fwd Limt", isAtFwdLimit(), "Rev Limit", isAtRevLimit());
+      }
+    }
+
     motor.set(ControlMode.PercentOutput, percent);
   }
 
