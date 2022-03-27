@@ -78,7 +78,7 @@ public class RobotContainer {
   private final Joystick coPanel = new Joystick(OIConstants.usbCoPanel);
 
   private boolean rumbling = false;
-
+  private boolean sensorConfigured = false;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -95,14 +95,22 @@ public class RobotContainer {
    * Configures any sensor triggers for the robot
    */
   private void configureSensorTriggers() {
-    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
-    colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
+    if (sensorConfigured == false) {
+    
+      Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
+      colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
+      
+      // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
+      // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
 
-    // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
-    // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
-
-    // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
-    // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+      // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
+      // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+      
+      sensorConfigured = true;
+      log.writeLog(false , "Sensor Trigger", "Sensors Configured");
+    } else {
+      log.writeLog(false , "Sensor Trigger", "Sensors Already Configured");
+    }
 
   }
 

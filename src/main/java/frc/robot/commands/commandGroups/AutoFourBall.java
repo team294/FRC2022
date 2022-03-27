@@ -1,5 +1,6 @@
 package frc.robot.commands.commandGroups;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
@@ -53,16 +54,21 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       new ShootSequence(intake, uptake, feeder, log),
 
       // drive to back balls
-      // new DriveTurnGyro(TargetType.kAbsolute, 180, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(3),
-      new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
+      new DriveTurnGyro(TargetType.kAbsolute, -135, 120, 120, 3, driveTrain, limeLight, log).withTimeout(3),
+      // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
+      new DriveStraight(3.5, TargetType.kAbsolute, -135, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
-      // drive to center shooting position
-      // new DriveTurnGyro(TargetType.kAbsolute, 180, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(3),
-      new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
+      // wait for human player to feed ball
+      new WaitCommand(1.0), 
       new IntakePistonSetPosition(false, intake, log),
 
+      // drive back to sweet spot
+      new DriveTurnGyro(TargetType.kAbsolute, 135, 120, 120, 3, driveTrain, limeLight, log).withTimeout(3),
+      // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
+      new DriveStraight(3.5, TargetType.kAbsolute, 135, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+
       // shoot
-      // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
+      new TurretTurnAngle(TargetType.kVisionScanLeft, 0, 3, turret, pivisionhub, log).withTimeout(1),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, log),
 
