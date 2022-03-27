@@ -46,7 +46,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("D1");
+  private final FileLog log = new FileLog("E1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -130,11 +130,10 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Set Percent", new ShooterSetPercentOutput(shooter, log));
     SmartDashboard.putData("Shooter Set PID", new ShooterSetPIDSV(shooter, log));
     SmartDashboard.putData("Shooter Set Velocity", new ShooterSetVelocity(InputMode.kSpeedRPM, shooter, log));
-    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistInch, shooter, log));
+    SmartDashboard.putData("Shooter RPM from Distance", new ShooterSetVelocity(InputMode.kDistFeet, shooter, log));
     SmartDashboard.putData("Shooter Calibrate Fwd", new ShooterRampOutput(0, 0.9, 30.0, shooter, log));
     SmartDashboard.putData("Shooter Distance to RPM", new ShooterDistToRPM(shooter, log));
-    SmartDashboard.putData("Shoot Red Ball", new ShootBall(shooter, uptake, feeder, log));
-    SmartDashboard.putData("Shoot Blue Ball", new ShootBall(shooter, uptake, feeder, log));
+    SmartDashboard.putData("Shoot Ball RPM from Distance", new ShootBall(shooter, uptake, feeder, log));
 
     // Feeder subsystem
     SmartDashboard.putData("Set Feeder Percent", new FeederSetPercentOutput(feeder, log));
@@ -232,7 +231,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, log));
+    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log));
     xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -271,9 +270,9 @@ public class RobotContainer {
     xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
-    xb[5].whenPressed(new TurretSetPercentOutput(-0.05, turret, log));
+    xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
     xb[5].whenReleased(new TurretStop(turret, log));
-    xb[6].whenPressed(new TurretSetPercentOutput(+0.05, turret, log));
+    xb[6].whenPressed(new TurretSetPercentOutput(+0.1, turret, log));
     xb[6].whenReleased(new TurretStop(turret, log));
 
     // back = 7, start = 8 

@@ -91,10 +91,12 @@ public class Uptake extends SubsystemBase implements Loggable {
     BallColor ejectColor = BallColor.kNone;
 
     switch (allianceSelection.getAlliance()) {
-      case Invalid: ejectColor = BallColor.kNone;
-      case Red: ejectColor = BallColor.kBlue;
-      case Blue: ejectColor = BallColor.kRed;
+      case Invalid: ejectColor = BallColor.kNone; break;
+      case Red: ejectColor = BallColor.kBlue; break;
+      case Blue: ejectColor = BallColor.kRed; break;
     }
+
+    // log.writeLogEcho(true, "Uptake", "GetEjectColor", "alliance", allianceSelection.getAlliance().name(), "eject color", ejectColor.name());
 
     return ejectColor;
   }
