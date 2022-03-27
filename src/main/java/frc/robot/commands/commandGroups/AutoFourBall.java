@@ -51,7 +51,7 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       // shoot 
       // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
-      new ShootSequence(intake, uptake, feeder, log),
+      new ShootSequence(intake, uptake, feeder, shooter, log),
 
       // drive to back balls
       new DriveTurnGyro(TargetType.kAbsolute, -135, 120, 120, 3, driveTrain, limeLight, log).withTimeout(3),
@@ -70,7 +70,7 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       // shoot
       new TurretTurnAngle(TargetType.kVisionScanLeft, 0, 3, turret, pivisionhub, log).withTimeout(1),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
-      new ShootSequence(intake, uptake, feeder, log),
+      new ShootSequence(intake, uptake, feeder, shooter, log),
 
       new FileLogWrite(false, false, "AutoFourBall", "end", log)
 
