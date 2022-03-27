@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
 
+
 public class UptakeSetPercentOutput extends CommandBase {
   /** Creates a new testUptake. */
   private final Uptake uptake;

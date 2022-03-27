@@ -211,17 +211,14 @@ public class Shooter extends SubsystemBase implements Loggable {
     return measuredRPM - setpointRPM;
   }
 
-  
   /**
-   * Use distance from the target to calculate target RPM. A slope is created between the 
-   * two closest values in the table to the parameter distance to calculate the target RPM.
-   * This method returns the default RPM if the robot is less than 5 feet from the target, 
-   * and the max RPM in the table if the robot is more than 30 feet from the target.
-   * @param distance distance from target (as per vision data), in feet
-   * @return target RPM for shooter to make it into the target
+   * Given a distance from the target, return the RPM that the shooter should be at
+   * 
+   * @param distance distance from the target to the shooter
+   * @return The RPM of the shooter motor.
    */
   public double distanceFromTargetToRPM(double distance) {
-    // return 12.5*distance + 2050;
+    // line of best fit for data (distance, rpm) {(55, 3100), (82, 3400), (136, 4001)}
     double rpm = 11.1243 * distance + 2488.02;
     log.writeLog(false, "Shooter", "DistanceToRPM", "Distance", distance, "RPM", rpm);
     return rpm;
