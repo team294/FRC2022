@@ -1,17 +1,12 @@
 package frc.robot.commands.commandGroups;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.CoordType;
-import frc.robot.Constants.StopType;
 import frc.robot.Constants.TargetType;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.TrajectoryCache;
-import frc.robot.utilities.TrajectoryCache.TrajectoryType;
 
 
 public class AutoFourBall extends SequentialCommandGroup {
@@ -53,15 +48,12 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
-      // debug
-      // new IntakePistonSetPosition(false, intake, log),
-
       // drive to back balls
       new DriveTurnGyro(TargetType.kAbsolute, 165, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
       // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
       new DriveStraight(4.0, TargetType.kAbsolute, 165, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
-      // // wait for human player to feed ball
+      // wait for human player to feed ball
       //new WaitCommand(1.0), 
       new IntakePistonSetPosition(false, intake, log),
 

@@ -38,14 +38,15 @@ public class UptakeSortBall extends SequentialCommandGroup {
         new ConditionalCommand(
           // if there is nothing in the feeder then feed it
           sequence(
-            new FileLogWrite(true, false, "UptakeSortBall", "feed", log),
+            new FileLogWrite(true, false, "UptakeSortBall", "send to feeder", log),
             new UptakeFeedBall(uptake, feeder, log).withTimeout(1)
             //new UptakeToFeeder(uptake, feeder, log).withTimeout(1)
           ),
           // if there is something in the feeder, turn off the uptake and hold the 2nd ball in the uptake
           sequence(
-            new FileLogWrite(true, false, "UptakeSortBall", "hold", log),
-            new UptakeStop(uptake, log)
+            new FileLogWrite(true, false, "UptakeSortBall", "hold in uptake", log)
+            // this logic has moved to the end of command group to allow sensors to stabilize
+            //new UptakeStop(uptake, log)
           ),
           () -> !feeder.isBallPresent()
         ),
@@ -60,6 +61,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
           new UptakeSetPercentOutput(0, 0, uptake, log),
           new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log), 
         () -> feeder.isBallPresent() && uptake.isBallAtColorSensor()),
+
       new FileLogWrite(true, false, "UptakeSortBall", "end sequence", log)
     );
   }
