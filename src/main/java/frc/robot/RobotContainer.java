@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -240,12 +241,15 @@ public class RobotContainer {
     //   new WaitCommand(0.07), // TODO change?
     //   new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
     // ));
-    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    xbLT.whenActive(new TurretShooterVision(TargetType.kVisionOnScreen, 0, -1, turret, shooter, pivisionhub, log));
     // xbLT.whenInactive(new ParallelCommandGroup(
     //   new TurretStop(turret, log),
     //   new PiVisionHubSetLEDState(0, pivisionhub) 
     // ));
-    xbLT.whenInactive(new TurretStop(turret, log));
+    xbLT.whenInactive(new ParallelCommandGroup(
+      new TurretStop(turret, log),
+      new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log)
+    ));
 
     for (int i = 1; i < xb.length; i++) {
       xb[i] = new JoystickButton(xboxController, i);
@@ -281,8 +285,10 @@ public class RobotContainer {
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, pivisionhub, log));
-    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
-    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
+    xbPOVLeft.whenActive(new TurretShooterVision(TargetType.kVisionScanLeft, -45, -2, turret, shooter, pivisionhub, log));
+    // xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
+    xbPOVRight.whenActive(new TurretShooterVision(TargetType.kVisionScanRight, 45, -2, turret, shooter, pivisionhub, log));
+    // xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
     //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 
