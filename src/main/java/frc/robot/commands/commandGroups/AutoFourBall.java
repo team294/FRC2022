@@ -57,9 +57,9 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       // new IntakePistonSetPosition(false, intake, log),
 
       // drive to back balls
-      new DriveTurnGyro(TargetType.kAbsolute, 150, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
+      new DriveTurnGyro(TargetType.kAbsolute, 165, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
       // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
-      new DriveStraight(4.0, TargetType.kAbsolute, 150, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+      new DriveStraight(4.0, TargetType.kAbsolute, 165, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
       // // wait for human player to feed ball
       //new WaitCommand(1.0), 

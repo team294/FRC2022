@@ -32,18 +32,18 @@ public class IntakePistonToggle extends CommandBase {
     log.writeLog(false, intake.getName(), "Toggle", "Extended at start", intake.getPistonExtended());
 
     // turn off/on intake before closing/opening intake
-    // if (intake.getPistonExtended()) {
-    //   intake.setMotorPercentOutput(0);
-    //   uptake.setUptakePercentOutput(0);
-    //   intake.setPistonExtended(false);
-    // } else {
-    //   intake.setPistonExtended(true);
-    //   CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
-    // }
+    if (intake.getPistonExtended()) {
+      intake.setMotorPercentOutput(0);
+      uptake.setUptakePercentOutput(0);
+      intake.setPistonExtended(false);
+    } else {
+      intake.setPistonExtended(true);
+      CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
+    }
 
     // temp fix for intake
-    intake.setPistonExtended(true);
-    CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
+    // intake.setPistonExtended(true);
+    // CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
     
   }
 
