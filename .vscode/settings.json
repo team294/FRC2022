@@ -26,5 +26,6 @@
     },
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
-  "wpilib.deployOffline": true
+  "wpilib.deployOffline": true,
+  "docwriter.style": "Javadoc"
 }
