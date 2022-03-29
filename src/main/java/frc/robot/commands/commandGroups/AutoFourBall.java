@@ -32,7 +32,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
 
       // intake one ball, turn, shoot then go to the back and get two more, come back and shoot
       
-      // intake ball
+      // get ready to intake ball
       new IntakePistonSetPosition(true, intake, log),
       new IntakeToColorSensor(intake, uptake, log),
 

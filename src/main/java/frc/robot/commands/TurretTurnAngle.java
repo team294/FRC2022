@@ -283,13 +283,13 @@ public class TurretTurnAngle extends CommandBase {
       // If using vision and we see the goal, then update target angle to the location of the goal
       targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset());
       tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
-    } else if (!piVisionHub.seesTarget() && targetType == TargetType.kVisionScanLeft && Math.abs(softLimitRev - currAngle - startAngle) < angleTolerance) {
+    } else if (!piVisionHub.seesTarget() && targetType == TargetType.kVisionScanLeft && Math.abs(softLimitRev - currAngle - startAngle) < 5) {
       // If using vision and scanning left and we don't see the target and we reach the left soft limit, then start scanning right
       targetType = TargetType.kVisionScanRight;
       target = softLimitFwd;
       targetRel = target - startAngle;
       tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
-    } else if (!piVisionHub.seesTarget() && targetType == TargetType.kVisionScanRight && Math.abs(softLimitFwd - currAngle - startAngle) < angleTolerance) {
+    } else if (!piVisionHub.seesTarget() && targetType == TargetType.kVisionScanRight && Math.abs(softLimitFwd - currAngle - startAngle) < 5) {
       // If using vision and scanning right and we don't see the target and we reach the right soft limit, then start scanning left
       targetType = TargetType.kVisionScanLeft;
       target = softLimitRev;
@@ -302,7 +302,7 @@ public class TurretTurnAngle extends CommandBase {
     tStateForecast = tProfile.calculate(timeSinceStart + tLagTurn);  // This is where the robot should be next cycle (or farther in the future if the robot has lag or backlash)
 
 //    if(tProfile.isFinished(timeSinceStart) && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)){  
-    if( (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)
+    if( piVisionHub.seesTarget() && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)
         && (Math.abs(targetRel - currAngle)<=5) ){  
       // If we completed the trapezoid profile and we are using vision, then
       // fine-tune angle using feedback based on live camera feedback
