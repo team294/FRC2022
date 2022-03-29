@@ -18,7 +18,7 @@ import frc.robot.utilities.MathBCR;
 
 import static frc.robot.Constants.TurretConstants.*;
 
-public class TurretShooterVision extends CommandBase {
+public class TurretTurnAngleGyro extends CommandBase {
   /**
    * Uses wpilib TrapezoidProfile generator to generate a motion profile for drive train turning
    * Does not regenerate the profile every time
@@ -35,7 +35,6 @@ public class TurretShooterVision extends CommandBase {
   private double targetAccel;
   private double startAngle, targetRel; // starting angle in degrees, target angle relative to start angle
   private double currAngle, currVelocity;
-  private double velocity;
   private double timeSinceStart;
   private TargetType targetType;
   private boolean regenerate;
@@ -44,7 +43,7 @@ public class TurretShooterVision extends CommandBase {
   private boolean continualTracking;
 
   private PiVisionHub piVisionHub;
-  private Shooter shooter;
+  private DriveTrain driveTrain;
   private PIDController pidAngVel;
   private double angleTolerance;
   private boolean feedbackUsingVision;
@@ -73,8 +72,8 @@ public class TurretShooterVision extends CommandBase {
    * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretShooterVision(TargetType type, double target, double angleTolerance, Turret turret, Shooter shooter, PiVisionHub piVisionHub, FileLog log) {
-    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, shooter, piVisionHub, log);
+  public TurretTurnAngleGyro(TargetType type, double target, double angleTolerance, Turret turret, DriveTrain driveTrain, PiVisionHub piVisionHub, FileLog log) {
+    this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, driveTrain, piVisionHub, log);
     // this(type, target, kClampTurnVelocity, kMaxTurnAcceleration, true, angleTolerance, turret, log);
   }
 
@@ -94,8 +93,8 @@ public class TurretShooterVision extends CommandBase {
    * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretShooterVision(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, Shooter shooter, PiVisionHub piVisionHub, FileLog log) {
-    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, shooter, piVisionHub, log);
+  public TurretTurnAngleGyro(TargetType type, double target, double maxVel, double maxAccel, double angleTolerance, Turret turret, DriveTrain driveTrain, PiVisionHub piVisionHub, FileLog log) {
+    this(type, target, maxVel, maxAccel, true, angleTolerance, turret, driveTrain, piVisionHub, log);
     // this(type, target, maxVel, maxAccel, true, angleTolerance, turret, log);
   }
 
@@ -115,10 +114,10 @@ public class TurretShooterVision extends CommandBase {
    * @param piVisionHub pivisionhub subsystem
    * @param log log
    */
-  public TurretShooterVision(TargetType type, double target, double maxVel, double maxAccel, boolean regenerate, double angleTolerance, Turret turret, Shooter shooter, PiVisionHub piVisionHub, FileLog log) {
+  public TurretTurnAngleGyro(TargetType type, double target, double maxVel, double maxAccel, boolean regenerate, double angleTolerance, Turret turret, DriveTrain driveTrain, PiVisionHub piVisionHub, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
-    this.shooter = shooter;
+    this.driveTrain = driveTrain;
     this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = MathBCR.normalizeAngle(target);
@@ -129,10 +128,9 @@ public class TurretShooterVision extends CommandBase {
     this.fromShuffleboard = false;
     continualTracking = angleTolerance < 0;
     this.angleTolerance = Math.abs(angleTolerance);
-    this.velocity = 0;
 
 
-    addRequirements(turret, shooter, piVisionHub);
+    addRequirements(turret);
     // addRequirements(turret);
 
     pidAngVel = new PIDController(kPTurn, 0, kDTurn);
@@ -142,11 +140,11 @@ public class TurretShooterVision extends CommandBase {
    * To be used when changing the target value directly from shuffleboard (not a pre-coded target)
    * @param fromShuffleboard true means the value is being changed from shuffleboard
    */
-  public TurretShooterVision(TargetType type, boolean regenerate, Turret turret, Shooter shooter, PiVisionHub piVisionHub, FileLog log) {
+  public TurretTurnAngleGyro(TargetType type, boolean regenerate, Turret turret, DriveTrain driveTrain, PiVisionHub piVisionHub, FileLog log) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
+    this.driveTrain = driveTrain;
     this.piVisionHub = piVisionHub;
-    this.shooter = shooter;
     this.log = log;
     this.target = 0;
     this.targetType = type;
@@ -155,8 +153,7 @@ public class TurretShooterVision extends CommandBase {
     this.regenerate = regenerate;
     this.fromShuffleboard = true;
     this.angleTolerance = 0;
-    this.velocity = 0;
-    addRequirements(turret, shooter, piVisionHub);
+    addRequirements(turret);
 
     SmartDashboard.putNumber("TurnTurret Manual Target Ang", 45);
     SmartDashboard.putNumber("TurnTurret Manual MaxVel", 150);
@@ -169,11 +166,11 @@ public class TurretShooterVision extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    log.writeLog(false, "TurretShooterVision", "initialize", "softLimitFwd", softLimitFwd, "softLimitRev", softLimitRev );
+    log.writeLog(false, "TurretTurnAngleGyro", "initialize", "softLimitFwd", softLimitFwd, "softLimitRev", softLimitRev );
     // Do not execute if the turret is not calibrated
     encoderCalibrated = turret.isEncoderCalibrated();
     if (!encoderCalibrated) {
-      log.writeLog(false, "TurretShooterVision", "initialize", "turret not calibrated" );
+      log.writeLog(false, "TurretTurnAngleGyro", "initialize", "turret not calibrated" );
       return;
     }
     
@@ -208,12 +205,12 @@ public class TurretShooterVision extends CommandBase {
         break;
       case kVisionOnScreen:
         if (piVisionHub.seesTarget()) {
-          log.writeLog(false, "TurretShooterVision", "initialize", "vision sees target" );
-          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+          log.writeLog(false, "TurretTurnAngleGyro", "initialize", "vision sees target" );
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()-driveTrain.getAngularVelocity()*0.04);
           piVisionHub.enableFastLogging(true);
         } else { 
           // no target is found; don't turn, just exit
-          log.writeLog(false, "TurretShooterVision", "initialize", "no target found - exiting" );
+          log.writeLog(false, "TurretTurnAngleGyro", "initialize", "no target found - exiting" );
           targetRel = 0;
           // continualTracking = false;
           //targetType = TargetType.kRelative;
@@ -221,22 +218,22 @@ public class TurretShooterVision extends CommandBase {
         break;
       case kVisionScanLeft:
         if (piVisionHub.seesTarget()) {
-          log.writeLog(false, "TurretShooterVision", "initialize", "vision sees target" );
-          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+          log.writeLog(false, "TurretTurnAngleGyro", "initialize", "vision sees target" );
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()-driveTrain.getAngularVelocity()*0.04);
           piVisionHub.enableFastLogging(true);
         } else {
-          log.writeLog(false, "TurretShooterVision", "initialize", "no target found - scanning left" );
+          log.writeLog(false, "TurretTurnAngleGyro", "initialize", "no target found - scanning left" );
           target = softLimitRev;
           targetRel = target - startAngle;
         }
         break;
       case kVisionScanRight:
         if (piVisionHub.seesTarget()) {
-          log.writeLog(false, "TurretShooterVision", "initialize", "vision sees target" );
-          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset());
+          log.writeLog(false, "TurretTurnAngleGyro", "initialize", "vision sees target" );
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()-driveTrain.getAngularVelocity()*0.04);
           piVisionHub.enableFastLogging(true);
         } else {
-          log.writeLog(false, "TurretShooterVision", "initialize", "no target found - scanning right" );
+          log.writeLog(false, "TurretTurnAngleGyro", "initialize", "no target found - scanning right" );
           target = softLimitFwd;
           targetRel = target - startAngle;
         }
@@ -246,12 +243,12 @@ public class TurretShooterVision extends CommandBase {
     // Prevent turret from wrapping
     if ( (startAngle + targetRel)>softLimitFwd )  {
       targetRel = softLimitFwd - startAngle;
-      log.writeLog(false, "TurretShooterVision", "initialize", "soft limit fwd set target angle", targetRel );
+      log.writeLog(false, "TurretTurnAngleGyro", "initialize", "soft limit fwd set target angle", targetRel );
     }
 
     if ( (startAngle + targetRel)<softLimitRev )  {
       targetRel = softLimitRev - startAngle;
-      log.writeLog(false, "TurretShooterVision", "initialize", "soft limit rev set target angle", targetRel );
+      log.writeLog(false, "TurretTurnAngleGyro", "initialize", "soft limit rev set target angle", targetRel );
     }
 
     // Set initial and final states
@@ -269,14 +266,9 @@ public class TurretShooterVision extends CommandBase {
     profileStartTime = System.currentTimeMillis(); // save starting time of profile
     currProfileTime = profileStartTime;
 
-    if (piVisionHub.seesTarget()) {
-        velocity = shooter.distanceFromTargetToRPM(piVisionHub.getDistance());
-        shooter.setMotorVelocity(velocity);
-    } // TODO test if continues at same speed without seeing any vision
-
-    log.writeLog(false, "TurretShooterVision",  "initialize", "Total Time", tProfile.totalTime(), "targetType", targetType, "StartAngleAbs", startAngle, "TargetAngleRel", targetRel);
+    log.writeLog(false, "TurretTurnAngleGyro", "initialize", "Total Time", tProfile.totalTime(), "targetType", targetType, "StartAngleAbs", startAngle, "TargetAngleRel", targetRel);
   }
-
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -290,12 +282,19 @@ public class TurretShooterVision extends CommandBase {
     currAngle = turret.getTurretPosition() - startAngle;
     currVelocity = turret.getTurretVelocity();
     
-    
     if (piVisionHub.seesTarget() && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)) {  
-        velocity = shooter.distanceFromTargetToRPM(piVisionHub.getDistance());
-        shooter.setMotorVelocity(velocity);
-        targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset());
-        tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
+      targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset()-driveTrain.getAngularVelocity()*0.04);
+      tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
+
+      if ( (currAngle + targetRel)>softLimitFwd )  {
+        targetRel = softLimitFwd - currAngle;
+        log.writeLog(false, "TurretTurnAngleGyro", "execute", "soft limit fwd set target angle", targetRel );
+      }
+  
+      if ( (currAngle + targetRel)<softLimitRev )  {
+        targetRel = softLimitRev - currAngle;
+        log.writeLog(false, "TurretTurnAngleGyro", "execute", "soft limit rev set target angle", targetRel );
+      }
     }
 
     timeSinceStart = (double)(currProfileTime - profileStartTime) * 0.001;
@@ -352,7 +351,7 @@ public class TurretShooterVision extends CommandBase {
       profileStartTime = currProfileTime;
     }
 
-    log.writeLog(false, "TurretShooterVision", "profile", "target", targetRel, 
+    log.writeLog(false, "TurretTurnAngleGyro", "profile", "target", targetRel, 
       "posT", tStateNow.position, "velT", targetVel, "accT", targetAccel,
       "posF", tStateForecast.position, "velF", forecastVel, "accF", forecastAccel,
       "posA", currAngle, "velA", currVelocity, "pFF", pFF, "pFB", pFB, "pTotal", pFF+pFB+pDB,
@@ -370,7 +369,7 @@ public class TurretShooterVision extends CommandBase {
       piVisionHub.enableFastLogging(false);
     }
     
-    log.writeLog(false, "TurretShooterVision", "End");
+    log.writeLog(false, "TurretTurnAngleGyro", "End");
   }
 
   // Returns true when the command should end.
@@ -385,7 +384,7 @@ public class TurretShooterVision extends CommandBase {
     && ((piVisionHub.seesTarget() && Math.abs(piVisionHub.getXOffset()) < angleTolerance) || (!piVisionHub.seesTarget() && feedbackUsingVision)))) {
     // if (Math.abs(targetRel - currAngle) < angleTolerance) {
       accuracyCounter++;
-      log.writeLog(false, "TurretShooterVision", "WithinTolerance", "Target Ang", targetRel, "Actual Ang", currAngle, 
+      log.writeLog(false, "TurretTurnAngleGyro", "WithinTolerance", "Target Ang", targetRel, "Actual Ang", currAngle, 
         "piVisionHub Xoff", piVisionHub.getXOffset(), 
         "Counter", accuracyCounter);
     } else {

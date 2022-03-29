@@ -35,6 +35,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   private boolean velocityControlOn = false;    // Is this subsystem using velocity control currently?
   private double measuredRPM = 0.0;             // Current measured speed
   private double setpointRPM = 0.0;             // Current velocity setpoint
+  private double lastVelocity = ShooterConstants.shooterDefaultRPM;
 
   
   public Shooter(FileLog log) {
@@ -89,6 +90,24 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public String getName() {
     return subsystemName;
+  }
+
+  /**
+   * Get the last velocity of the shooter
+   * 
+   * @return The last velocity.
+   */
+  public double getLastVelocity() {
+    return lastVelocity;
+  }
+
+  /**
+   * Set the last velocity of the shooter
+   * 
+   * @param lastVelocity The last velocity of the shooter.
+   */
+  public void setLastVelocity(double lastVelocity) {
+    this.lastVelocity = lastVelocity;
   }
 
   /**
