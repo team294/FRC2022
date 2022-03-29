@@ -15,7 +15,6 @@ public class AutoFourBall extends SequentialCommandGroup {
 /**
  * Four ball auto starting in the center facing the ball with hub directly behind lined up for a shot
  * 
- * @param waitTime seconds to wait before starting
  * @param driveTrain drivetrain subsystem
  * @param shooter shooter subsystem
  * @param feeder feeder subsystem
@@ -24,11 +23,10 @@ public class AutoFourBall extends SequentialCommandGroup {
  * @param limelight front limelight for driving with vision
  * @param log file logger
  */
-public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, Turret turret, TrajectoryCache trajectoryCache, PiVisionHub pivisionhub, LimeLight limeLight, FileLog log) {
+public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, Turret turret, TrajectoryCache trajectoryCache, PiVisionHub pivisionhub, LimeLight limeLight, FileLog log) {
     addCommands(
       // setup
       new FileLogWrite(false, false, "AutoFourBall", "starting", log),
-      //new WaitCommand(waitTime),                        // delay from shuffleboard if needed
       new DriveResetPose(0, 0, 180, driveTrain, log),   // set initial pose to 180 degrees away from the hub (facing the ball)
       new PiVisionHubSetLEDState(1, pivisionhub),       // turn on led light for vision
 
@@ -48,6 +46,8 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
+
+      // turn on uptake for next set of balls
       new UptakeSetPercentOutput(0.25, false, uptake, log),
 
       // drive to back balls
@@ -63,6 +63,7 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
       // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
       new DriveStraight(3.5, TargetType.kAbsolute, 0, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+
       // shoot
       new TurretTurnAngle(TargetType.kVisionScanRight, 0, 3, turret, pivisionhub, log).withTimeout(1),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),

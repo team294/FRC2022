@@ -3,10 +3,8 @@ package frc.robot.commands.commandGroups;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TargetType;
 import frc.robot.commands.*;
-import frc.robot.commands.ShooterSetVelocity.InputMode;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 
@@ -22,27 +20,26 @@ public class AutoShootTaxi extends SequentialCommandGroup {
  * @param feeder feeder subsystem
  * @param intake intake subsystem
  * @param uptake update subsystem
+ * @param vision pivision subsystem
  * @param limelight front limelight for driving with vision
  * @param log file logger
  */
-public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, LimeLight limeLight, FileLog log) {
+public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intake intake, Uptake uptake, Turret turret, PiVisionHub pivisionhub,LimeLight limeLight, FileLog log) {
     addCommands(
       new FileLogWrite(false, false, "AutoShootTaxi", "starting", log),
-      new WaitCommand(waitTime),                                        // delay from shuffleboard
-      new DriveZeroGyro(0, driveTrain, log),      
-      new ShooterSetVelocity(InputMode.kSpeedRPM, AutoConstants.ballOneRPM, shooter, log), //#endregion, shooter, log),  // turn on the shooter
-      new FeederSetPercentOutput(0.3, feeder, log),                     // turn on feeder to send first ball to shooter
-      new WaitCommand(1),                                             // wait for ball to shoot
-      new UptakeSetPercentOutput(0.3, false, uptake, log),              // make sure uptake is running just in case ball is jammed
-      new WaitCommand(0.5),                                             // wait for ball to shoot
-      new FeederSetPercentOutput(0, feeder, log),                       // turn off feeder
+      new WaitCommand(waitTime),                        // delay from shuffleboard
+      new DriveZeroGyro(0, driveTrain, log),  
 
-      parallel(
-        new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log),  // turn off shooter
+      // target with vision
+      new PiVisionHubSetLEDState(1, pivisionhub), 
+      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
 
-        // drive out backwards 
-        new DriveStraight(-AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2)
-      ),
+      // shoot
+      new ShootSetup(true, AutoConstants.ballOneRPM, pivisionhub, shooter, log),
+      new ShootSequence(intake, uptake, feeder, shooter, log),
+      
+      // drive out backwards 
+      new DriveStraight(-AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
 
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),
