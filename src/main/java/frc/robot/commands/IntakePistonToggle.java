@@ -40,6 +40,11 @@ public class IntakePistonToggle extends CommandBase {
       intake.setPistonExtended(true);
       CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
     }
+
+    // temp fix for intake
+    // intake.setPistonExtended(true);
+    // CommandScheduler.getInstance().schedule(new IntakeToColorSensor(intake, uptake, log));
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.

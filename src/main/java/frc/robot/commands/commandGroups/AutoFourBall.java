@@ -1,16 +1,12 @@
 package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.CoordType;
-import frc.robot.Constants.StopType;
 import frc.robot.Constants.TargetType;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.TrajectoryCache;
-import frc.robot.utilities.TrajectoryCache.TrajectoryType;
 
 
 public class AutoFourBall extends SequentialCommandGroup {
@@ -31,7 +27,7 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
     addCommands(
       // setup
       new FileLogWrite(false, false, "AutoFourBall", "starting", log),
-      new WaitCommand(waitTime),                        // delay from shuffleboard if needed
+      //new WaitCommand(waitTime),                        // delay from shuffleboard if needed
       new DriveResetPose(0, 0, 180, driveTrain, log),   // set initial pose to 180 degrees away from the hub (facing the ball)
       new PiVisionHubSetLEDState(1, pivisionhub),       // turn on led light for vision
 
@@ -45,24 +41,29 @@ public AutoFourBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Fee
       new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kAbsolute, 180, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
       // turn back to hub
-      new DriveTurnGyro(TargetType.kAbsolute, 0, 120, 120, 3, driveTrain, limeLight, log).withTimeout(2),
+      new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(2),
 
       // shoot 
-      // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
+      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
       // drive to back balls
-      // new DriveTurnGyro(TargetType.kAbsolute, 180, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(3),
-      new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
+      new DriveTurnGyro(TargetType.kAbsolute, 165, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
+      // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
+      new DriveStraight(4.0, TargetType.kAbsolute, 165, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
-      // drive to center shooting position
-      // new DriveTurnGyro(TargetType.kAbsolute, 180, 120, 1200, 3, driveTrain, limeLight, log).withTimeout(3),
-      new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
+      // wait for human player to feed ball
+      //new WaitCommand(1.0), 
       new IntakePistonSetPosition(false, intake, log),
 
+      // drive back to sweet spot
+      new DriveTurnGyro(TargetType.kAbsolute, -20, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
+      // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
+      new DriveStraight(3.5, TargetType.kAbsolute, -20, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+
       // shoot
-      // new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
+      new TurretTurnAngle(TargetType.kVisionScanRight, 0, 3, turret, pivisionhub, log).withTimeout(1),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 

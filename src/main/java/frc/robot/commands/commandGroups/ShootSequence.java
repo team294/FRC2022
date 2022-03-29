@@ -30,11 +30,11 @@ public class ShootSequence extends SequentialCommandGroup {
           new FileLogWrite(true, false, "ShootSequence", "shooting", log),
           new ShooterSetVelocity(InputMode.kLastSetSpeed, shooter, log).withTimeout(1),    // Wait for shooter to be at speed
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send first ball to shooter
-          new WaitCommand(1).withInterrupt(() -> !feeder.isBallPresent()),        // turn off feeder when ball clears feeder
+          new WaitCommand(2).withInterrupt(() -> !feeder.isBallPresent()),        // turn off feeder when ball clears feeder
           new FeederSetPercentOutput(0, feeder, log),         // turn off feeder
           new WaitCommand(0.2),                           // Give first ball a little time to clear feeder
 
-          new IntakeSetPercentOutput(0, IntakeConstants.onPct, intake, log), // turn on transfer wheels to clear jams
+          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intake, log), // turn on transfer wheels to clear jams
           new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to feeder
           new ShooterSetVelocity(InputMode.kLastSetSpeed, shooter, log).withTimeout(1),    // Wait for shooter to be at speed
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send second ball to shooter

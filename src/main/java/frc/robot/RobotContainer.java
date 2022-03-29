@@ -47,7 +47,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("E1");
+  private final FileLog log = new FileLog("E6");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -79,7 +79,7 @@ public class RobotContainer {
   private final Joystick coPanel = new Joystick(OIConstants.usbCoPanel);
 
   private boolean rumbling = false;
-
+  private boolean sensorConfigured = false;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -96,14 +96,22 @@ public class RobotContainer {
    * Configures any sensor triggers for the robot
    */
   private void configureSensorTriggers() {
-    Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
-    colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
+    if (sensorConfigured == false) {
+    
+      Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
+      colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
+      
+      // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
+      // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
 
-    // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
-    // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
-
-    // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
-    // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+      // Trigger feederSensorTrigger = new Trigger(() -> feeder.isBallPresent());
+      // feederSensorTrigger.whenActive(new FeederSensorTrigger(feeder, log));
+      
+      sensorConfigured = true;
+      log.writeLog(false , "Sensor Trigger", "Sensors Configured");
+    } else {
+      log.writeLog(false , "Sensor Trigger", "Sensors Already Configured");
+    }
 
   }
 
@@ -271,7 +279,7 @@ public class RobotContainer {
     // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     xb[3].whenHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
-    xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    //xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
     xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
