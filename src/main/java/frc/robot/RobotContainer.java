@@ -293,9 +293,11 @@ public class RobotContainer {
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, pivisionhub, log));
-    xbPOVLeft.whenActive(new TurretShooterVision(TargetType.kVisionScanLeft, -45, -2, turret, shooter, pivisionhub, log));
+    xbPOVLeft.whenActive(new TurretTurnAngleGyro(TargetType.kVisionScanLeft, -45, -2, turret, driveTrain, pivisionhub, log));
+    // xbPOVLeft.whenActive(new TurretShooterVision(TargetType.kVisionScanLeft, -45, -2, turret, shooter, pivisionhub, log));
     // xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
-    xbPOVRight.whenActive(new TurretShooterVision(TargetType.kVisionScanRight, 45, -2, turret, shooter, pivisionhub, log));
+    xbPOVRight.whenActive(new TurretTurnAngleGyro(TargetType.kVisionScanRight, 45, -2, turret, driveTrain, pivisionhub, log));
+    // xbPOVRight.whenActive(new TurretShooterVision(TargetType.kVisionScanRight, 45, -2, turret, shooter, pivisionhub, log));
     // xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
     //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
