@@ -206,7 +206,7 @@ public class TurretTurnAngleGyro extends CommandBase {
       case kVisionOnScreen:
         if (piVisionHub.seesTarget()) {
           log.writeLog(false, "TurretTurnAngleGyro", "initialize", "vision sees target" );
-          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.04);
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.1);
           piVisionHub.enableFastLogging(true);
         } else { 
           // no target is found; don't turn, just exit
@@ -219,7 +219,7 @@ public class TurretTurnAngleGyro extends CommandBase {
       case kVisionScanLeft:
         if (piVisionHub.seesTarget()) {
           log.writeLog(false, "TurretTurnAngleGyro", "initialize", "vision sees target" );
-          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.04);
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.1);
           piVisionHub.enableFastLogging(true);
         } else {
           log.writeLog(false, "TurretTurnAngleGyro", "initialize", "no target found - scanning left" );
@@ -230,7 +230,7 @@ public class TurretTurnAngleGyro extends CommandBase {
       case kVisionScanRight:
         if (piVisionHub.seesTarget()) {
           log.writeLog(false, "TurretTurnAngleGyro", "initialize", "vision sees target" );
-          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.04);
+          targetRel = MathBCR.normalizeAngle(piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.1);
           piVisionHub.enableFastLogging(true);
         } else {
           log.writeLog(false, "TurretTurnAngleGyro", "initialize", "no target found - scanning right" );
@@ -283,7 +283,7 @@ public class TurretTurnAngleGyro extends CommandBase {
     currVelocity = turret.getTurretVelocity();
     
     if (piVisionHub.seesTarget() && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)) {  
-      targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.04);
+      targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset()+driveTrain.getAngularVelocity()*0.1);
       tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
 
       if ( (currAngle + targetRel)>softLimitFwd )  {
