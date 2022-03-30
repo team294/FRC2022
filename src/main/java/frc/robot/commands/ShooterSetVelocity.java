@@ -101,7 +101,7 @@ public class ShooterSetVelocity extends CommandBase {
     velocity = 0;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter, pivisionhub);
+    addRequirements(shooter);
   }
 
   

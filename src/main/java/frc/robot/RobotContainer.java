@@ -275,7 +275,7 @@ public class RobotContainer {
     //x - micro shot for use in the pit
     // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
-    xb[3].whenHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
+    xb[3].whileHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
     //xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
