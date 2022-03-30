@@ -39,7 +39,7 @@ public class ShootSequence extends SequentialCommandGroup {
           new ShooterSetVelocity(InputMode.kLastSetSpeed, shooter, log).withTimeout(1),    // Wait for shooter to be at speed
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send second ball to shooter
 
-          new WaitCommand(0.5),                                 // wait for second ball to shoot 
+          new WaitCommand(1.0),                                 // wait for second ball to shoot 
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
           new IntakeToColorSensor(intake, uptake, log)          // turn on intake
         ),

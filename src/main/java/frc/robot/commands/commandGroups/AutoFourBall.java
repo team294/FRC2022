@@ -62,7 +62,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log),
 
       // wait for second ball from human player
-      new WaitCommand(0.25).withInterrupt(() -> uptake.isBallAtColorSensor()),
+      new WaitCommand(0.5).withInterrupt(() -> uptake.isBallAtColorSensor()),
 
       // retract intake
       new IntakePistonSetPosition(false, intake, log),
