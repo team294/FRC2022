@@ -2,6 +2,7 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.TargetType;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -28,7 +29,7 @@ public AutoTaxi(double waitTime, LimeLight limeLight, Intake intake, Uptake upta
       
 
       // drive out backwards so we are ready to shoot preloaded ball
-      new DriveStraight(-1.3, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
+      new DriveStraight(-AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
 
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),

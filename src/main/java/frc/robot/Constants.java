@@ -147,7 +147,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double driveToBallTwoInMeters = 1.1; // needs at least 1.0 to get out of hangar
+        public static final double driveToBallTwoInMeters = 1.4; 
         public static final double ballOneRPM = 3000;
         public static final double ballTwoRPM = 3300;
         public static final double ballCenterX = -AutoConstants.driveToBallTwoInMeters;

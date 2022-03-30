@@ -33,7 +33,6 @@ public class AutoSelection {
 		// auto selections
 		autoChooser.setDefaultOption("Two Ball", TWO_BALL);
 		autoChooser.addOption("Four Ball Center", FOUR_BALL);
-		autoChooser.addOption("Five Ball Right", FIVE_BALL);
 		autoChooser.addOption("Shoot then Taxi", SHOOT_TAXI);
 		autoChooser.addOption("Taxi", TAXI);
 	
@@ -69,7 +68,7 @@ public class AutoSelection {
 
 		if (autoPlan == SHOOT_TAXI) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoShootTaxi");
-			autonomousCommand = new AutoShootTaxi(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
+			autonomousCommand = new AutoShootTaxi(waitTime, driveTrain, shooter, feeder, intake, uptake, turret, pivisionhub, limeLight, log);
 		}
 		
 		if (autoPlan == TAXI) {
@@ -79,12 +78,12 @@ public class AutoSelection {
 
 		if (autoPlan == TWO_BALL) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoTwoBall");
-			autonomousCommand = new AutoTwoBall(waitTime, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
+			autonomousCommand = new AutoTwoBall(waitTime, driveTrain, shooter, feeder, intake, uptake, turret, pivisionhub, limeLight, log);
 		}
 
 		if (autoPlan == FOUR_BALL) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoFourBall");
-			autonomousCommand = new AutoFourBall(waitTime, driveTrain, shooter, feeder, intake, uptake, turret, trajectoryCache, pivisionhub, limeLight, log);
+			autonomousCommand = new AutoFourBall(driveTrain, shooter, feeder, intake, uptake, turret, trajectoryCache, pivisionhub, limeLight, log);
 		}
 
 		if (autoPlan == FIVE_BALL) {

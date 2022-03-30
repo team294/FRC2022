@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -97,7 +98,7 @@ public class RobotContainer {
   private void configureSensorTriggers() {
     if (sensorConfigured == false) {
     
-      Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor());
+      Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor() && DriverStation.isTeleop());
       colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, log));
       
       // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
@@ -240,7 +241,7 @@ public class RobotContainer {
     
     // right trigger shoots ball
     xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log));
-    xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
+    // xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
     // xbLT.whenActive(new SequentialCommandGroup(
@@ -261,21 +262,20 @@ public class RobotContainer {
     
     //a - short shot distance
     xb[1].whenHeld(new ShootSetup(false, 3100, pivisionhub, shooter, log));         
-    xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    // xb[1].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //b - medium shot distance
     xb[2].whenHeld(new ShootSetup(false, 3400, pivisionhub, shooter, log));        
-    xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    // xb[2].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
 
     //y - long shot distance
     xb[4].whenHeld(new ShootSetup(false, 4100, pivisionhub, shooter, log));        
-    xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    // xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     //x - micro shot for use in the pit
     // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     xb[3].whenHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
-    //xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
     // LB = 5, RB = 6
     xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
