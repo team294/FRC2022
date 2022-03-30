@@ -220,7 +220,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   public double distanceFromTargetToRPM(double distance) {
     // return 12.5*distance + 2050;
     // double rpm = 11.1243 * distance + 2488.02;
-    double rpm = 12.5 * distance + 2488.02;
+    double rpm = 12.5 * distance + 2400;
     log.writeLog(false, "Shooter", "DistanceToRPM", "Distance", distance, "RPM", rpm);
     return rpm;
     // int len = ShooterConstants.distanceFromTargetToRPMTable.length;

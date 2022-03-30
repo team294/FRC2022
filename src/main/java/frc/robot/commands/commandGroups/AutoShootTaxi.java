@@ -30,17 +30,17 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
       new WaitCommand(waitTime),                        // delay from shuffleboard
       new DriveZeroGyro(0, driveTrain, log),  
 
+      // drive out backwards so vision can see
+      new DriveStraight(-AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
+
       // target with vision
       new PiVisionHubSetLEDState(1, pivisionhub), 
-      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
+      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log).withTimeout(2.0),
 
       // shoot
       new ShootSetup(true, AutoConstants.ballOneRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
-      
-      // drive out backwards 
-      new DriveStraight(-AutoConstants.driveToBallTwoInMeters, TargetType.kRelative, 0.0, 2.61, 3.8, true, driveTrain, limeLight, log).withTimeout(2),
-
+    
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),
 

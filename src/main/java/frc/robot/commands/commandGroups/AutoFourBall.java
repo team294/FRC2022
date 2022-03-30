@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.TargetType;
+import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.utilities.FileLog;
@@ -52,16 +53,22 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
 
       // drive to back balls
       new DriveTurnGyro(TargetType.kAbsolute, 168, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
-      // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.centerBallToBackFourball.value], driveTrain, log),
       new DriveStraight(4.2, TargetType.kAbsolute, 168, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
       
       // wait for human player to feed ball
-      new WaitCommand(0.5), 
+      new WaitCommand(0.25).withInterrupt(() -> feeder.isBallPresent()),
+      
+      // once first ball loaded turn off decider wheel
+      new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log),
+
+      // wait for second ball from human player
+      new WaitCommand(0.25).withInterrupt(() -> uptake.isBallAtColorSensor()),
+
+      // retract intake
       new IntakePistonSetPosition(false, intake, log),
 
       // drive back to sweet spot
       new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
-      // new DriveFollowTrajectory(CoordType.kAbsolute, StopType.kBrake, trajectoryCache.cache[TrajectoryType.backToCenterFourBall.value], driveTrain, log),
       new DriveStraight(3.5, TargetType.kAbsolute, 0, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
       // shoot

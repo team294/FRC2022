@@ -33,7 +33,6 @@ public class AutoSelection {
 		// auto selections
 		autoChooser.setDefaultOption("Two Ball", TWO_BALL);
 		autoChooser.addOption("Four Ball Center", FOUR_BALL);
-		autoChooser.addOption("Five Ball Right", FIVE_BALL);
 		autoChooser.addOption("Shoot then Taxi", SHOOT_TAXI);
 		autoChooser.addOption("Taxi", TAXI);
 	
