@@ -7,7 +7,7 @@ import frc.robot.utilities.FileLog;
 public class UptakeEjectBall extends CommandBase {
   Uptake uptake;
   FileLog log;
-  boolean hasPassed;
+  long targetTime;
 
   /**
    * Ejects a ball from the uptake
@@ -25,16 +25,13 @@ public class UptakeEjectBall extends CommandBase {
   @Override
   public void initialize() {
     log.writeLog(false, "UptakeEjectBall", "Init");
-    hasPassed = false;
+    targetTime = System.currentTimeMillis() + 200;      // Run eject motor for at least a short time
+    uptake.setEjectPercentOutput(0.25);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    uptake.setEjectPercentOutput(0.25);
-    if(uptake.isBallGoingToFeeder()){
-      hasPassed = true;
-    }
   }
 
   // Called once the command ends or is interrupted.
@@ -47,9 +44,6 @@ public class UptakeEjectBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(hasPassed && !uptake.isBallGoingToFeeder()){
-      return true;
-    }
-    else return false;
+    return (System.currentTimeMillis()>targetTime) && !uptake.isBallAtColorSensor();
   }
 }
