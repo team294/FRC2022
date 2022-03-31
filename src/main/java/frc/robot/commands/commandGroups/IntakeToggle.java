@@ -27,7 +27,7 @@ public class IntakeToggle extends SequentialCommandGroup {
       new ConditionalCommand(
         sequence(
           new IntakePistonSetPosition(false, intake, log),
-          new WaitCommand(.2),
+          new WaitCommand(.5),
           new IntakeSetPercentOutput(0, intake, log),
           new UptakeSetPercentOutput(0, 0, uptake, log)
         ), 

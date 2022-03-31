@@ -37,9 +37,11 @@ public class ShootSequence extends SequentialCommandGroup {
           new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intake, log), // turn on transfer wheels to clear jams
           new UptakeSetPercentOutput(UptakeConstants.onPct, false, uptake, log),  // make sure uptake is running to send second ball to feeder
           new ShooterSetVelocity(InputMode.kLastSetSpeed, shooter, log).withTimeout(1),    // Wait for shooter to be at speed
+          new WaitCommand(0.5).withInterrupt(feeder :: isBallPresent),
           new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send second ball to shooter
 
-          new WaitCommand(1.0),                                 // wait for second ball to shoot 
+          new WaitCommand(1).withInterrupt(() -> !feeder.isBallPresent()),  // wait for second ball to shoot 
+          new WaitCommand(.15),  // Wait for ball to exit shooter
           new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
           new IntakeToColorSensor(intake, uptake, log)          // turn on intake
         ),

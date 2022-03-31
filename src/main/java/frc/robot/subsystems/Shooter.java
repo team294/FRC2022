@@ -203,6 +203,13 @@ public class Shooter extends SubsystemBase implements Loggable {
     motor1.set(ControlMode.Velocity, setpointRPM/ShooterConstants.rawVelocityToRPM,
       DemandType.ArbitraryFeedForward, kS*Math.signum(setpointRPM) + kV*setpointRPM);
   }
+
+  /**
+   * Returns that last rpm that was set
+   */
+  public double getSetpointRPM() {
+    return setpointRPM;
+  }
   
   /**
    * @return PID error, in RPM.  + = actual speed too fast, - = actual speed too slow
