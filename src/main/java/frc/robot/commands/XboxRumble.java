@@ -13,22 +13,27 @@ public class XboxRumble extends CommandBase {
   private XboxController xboxController;
   private double percentRumble;
   private double targetTime;
+  private double startingTime;
   private FileLog log;
   private int seconds;
+  private int numOfRumble;
+  private int currRumble;
   /** Creates a new XboxRumble. */
   /**
    * Rumbles the Xbox Controller
    * @param percentRumble The normalized value (0 to 1) to set the rumble to
    * @param seconds time in seconds to rumble
+   * @param numOfRumble how many rumbles
    * @param xboxController xbox controller
    * @param log logger
    */
-  public XboxRumble(double percentRumble, int seconds, XboxController xboxController, FileLog log) {
+  public XboxRumble(double percentRumble, int seconds, int numOfRumble, XboxController xboxController, FileLog log) {
     this.xboxController = xboxController;
     this.percentRumble = percentRumble;
     this.log = log;
     this.seconds = seconds;
-    targetTime = System.currentTimeMillis() + (seconds * 1000);
+    this.numOfRumble = numOfRumble;
+    targetTime = System.currentTimeMillis() + (seconds * 1000) + (numOfRumble * 1000);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -36,23 +41,36 @@ public class XboxRumble extends CommandBase {
   @Override
   public void initialize() {
     new FileLogWrite(false, false, "XboxRumble", "Starting rumble for " + seconds + "seconds", log);
+    currRumble = 1;
+    startingTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    xboxController.setRumble(RumbleType.kLeftRumble, percentRumble);
-    xboxController.setRumble(RumbleType.kRightRumble, percentRumble);
+    if(System.currentTimeMillis() < ((currRumble * (seconds * 1000)) + ((currRumble - 1) * 1000) + startingTime)){
+      xboxController.setRumble(RumbleType.kLeftRumble, percentRumble);
+      xboxController.setRumble(RumbleType.kRightRumble, percentRumble);
+    }else if(System.currentTimeMillis() > ((currRumble * (seconds * 1000)) + (currRumble * 1000) + startingTime)){
+      currRumble++;
+    }else{
+      xboxController.setRumble(RumbleType.kLeftRumble, 0);
+      xboxController.setRumble(RumbleType.kRightRumble, 0);
+    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    xboxController.setRumble(RumbleType.kLeftRumble, 0);
+    xboxController.setRumble(RumbleType.kRightRumble, 0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(System.currentTimeMillis() > targetTime){
+    if((System.currentTimeMillis() > targetTime) && currRumble >= numOfRumble){
       return true;
     }else return false;
   }
