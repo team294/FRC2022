@@ -37,6 +37,7 @@ public class TurretTurnAngle extends CommandBase {
   private double currAngle, currVelocity;
   private double timeSinceStart;
   private TargetType targetType;
+  private TargetType originalTargetType;
   private boolean regenerate;
   private boolean fromShuffleboard;
   private boolean encoderCalibrated = true;
@@ -119,6 +120,7 @@ public class TurretTurnAngle extends CommandBase {
     this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = MathBCR.normalizeAngle(target);
+    this.originalTargetType = type;
     this.targetType = type;
     this.maxVel = MathUtil.clamp(Math.abs(maxVel), 0, kClampTurnVelocity);
     this.maxAccel = MathUtil.clamp(Math.abs(maxAccel), 0, kMaxTurnAcceleration);
@@ -143,6 +145,7 @@ public class TurretTurnAngle extends CommandBase {
     this.piVisionHub = piVisionHub;
     this.log = log;
     this.target = 0;
+    this.originalTargetType = type;
     this.targetType = type;
     this.maxVel = 0;
     this.maxAccel = 0;
@@ -162,6 +165,8 @@ public class TurretTurnAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    this.targetType = originalTargetType;
+
     log.writeLog(false, "TurretTurnAngle", "initialize", "softLimitFwd", softLimitFwd, "softLimitRev", softLimitRev );
     // Do not execute if the turret is not calibrated
     encoderCalibrated = turret.isEncoderCalibrated();

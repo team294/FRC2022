@@ -76,7 +76,7 @@ public class ShooterSetVelocity extends CommandBase {
       velocity = value;
       log.writeLog(false, "Shooter", "SetVelocity", "Velocity from rpm", velocity);
     } else {
-      velocity = 0;
+      velocity = shooter.getSetpointRPM();
       log.writeLog(false, "Shooter", "SetVelocity", "Velocity last set value", velocity);
     }
 
@@ -131,7 +131,7 @@ public class ShooterSetVelocity extends CommandBase {
 
     if (mode==InputMode.kLastSetSpeed) {
       // Don't change the speed setting.  Just wait for the shooter to get to the previously set speed and then exit. 
-      log.writeLog(false, "Shooter SetVelocity", "Initialize", "Using Last Velocity ", true);
+      log.writeLog(false, "Shooter SetVelocity", "Initialize", "Using Last Velocity", velocity);
     } else {
       shooter.setMotorVelocity(velocity);
       log.writeLog(false, "Shooter SetVelocity", "Initialize", "Set Velocity", velocity);

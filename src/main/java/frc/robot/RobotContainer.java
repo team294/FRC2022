@@ -240,7 +240,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log));
+    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log),false);
     // xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -275,7 +275,7 @@ public class RobotContainer {
     //x - micro shot for use in the pit
     // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
     // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
-    xb[3].whenHeld(new ShootSetup(true, 500, pivisionhub, shooter, log));        
+    xb[3].whileHeld(new ShootSetup(true, 3100, pivisionhub, shooter, log));        
     
     // LB = 5, RB = 6
     xb[5].whenPressed(new TurretSetPercentOutput(-0.1, turret, log));
@@ -315,7 +315,7 @@ public class RobotContainer {
     //left[2].whenPressed(new IntakeStop(intakeFront, log));
 
     // right joystick left button
-    right[1].whenPressed(new IntakePistonToggle(intakeFront, uptake, log)); 
+    right[1].whenPressed(new IntakeToggle(intakeFront, uptake, log)); 
 
     // right joystick right button
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision

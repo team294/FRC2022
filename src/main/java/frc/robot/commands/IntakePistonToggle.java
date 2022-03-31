@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.lang.annotation.Target;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.commandGroups.IntakeToColorSensor;
@@ -12,7 +14,6 @@ public class IntakePistonToggle extends CommandBase {
   private Intake intake;
   private Uptake uptake;
   private FileLog log;
-
   /**
    * Toggles the intake between deployed and retracted 
    * 
@@ -24,6 +25,7 @@ public class IntakePistonToggle extends CommandBase {
     this.uptake = uptake;
     this.log = log;
     addRequirements(intake, uptake);
+    
   }
    
   // Called when the command is initially scheduled.

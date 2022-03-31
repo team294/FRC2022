@@ -41,10 +41,13 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kAbsolute, 180, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
       // turn back to hub
-      new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(2),
-
+      parallel(
+        new DriveTurnGyro(TargetType.kAbsolute, 60, 300, 200, 6, driveTrain, limeLight, log).withTimeout(2),
+        new TurretTurnAngle(TargetType.kAbsolute, 45, 6, turret, pivisionhub, log)
+      ),
+        
       // shoot 
-      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
+      new TurretTurnAngle(TargetType.kVisionScanRight, 0, 3, turret, pivisionhub, log),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
@@ -52,7 +55,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       new UptakeSetPercentOutput(0.25, false, uptake, log),
 
       // drive to back balls
-      new DriveTurnGyro(TargetType.kAbsolute, 168, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
+      new DriveTurnGyro(TargetType.kAbsolute, 168, 300, 200, 6, driveTrain, limeLight, log).withTimeout(3),
       new DriveStraight(4.2, TargetType.kAbsolute, 168, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
       
       // wait for human player to feed ball
@@ -64,15 +67,22 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       // wait for second ball from human player
       new WaitCommand(0.5).withInterrupt(() -> uptake.isBallAtColorSensor()),
 
-      // retract intake
-      new IntakePistonSetPosition(false, intake, log),
+      parallel(
+        // retract intake
+        new IntakePistonSetPosition(false, intake, log),
 
-      // drive back to sweet spot
-      new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
-      new DriveStraight(3.5, TargetType.kAbsolute, 0, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+        // drive back to sweet spot
+        //new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
+        new DriveStraight(-3.8, TargetType.kAbsolute, 168, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3)
+      ),
+
+      // turn to face hub
+      parallel(
+        new DriveTurnGyro(TargetType.kAbsolute, 105, 300, 200, 6, driveTrain, limeLight, log).withTimeout(2),
+        new TurretTurnAngle(TargetType.kVisionScanRight, 0, 1, turret, pivisionhub, log).withTimeout(1)
+      ),
 
       // shoot
-      new TurretTurnAngle(TargetType.kVisionScanRight, 0, 3, turret, pivisionhub, log).withTimeout(1),
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
