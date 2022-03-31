@@ -5,13 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.utilities.FileLog;
 
 public class XboxRumble extends CommandBase {
-  private XboxController xboxController;
+  private Joystick xboxController;
   private double percentRumble;
   private double targetTime;
   private double startingTime;
@@ -28,7 +29,7 @@ public class XboxRumble extends CommandBase {
    * @param xboxController xbox controller
    * @param log logger
    */
-  public XboxRumble(double percentRumble, double seconds, int numOfRumble, XboxController xboxController, FileLog log) {
+  public XboxRumble(double percentRumble, double seconds, int numOfRumble, Joystick xboxController, FileLog log) {
     this.xboxController = xboxController;
     this.log = log;
     this.percentRumble = MathUtil.clamp(Math.abs(percentRumble),0,1);
