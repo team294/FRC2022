@@ -57,7 +57,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
       ),
 
       new LogEnableFastLogging(false, uptake, log),
-      new WaitCommand(0.5),
+      // new WaitCommand(0.5),
 
       // turn off uptake if we have balls in feeder and uptake, otherwise turn it on
       new ConditionalCommand(

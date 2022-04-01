@@ -25,7 +25,7 @@ public class UptakeEjectBall extends CommandBase {
   @Override
   public void initialize() {
     log.writeLog(false, "UptakeEjectBall", "Init");
-    targetTime = System.currentTimeMillis() + 200;      // Run eject motor for at least a short time
+    targetTime = System.currentTimeMillis() + 40;      // Run eject motor for at least a short time
     uptake.setEjectPercentOutput(0.25);
   }
 
