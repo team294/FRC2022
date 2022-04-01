@@ -127,7 +127,7 @@ public class TrajectoryCache {
             new Pose2d(AutoConstants.ballCenterX, AutoConstants.ballCenterY, new Rotation2d(Math.toRadians(-135))), 
             List.of(
                             ),
-            new Pose2d(AutoConstants.ballBackX, AutoConstants.ballBackY, new Rotation2d(Math.toRadians(-135)))
+            new Pose2d(AutoConstants.ballBackX, AutoConstants.ballBackY, new Rotation2d(Math.toRadians(168)))
         );
 
         cache[TrajectoryType.backToCenterFourBall.value] = calcTrajectory("Back to Center Fourball", 0.4, 0.4, false,
