@@ -182,6 +182,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     motor1.config_kP(0, P, timeoutMs);
     motor1.config_kI(0, I, timeoutMs);
     motor1.config_kD(0, D, timeoutMs);
+    // motor1.config_IntegralZone(slotIdx, izone, timeoutMs);
     // motor.config_kF(0, F, timeoutMs);  // value = 1023 * desired-percent-out / at-sensor-velocity-sensor-units-per-100ms
     kS = S;
     kV = V;

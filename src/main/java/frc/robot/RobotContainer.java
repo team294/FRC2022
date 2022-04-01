@@ -127,6 +127,10 @@ public class RobotContainer {
     // display overheating motors
     tempCheck.displayOverheatingMotors();
 
+    // XBox rumble
+    SmartDashboard.putData("XBox Rumble 1", new XboxRumble(0.5, 0.25, 1, xboxController, log));
+    SmartDashboard.putData("XBox Rumble 2", new XboxRumble(0.5, 0.25, 2, xboxController, log));
+
     // Intake subsystem
     SmartDashboard.putData("Intake Front Fwd", new IntakeSetPercentOutput(0.2, 0.2, intakeFront, log));
     SmartDashboard.putData("Intake Front Rev", new IntakeSetPercentOutput(-0.2, -0.2, intakeFront, log));
@@ -284,7 +288,8 @@ public class RobotContainer {
     xb[6].whenReleased(new TurretStop(turret, log));
 
     // back = 7, start = 8 
-    xb[7].whenHeld(new ClimberSetExtended(true,climber, log)); 
+    xb[7].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));   // micro shot for use in the pit
+    // xb[7].whenHeld(new ClimberSetExtended(true,climber, log)); 
     xb[8].whenHeld(new ClimberSetExtended(false,climber, log)); 
 
     // pov is the d-pad (up, down, left, right)

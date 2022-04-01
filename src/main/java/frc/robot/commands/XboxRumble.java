@@ -35,7 +35,6 @@ public class XboxRumble extends CommandBase {
     this.percentRumble = MathUtil.clamp(Math.abs(percentRumble),0,1);
     this.seconds = Math.abs(seconds);
     this.numOfRumble = Math.abs(numOfRumble);
-    targetTime = System.currentTimeMillis() + (seconds * 1000 * (2*numOfRumble - 1) );
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -45,17 +44,21 @@ public class XboxRumble extends CommandBase {
     log.writeLog(false, "XboxRumble", "Starting rumble", "seconds", seconds, "times", numOfRumble);
     currRumble = 1;
     startingTime = System.currentTimeMillis();
+    targetTime = startingTime + (seconds * 1000 * (2*numOfRumble - 1) );
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // log.writeLogEcho(false, "XboxRumble", "Execute", "Delta Time", (System.currentTimeMillis()-startingTime)/1000, "curRumble", currRumble);
     if( System.currentTimeMillis() < ( (2*currRumble-1) * seconds * 1000 + startingTime ) ) {
+      // log.writeLogEcho(false, "XboxRumble", "Execute", "Rumbling", true);
       xboxController.setRumble(RumbleType.kLeftRumble, percentRumble);
       xboxController.setRumble(RumbleType.kRightRumble, percentRumble);
     } else if( System.currentTimeMillis() > ( 2 * currRumble * seconds * 1000 + startingTime ) ) {
       currRumble++;
     } else {
+      // log.writeLogEcho(false, "XboxRumble", "Execute", "Rumbling", false);
       xboxController.setRumble(RumbleType.kLeftRumble, 0);
       xboxController.setRumble(RumbleType.kRightRumble, 0);
     }
@@ -64,6 +67,7 @@ public class XboxRumble extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    log.writeLog(false, "XboxRumble", "End", "Total time", (System.currentTimeMillis()-startingTime)/1000);
     xboxController.setRumble(RumbleType.kLeftRumble, 0);
     xboxController.setRumble(RumbleType.kRightRumble, 0);
   }
