@@ -56,7 +56,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
 
       // drive to back balls
       new DriveTurnGyro(TargetType.kAbsolute, 168, 300, 200, 6, driveTrain, limeLight, log).withTimeout(3),
-      new DriveStraight(4.0, TargetType.kAbsolute, 168, 3.5, 3.8, true, driveTrain, limeLight, log).withTimeout(3),  // Reduced 4.2 to 4.0 for F1, max vel 2.66 to 3.5
+      new DriveStraight(3.8, TargetType.kAbsolute, 168, 3.5, 3.8, true, driveTrain, limeLight, log).withTimeout(3),  // Reduced 4.2 to 4.0 for F1 to 3.8 for F2, max vel 2.66 to 3.5
       
       // wait for human player to feed ball
       new WaitCommand(0.25).withInterrupt(() -> feeder.isBallPresent()),
@@ -78,9 +78,10 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
 
       // turn to face hub
       parallel(
-        new DriveTurnGyro(TargetType.kAbsolute, 105, 300, 200, 6, driveTrain, limeLight, log).withTimeout(2),
-        new TurretTurnAngle(TargetType.kVisionScanRight, 0, 1, turret, pivisionhub, log).withTimeout(1)
+        new DriveTurnGyro(TargetType.kAbsolute, 75, 300, 200, 6, driveTrain, limeLight, log).withTimeout(2),      // F3 change from 105 to 75 deg
+        new TurretTurnAngle(TargetType.kAbsolute, 60, 1, turret, pivisionhub, log).withTimeout(2)
       ),
+      new TurretTurnAngle(TargetType.kVisionScanRight, 0, 1, turret, pivisionhub, log).withTimeout(2),      // F3 add scan after turn is finished
 
       // shoot
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),

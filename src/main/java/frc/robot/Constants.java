@@ -164,7 +164,7 @@ public final class Constants {
         public static final double pidErrorTolerance = 100; // in RPM
 
         public static final double kP = 0.02;        // PID terms
-        public static final double kI = 0.0;
+        public static final double kI = 0.005;          // Added in F2
         public static final double kD = 0.0;
         public static final double kS = 0.003;
         public static final double kV = 0.000154;

@@ -182,10 +182,16 @@ public class Shooter extends SubsystemBase implements Loggable {
     motor1.config_kP(0, P, timeoutMs);
     motor1.config_kI(0, I, timeoutMs);
     motor1.config_kD(0, D, timeoutMs);
-    // motor1.config_IntegralZone(slotIdx, izone, timeoutMs);
     // motor.config_kF(0, F, timeoutMs);  // value = 1023 * desired-percent-out / at-sensor-velocity-sensor-units-per-100ms
     kS = S;
     kV = V;
+
+    // auto clear the integral accumulator if the sensor value is too far from the
+    // target. This prevent unstable oscillation if the kI is too large. Value is in sensor units [encoder ticks]/[100ms].
+    motor1.config_IntegralZone(0, 100/ShooterConstants.rawVelocityToRPM, timeoutMs);
+
+    // Sets the maximum integral accumulator, in closed loop error units [encoder ticks]/[100ms].
+    motor1.configMaxIntegralAccumulator(0, 300/ShooterConstants.rawVelocityToRPM, timeoutMs);
 
     if (velocityControlOn) {
       // Reset velocity to force kS and kV updates to take effect
@@ -228,7 +234,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   public double distanceFromTargetToRPM(double distance) {
     // return 12.5*distance + 2050;
     // double rpm = 11.1243 * distance + 2488.02;
-    double rpm = 13.0 * distance + 2400;    // Increase 12.5 to 13.0 for F1
+    double rpm = 14.6 * distance + 2300;    // Increase 12.5 to 13.0*D + 2400 for F1, F3: 15.9*d + 2267, F4:  14.6*d + 2300
     log.writeLog(false, "Shooter", "DistanceToRPM", "Distance", distance, "RPM", rpm);
     return rpm;
     // int len = ShooterConstants.distanceFromTargetToRPMTable.length;
