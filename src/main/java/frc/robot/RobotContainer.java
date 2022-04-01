@@ -47,7 +47,7 @@ import frc.robot.utilities.TrajectoryCache.TrajectoryType;
  */
 public class RobotContainer {
   // Define robot key utilities
-  private final FileLog log = new FileLog("E6");
+  private final FileLog log = new FileLog("F1");
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
@@ -294,10 +294,10 @@ public class RobotContainer {
 
     // pov is the d-pad (up, down, left, right)
     xbPOVUp.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 0, 2, turret, pivisionhub, log));
-    // xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
-    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kVisionScanRight, 45, -2, turret, pivisionhub, log));
-    // xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
-    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kVisionScanLeft, 45, -2, turret, pivisionhub, log));
+    xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kAbsolute, 45, 2, turret, pivisionhub, log));
+    // xbPOVRight.whenActive(new TurretTurnAngle(TargetType.kVisionScanRight, 45, -2, turret, pivisionhub, log));
+    xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kAbsolute, -45, 2, turret, pivisionhub, log));
+    // xbPOVLeft.whenActive(new TurretTurnAngle(TargetType.kVisionScanLeft, 45, -2, turret, pivisionhub, log));
     //xbPOVDown.whenActive(new StopAllMotors(feeder, shooter, intakeFront, uptake, log));
   }
 

@@ -56,7 +56,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
 
       // drive to back balls
       new DriveTurnGyro(TargetType.kAbsolute, 168, 300, 200, 6, driveTrain, limeLight, log).withTimeout(3),
-      new DriveStraight(4.2, TargetType.kAbsolute, 168, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+      new DriveStraight(4.0, TargetType.kAbsolute, 168, 3.5, 3.8, true, driveTrain, limeLight, log).withTimeout(3),  // Reduced 4.2 to 4.0 for F1, max vel 2.66 to 3.5
       
       // wait for human player to feed ball
       new WaitCommand(0.25).withInterrupt(() -> feeder.isBallPresent()),
@@ -73,7 +73,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
 
         // drive back to sweet spot
         //new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(3),
-        new DriveStraight(-3.8, TargetType.kAbsolute, 168, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3)
+        new DriveStraight(-3.8, TargetType.kAbsolute, 168, 3.5, 3.8, true, driveTrain, limeLight, log).withTimeout(3)  // F1 max vel 2.66 to 3.5
       ),
 
       // turn to face hub
