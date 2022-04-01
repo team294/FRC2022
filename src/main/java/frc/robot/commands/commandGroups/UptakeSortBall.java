@@ -1,5 +1,6 @@
 package frc.robot.commands.commandGroups;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -19,7 +20,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
    * @param feeder feeder subsystem
    * @param log logger
    */
-  public UptakeSortBall(Uptake uptake, Feeder feeder, FileLog log) {
+  public UptakeSortBall(Uptake uptake, Feeder feeder, Joystick xboxController, FileLog log) {
 
     addCommands(
       new FileLogWrite(true, false, "UptakeSortBall", "start sequence", log),
@@ -37,14 +38,16 @@ public class UptakeSortBall extends SequentialCommandGroup {
         // if it is the right color then check if there is room in the feeder
         new ConditionalCommand(
           // if there is nothing in the feeder then feed it
-          sequence(
+          parallel(
             new FileLogWrite(true, false, "UptakeSortBall", "send to feeder", log),
+            new XboxRumble(0.5, 0.25, 1, xboxController, log),    // Notify drive that the robot has one ball
             new UptakeFeedBall(uptake, feeder, log).withTimeout(1)
             //new UptakeToFeeder(uptake, feeder, log).withTimeout(1)
           ),
           // if there is something in the feeder, turn off the uptake and hold the 2nd ball in the uptake
-          sequence(
-            new FileLogWrite(true, false, "UptakeSortBall", "hold in uptake", log)
+          parallel(
+            new FileLogWrite(true, false, "UptakeSortBall", "hold in uptake", log),
+            new XboxRumble(0.5, 0.25, 2, xboxController, log)    // Notify drive that the robot has one ball
             // this logic has moved to the end of command group to allow sensors to stabilize
             //new UptakeStop(uptake, log)
           ),
@@ -54,7 +57,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
       ),
 
       new LogEnableFastLogging(false, uptake, log),
-      new WaitCommand(0.5),
+      // new WaitCommand(0.5),
 
       // turn off uptake if we have balls in feeder and uptake, otherwise turn it on
       new ConditionalCommand(

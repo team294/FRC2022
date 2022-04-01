@@ -247,11 +247,6 @@ public class Uptake extends SubsystemBase implements Loggable {
         BallCount.setBallCount(0, BallLocation.kUptake, log);
       }
       
-      if (isBallGoingToFeeder()) {
-        BallCount.setBallCount(1, BallLocation.kEject, log);
-      } else {
-        BallCount.setBallCount(0, BallLocation.kEject, log);
-      }      
     }
   }
 
