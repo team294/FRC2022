@@ -79,7 +79,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       // turn to face hub
       parallel(
         new DriveTurnGyro(TargetType.kAbsolute, 75, 300, 200, 6, driveTrain, limeLight, log).withTimeout(2),      // F3 change from 105 to 75 deg
-        new TurretTurnAngle(TargetType.kAbsolute, 60, 1, turret, pivisionhub, log).withTimeout(2)
+        new TurretTurnAngle(TargetType.kAbsolute, 70, 1, turret, pivisionhub, log).withTimeout(2)             // F5 change from 60 to 70
       ),
       new TurretTurnAngle(TargetType.kVisionScanRight, 0, 1, turret, pivisionhub, log).withTimeout(2),      // F3 add scan after turn is finished
 
