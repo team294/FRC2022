@@ -26,12 +26,16 @@ public class IntakeToggle extends SequentialCommandGroup {
     addCommands(
       new ConditionalCommand(
         sequence(
+          // Retract intake
           new IntakePistonSetPosition(false, intake, log),
-          new WaitCommand(.5),
+          new WaitCommand(0.5),
+          // new IntakeSetPercentOutput(, intake, log),   // F7 added to clear jams - run intake in reverse briefly after retracting
+          // new WaitCommand(0.3),                         // F7 added to clear jams
           new IntakeSetPercentOutput(0, intake, log),
           new UptakeSetPercentOutput(0, 0, uptake, log)
         ), 
         sequence(
+          // Extend intake
           new IntakePistonSetPosition(true, intake, log),
           new IntakeToColorSensor(intake, uptake, log)
         ), 

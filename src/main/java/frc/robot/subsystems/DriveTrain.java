@@ -239,7 +239,7 @@ public class DriveTrain extends SubsystemBase {
    * @param turnOn true = turn on open loop ramp rate limit, false = turn off open loop ramp rate limit
    */
   public void setOpenLoopRampLimit(boolean turnOn) {
-    double ramp = turnOn ? 0.63 : 0.0;     // Was 0.4, but robot tips easily
+    double ramp = turnOn ? 0.60 : 0.0;     // Was 0.4, but robot tips easily
     leftMotor1.configOpenloopRamp(ramp);
     leftMotor2.configOpenloopRamp(ramp);
     rightMotor1.configOpenloopRamp(ramp);
