@@ -164,10 +164,10 @@ public final class Constants {
         public static final double pidErrorTolerance = 100; // in RPM
 
         public static final double kP = 0.02;        // PID terms
-        public static final double kI = 0.0;
+        public static final double kI = 0.005;          // Added in F2
         public static final double kD = 0.0;
-        public static final double kS = 0.003;
-        public static final double kV = 0.000154;
+        public static final double kS = 0.004;              // F5 updated from 0.003 to 0.004
+        public static final double kV = 0.000155;           // F5 updated from 0.000154 to 0.000155
 
         public static final int[][] distanceFromTargetToRPMTable = {{6,3100},{7,3400},{11,3700},{16,4300},{21,4900},{26,5200}};         // Values in feet, RPM
         public static final double shooterDefaultRPM = 2800;

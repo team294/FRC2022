@@ -44,7 +44,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(2),
 
       // shoot 
-      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log),
+      new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log).withTimeout(3),       // F2 -- Added 3-sec timeout, in case we lose vision
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
