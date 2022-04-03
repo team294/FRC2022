@@ -975,19 +975,6 @@
               "imageHeight": 0
             }
           },
-          "6,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/problemExists",
-              "_title": "Problem Exists",
-              "Colors/Color when true": "#800000FF",
-              "Colors/Color when false": "#000000FF"
-            }
-          },
           "0,0": {
             "size": [
               2,
@@ -1104,6 +1091,19 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Autonomous delay",
               "_title": "Auto delay"
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/problemExists",
+              "_title": "Problem Exists",
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#000000FF"
             }
           }
         }
