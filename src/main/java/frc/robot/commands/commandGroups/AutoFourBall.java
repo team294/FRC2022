@@ -52,6 +52,7 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
       // turn on uptake for next set of balls
+      new IntakeToColorSensor(intake, uptake, log),           // F8 added IntakeToColorSensor, since it was removed from ShootSequence in F7
       new UptakeSetPercentOutput(0.25, false, uptake, log),
 
       // drive to back balls
@@ -86,6 +87,9 @@ public AutoFourBall(DriveTrain driveTrain, Shooter shooter, Feeder feeder, Intak
       // shoot
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
+
+      // Prep for Teleop mode
+      new IntakeToColorSensor(intake, uptake, log),           // F8 added IntakeToColorSensor, since it was removed from ShootSequence in F7
 
       new FileLogWrite(false, false, "AutoFourBall", "end", log)
 

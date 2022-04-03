@@ -234,7 +234,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   public double distanceFromTargetToRPM(double distance) {
     // return 12.5*distance + 2050;
     // double rpm = 11.1243 * distance + 2488.02;
-    double rpm = 14.6 * distance + 2300;    // Increase 12.5 to 13.0*D + 2400 for F1, F3: 15.9*d + 2267, F4:  14.6*d + 2300
+    double rpm = 13.3 * distance + 2394;    // Increase 12.5 to 13.0*D + 2400 for F1, F3: 15.9*d + 2267, F4:  14.6*d + 2300, F5: 13.3*d + 2394
     log.writeLog(false, "Shooter", "DistanceToRPM", "Distance", distance, "RPM", rpm);
     return rpm;
     // int len = ShooterConstants.distanceFromTargetToRPMTable.length;
@@ -287,9 +287,13 @@ public class Shooter extends SubsystemBase implements Loggable {
 		log.writeLog(logWhenDisabled, subsystemName, "Update Variables",  
       "Bus Volt", motor1.getBusVoltage(),
       "Out Percent", motor1.getMotorOutputPercent(),
+      "Out Percent 2", motor2.getMotorOutputPercent(),
       "Volt", motor1.getMotorOutputVoltage(), 
+      "Volt 2", motor2.getMotorOutputVoltage(), 
       "Amps", motor1.getSupplyCurrent(),
+      "Amps 2", motor2.getSupplyCurrent(),
       "Temperature", motor1.getTemperature(),
+      "Temperature 2", motor2.getTemperature(),
       "Position", getMotorPosition(),
       "Measured RPM", measuredRPM,
       "Setpoint RPM", setpointRPM
