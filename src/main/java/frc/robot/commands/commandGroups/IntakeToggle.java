@@ -29,8 +29,6 @@ public class IntakeToggle extends SequentialCommandGroup {
           // Retract intake
           new IntakePistonSetPosition(false, intake, log),
           new WaitCommand(0.5),
-          // new IntakeSetPercentOutput(, intake, log),   // F7 added to clear jams - run intake in reverse briefly after retracting
-          // new WaitCommand(0.3),                         // F7 added to clear jams
           new IntakeSetPercentOutput(0, intake, log),
           new UptakeSetPercentOutput(0, 0, uptake, log)
         ), 

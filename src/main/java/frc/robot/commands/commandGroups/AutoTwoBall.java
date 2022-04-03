@@ -48,6 +48,9 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
       new ShootSequence(intake, uptake, feeder, shooter, log),
 
+      // Prep for Teleop mode
+      new IntakeToColorSensor(intake, uptake, log),           // F8 added IntakeToColorSensor, since it was removed from ShootSequence in F7
+
       new FileLogWrite(false, false, "AutoTwoBall", "end", log)
 
     );
