@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -51,6 +52,7 @@ public class RobotContainer {
   private final TemperatureCheck tempCheck = new TemperatureCheck(log);
   private final PowerDistribution powerdistribution = new PowerDistribution(Ports.CANPowerDistHub, ModuleType.kRev);
   private final Compressor compressor = new Compressor(PneumaticsModuleType.REVPH);
+  private REVPHSim pneumaticHubSim;
   private final AllianceSelection allianceSelection = new AllianceSelection(log);
 
   // Define robot subsystems  
@@ -479,6 +481,8 @@ public class RobotContainer {
     pivisionhub.setLEDState(true);
     driveTrain.setDriveModeCoast(false);
 
+    climber.togglePistonExtended();
+
     // wait until teleop to set trigger as it interferes with autos
     configureSensorTriggers();
   }
@@ -494,5 +498,16 @@ public class RobotContainer {
     // } else {
     //   setXBoxRumble(0);
     // }
+  }
+
+  public void simulationInit() {
+    System.out.println("Starting Simulation");
+    System.out.println("Loading Simulation Variables");
+    pneumaticHubSim = new REVPHSim(Ports.CANPneumaticHub);
+    climber.initSim();
+  }
+
+  public void simulationPeriodic() {
+    
   }
 }

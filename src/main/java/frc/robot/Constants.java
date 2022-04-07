@@ -156,6 +156,12 @@ public final class Constants {
         public static final double ballBackY = -0.8;
     }
 
+    public static final class ClimberConstants {
+        public static final double climberMinimumLength = 0.5;
+        public static final double climberExtendLength = 0.5;
+        public static final double msToExtend = 800;
+    }
+
     public static final class ShooterConstants {
         public static final double compensationVoltage = 12.0;                      // voltage compensation on motor
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions

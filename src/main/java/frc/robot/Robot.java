@@ -110,4 +110,14 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  @Override
+  public void simulationInit() {
+    m_robotContainer.simulationInit();    
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    m_robotContainer.simulationPeriodic();
+  }
 }

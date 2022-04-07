@@ -1,0 +1,4 @@
+[NetworkTables Storage 3.0]
+string "/Preferences/.type"="RobotPreferences"
+boolean "/Preferences/problemExists"=true
+string "/Preferences/problemSubsystem"="RobotPreferences"
