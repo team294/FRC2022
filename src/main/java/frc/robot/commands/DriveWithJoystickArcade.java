@@ -21,7 +21,11 @@ public class DriveWithJoystickArcade extends CommandBase {
   private final Joystick rightJoystick;
   private final FileLog log;
   
-  private double leftPercent, rightPercent;
+  private double fwdPercent, turnPercent;
+  private double lastFwdPercent, lastTime, curTime;
+
+  private final double maxFwdRateChange = 2.0;
+  private final double maxRevRateChange = -1.4;
 
   /**
    * @param driveTrain drive train subsystem to use
@@ -41,20 +45,35 @@ public class DriveWithJoystickArcade extends CommandBase {
   @Override
   public void initialize() {
     driveTrain.setDriveModeCoast(false);
-    driveTrain.setOpenLoopRampLimit(true);
+    driveTrain.setOpenLoopRampLimit(false);
+
+    lastFwdPercent = 0;
+    lastTime = System.currentTimeMillis() / 1000.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leftPercent = -leftJoystick.getY();
-    rightPercent = rightJoystick.getX() * 0.5;
+    curTime = System.currentTimeMillis() / 1000.0;
+    fwdPercent = -leftJoystick.getY();
+    turnPercent = rightJoystick.getX() * 0.5;
 
     if(log.getLogRotation() == log.DRIVE_CYCLE) {
-      log.writeLog(false, "DriveWithJoystickArcade", "Joystick", "L Joystick", leftPercent, "R Joystick", rightPercent);
+      log.writeLog(false, "DriveWithJoystickArcade", "Joystick", "L Joystick", fwdPercent, "R Joystick", turnPercent);
+    }
+
+    double fwdRateChange = (fwdPercent - lastFwdPercent) / (curTime - lastTime);
+    if (fwdRateChange > maxFwdRateChange) {
+      fwdPercent = lastFwdPercent + (curTime - lastTime)*maxFwdRateChange;
+    } else if (fwdRateChange < maxRevRateChange) {
+      fwdPercent = lastFwdPercent +(curTime - lastTime)*maxRevRateChange;
+
     }
     
-    driveTrain.arcadeDrive(leftPercent, rightPercent);
+    driveTrain.arcadeDrive(fwdPercent, turnPercent);
+
+    lastFwdPercent = fwdPercent;
+    lastTime = curTime;
   }
 
   // Called once the command ends or is interrupted.
