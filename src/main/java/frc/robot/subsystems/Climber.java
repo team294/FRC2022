@@ -110,7 +110,7 @@ public class Climber extends SubsystemBase implements Loggable {
         lPiston.append(
             new MechanismLigament2d("lArm", 0.5, 180, 6, new Color8Bit(Color.kPurple)));
             
-    // post the mechanism to the dashboard
+    // post the mechanism to the dash board
     SmartDashboard.putData("Mech2d", lMech);
   }
 

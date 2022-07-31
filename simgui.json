@@ -36,6 +36,13 @@
           "open": true
         }
       }
+    },
+    "PowerDistributions": {
+      "1": {
+        "PowerDistribution[1]": {
+          "open": true
+        }
+      }
     }
   },
   "NTProvider": {
