@@ -597,6 +597,7 @@ public class DriveTrain extends SubsystemBase {
       tLagAngular = SmartDashboard.getNumber("Drive tLag Angular", tLagAngular);
        
       // Update data on SmartDashboard
+      SmartDashboard.putNumber("Drive High Temp", Math.max(rightMotor1.getTemperature(), Math.max(rightMotor2.getTemperature(), Math.max(leftMotor1.getTemperature(), leftMotor2.getTemperature()))));
       SmartDashboard.putNumber("Drive Right Raw", getRightEncoderRaw());
       SmartDashboard.putNumber("Drive Left Raw", getLeftEncoderRaw());
       SmartDashboard.putNumber("Drive Right Enc", getRightEncoderInches());
