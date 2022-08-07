@@ -375,16 +375,6 @@
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/TurnTurret Manual Target Ang",
-                  "_title": "TurnTurret Manual Target Ang"
-                },
-                {
-                  "_type": "Command",
-                  "_source0": "network_table:///SmartDashboard/Turret Turn to Angle",
-                  "_title": "Turret Turn to Angle"
-                },
-                {
-                  "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/TurnTurret Manual MaxVel",
                   "_title": "TurnTurret Manual MaxVel"
                 },
@@ -397,6 +387,16 @@
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/TurnTurret Manual Tolerance",
                   "_title": "TurnTurret Manual Tolerance"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/Turret Turn to Angle",
+                  "_title": "Turret Turn to Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/TurnTurret Manual Target Ang",
+                  "_title": "TurnTurret Manual Target Ang"
                 }
               ]
             }
