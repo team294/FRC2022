@@ -572,11 +572,8 @@ public class DriveTrain extends SubsystemBase {
     // calculate angVel in degrees per second
     angularVelocity =  lfRunningAvg.calculate( (currAng - prevAng) / (currTime - prevTime) * 1000 );
     
-    updateDriveLog(false);
-    // TODO put back in if statement
-
     if(log.getLogRotation() == log.DRIVE_CYCLE) {
-      // updateDriveLog(false);
+      updateDriveLog(false);
 
       if(!isGyroReading()) {
         RobotPreferences.recordStickyFaults("Gyro", log);
