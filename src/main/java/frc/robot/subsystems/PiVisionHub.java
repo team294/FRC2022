@@ -36,7 +36,7 @@ public class PiVisionHub extends PiVision {
 
   /**
    * Takes into account not being in line with the target.
-   * @return distance from camera to target, on the floor, in feet
+   * @return distance from camera to target, on the floor, in inches
    */
   public double getDistance() {
     if (width == 0) return 0;

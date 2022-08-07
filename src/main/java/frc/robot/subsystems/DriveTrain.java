@@ -561,17 +561,31 @@ public class DriveTrain extends SubsystemBase {
     return leftMotor1.getClosedLoopTarget();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-
-    // Update robot odometry
-    double degrees = getGyroRotation();
+  /**
+   * "Update the robot's odometry based on the current gyro and encoder values."
+   * 
+   * @param piVisionHub The PiVisionHub object that is used to get the data from the Raspberry Pi
+   */
+  public void updateOdometry(double degrees, PiVisionHub piVisionHub) {
     double leftMeters = Units.inchesToMeters(getLeftEncoderInches());
     double rightMeters = Units.inchesToMeters(getRightEncoderInches());
     odometry.update(Rotation2d.fromDegrees(degrees), leftMeters, rightMeters);
     fieldSim.setRobotPose(getPose());
 
+    if (piVisionHub.seesTarget()) {
+      double dist = piVisionHub.getDistance();
+      double angle = getGyroRotation();
+    }
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+
+    // Update the odometry
+    double degrees = getGyroRotation();
+    // updateOdometry(degrees, piVisionHub);
+    
     // save current angle and time for calculating angVel
     currAng = getGyroRaw();
     currTime = System.currentTimeMillis();
