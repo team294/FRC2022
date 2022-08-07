@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,13 +40,15 @@ public class DriveTrain extends SubsystemBase {
 
   private final DifferentialDrive diffDrive;
   private final DifferentialDriveOdometry odometry;
-
+  
+  private final Field2d fieldSim = new Field2d();
+  
   private double leftEncoderZero = 0;
   private double rightEncoderZero = 0;
-
+  
   private final AHRS ahrs;
   private double yawZero = 0;
-
+  
   private FileLog log;
   private TemperatureCheck tempCheck;
   
@@ -154,6 +157,9 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("Drive kI Angular", kIAngular);
     SmartDashboard.putNumber("Drive kD Angular", kDAngular);
     SmartDashboard.putNumber("Drive tLag Angular", tLagAngular);
+
+    // field!
+    SmartDashboard.putData("Field", fieldSim);
   }
 
   /**
@@ -564,6 +570,7 @@ public class DriveTrain extends SubsystemBase {
     double leftMeters = Units.inchesToMeters(getLeftEncoderInches());
     double rightMeters = Units.inchesToMeters(getRightEncoderInches());
     odometry.update(Rotation2d.fromDegrees(degrees), leftMeters, rightMeters);
+    fieldSim.setRobotPose(odometry.getPoseMeters());
 
     // save current angle and time for calculating angVel
     currAng = getGyroRaw();
