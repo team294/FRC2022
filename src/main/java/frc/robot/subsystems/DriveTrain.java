@@ -570,7 +570,7 @@ public class DriveTrain extends SubsystemBase {
     double leftMeters = Units.inchesToMeters(getLeftEncoderInches());
     double rightMeters = Units.inchesToMeters(getRightEncoderInches());
     odometry.update(Rotation2d.fromDegrees(degrees), leftMeters, rightMeters);
-    fieldSim.setRobotPose(odometry.getPoseMeters());
+    fieldSim.setRobotPose(getPose());
 
     // save current angle and time for calculating angVel
     currAng = getGyroRaw();
