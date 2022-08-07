@@ -211,9 +211,9 @@ public final class Constants {
         public static final double kClampAccelShortTurn = 200.0;     // For short turns, Max acceleration in degrees per second^2
         public static final double kShortTurn = 20.0;           // Short turns are relative angle change less than +/- this variable, in degrees
         public static final double tLagTurn = 0.020;          // Lag time to start/stop turning, or just one cycle forcast through scheduler
-        public static double kITurnEnd = 0.004;         // Value of kI to use after the trapezoid profile is finished
-        public static double kPTurn = 0.000;         // PID terms  0.001
-        public static double kITurn = 0.000;
+        public static double kITurnEnd = 0.015;         // Value of kI to use after the trapezoid profile is finished, was 0.004
+        public static double kPTurn = 0.000;         // PID terms  0.001 in season, was turned off to now use kITurn instead
+        public static double kITurn = 0.010;
         public static double kDTurn = 0.000;
         public static double kSTurn = 0.012;       // Feed-forward terms
         public static double kVTurn = 0.00102;      

@@ -316,7 +316,9 @@ public class TurretTurnAngle extends CommandBase {
     targetVel = tStateNow.velocity;
     targetAccel = tStateNow.acceleration;
     double forecastVel = tStateForecast.velocity;
-    double forecastAccel = MathUtil.clamp((forecastVel-targetVel)/tLagTurn, -maxAccel, maxAccel);    
+    // double forecastAccel = MathUtil.clamp((forecastVel-targetVel)/tLagTurn, -maxAccel, maxAccel);    
+    TrapezoidProfileBCR.State tStateFutureAccel = tProfile.calculate(timeSinceStart + .05);       // The acceleration tends to cause velocity overshoot after accel goes to 0.  So, use accel value 50ms in the future to avoid overshoot.
+    double forecastAccel = tStateFutureAccel.acceleration;
 
     if(!tProfile.isFinished(timeSinceStart) && !feedbackUsingVision){
       // Feed-forward percent voltage to drive motors
