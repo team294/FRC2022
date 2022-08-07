@@ -206,7 +206,7 @@ public final class Constants {
 
         // Turn-to-angle constants
         public static final double kMaxTurnVelocity = 1150.0;        // Max turret velocity in degrees per second (extrapolted at 100% power)
-        public static final double kClampTurnVelocity = 250.0;       // Max turret velocity allowed (for safety) in degrees per second
+        public static final double kClampTurnVelocity = 300.0;       // Max turret velocity allowed (for safety) in degrees per second 
         public static final double kMaxTurnAcceleration = 500.0;     // Max acceleration in degrees per second^2
         public static final double kClampAccelShortTurn = 200.0;     // For short turns, Max acceleration in degrees per second^2
         public static final double kShortTurn = 20.0;           // Short turns are relative angle change less than +/- this variable, in degrees

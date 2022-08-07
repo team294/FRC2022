@@ -155,7 +155,7 @@ public class TurretTurnAngle extends CommandBase {
     addRequirements(turret);
 
     SmartDashboard.putNumber("TurnTurret Manual Target Ang", 45);
-    SmartDashboard.putNumber("TurnTurret Manual MaxVel", 150);
+    SmartDashboard.putNumber("TurnTurret Manual MaxVel", 300);  //150 during season, increased to 300 after tuning
     SmartDashboard.putNumber("TurnTurret Manual MaxAccel", kMaxTurnAcceleration);
     SmartDashboard.putNumber("TurnTurret Manual Tolerance", 0.5);
 
