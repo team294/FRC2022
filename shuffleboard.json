@@ -375,16 +375,6 @@
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/TurnTurret Manual Target Ang",
-                  "_title": "TurnTurret Manual Target Ang"
-                },
-                {
-                  "_type": "Command",
-                  "_source0": "network_table:///SmartDashboard/Turret Turn to Angle",
-                  "_title": "Turret Turn to Angle"
-                },
-                {
-                  "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/TurnTurret Manual MaxVel",
                   "_title": "TurnTurret Manual MaxVel"
                 },
@@ -397,6 +387,16 @@
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/TurnTurret Manual Tolerance",
                   "_title": "TurnTurret Manual Tolerance"
+                },
+                {
+                  "_type": "Command",
+                  "_source0": "network_table:///SmartDashboard/Turret Turn to Angle",
+                  "_title": "Turret Turn to Angle"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/TurnTurret Manual Target Ang",
+                  "_title": "TurnTurret Manual Target Ang"
                 }
               ]
             }
@@ -975,19 +975,6 @@
               "imageHeight": 0
             }
           },
-          "6,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/problemExists",
-              "_title": "Problem Exists",
-              "Colors/Color when true": "#800000FF",
-              "Colors/Color when false": "#000000FF"
-            }
-          },
           "0,0": {
             "size": [
               2,
@@ -1104,6 +1091,19 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Autonomous delay",
               "_title": "Auto delay"
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/problemExists",
+              "_title": "Problem Exists",
+              "Colors/Color when true": "#FF0000FF",
+              "Colors/Color when false": "#000000FF"
             }
           }
         }

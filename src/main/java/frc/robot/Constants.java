@@ -212,18 +212,18 @@ public final class Constants {
 
         // Turn-to-angle constants
         public static final double kMaxTurnVelocity = 1150.0;        // Max turret velocity in degrees per second (extrapolted at 100% power)
-        public static final double kClampTurnVelocity = 250.0;       // Max turret velocity allowed (for safety) in degrees per second
+        public static final double kClampTurnVelocity = 300.0;       // Max turret velocity allowed (for safety) in degrees per second 
         public static final double kMaxTurnAcceleration = 500.0;     // Max acceleration in degrees per second^2
         public static final double kClampAccelShortTurn = 200.0;     // For short turns, Max acceleration in degrees per second^2
         public static final double kShortTurn = 20.0;           // Short turns are relative angle change less than +/- this variable, in degrees
         public static final double tLagTurn = 0.020;          // Lag time to start/stop turning, or just one cycle forcast through scheduler
-        public static double kITurnEnd = 0.004;         // Value of kI to use after the trapezoid profile is finished
-        public static double kPTurn = 0.001;         // PID terms  0.001
-        public static double kITurn = 0.000;
+        public static double kITurnEnd = 0.015;         // Value of kI to use after the trapezoid profile is finished, was 0.004
+        public static double kPTurn = 0.000;         // PID terms  0.001 in season, was turned off to now use kITurn instead
+        public static double kITurn = 0.010;
         public static double kDTurn = 0.000;
         public static double kSTurn = 0.012;       // Feed-forward terms
         public static double kVTurn = 0.00102;      
-        public static double kATurn = 0.00010;
+        public static double kATurn = 0.00008;      // For 2022 season, was 0.00010
     }
     
     public static final class PiVisionConstants {
