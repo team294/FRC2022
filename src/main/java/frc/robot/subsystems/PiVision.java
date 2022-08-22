@@ -127,6 +127,7 @@ public class PiVision extends SubsystemBase implements Loggable {
       SmartDashboard.putNumber(StringUtil.buildString(name, " width"), width);
       SmartDashboard.putNumber(StringUtil.buildString(name, " targets"), numberOfTargets);
       SmartDashboard.putNumber(StringUtil.buildString(name, " fps"), fps);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " latency"), latency);
       SmartDashboard.putBoolean(StringUtil.buildString(name, " Updating"), isGettingData());
     }
 

@@ -59,11 +59,16 @@ public class PiVisionHub extends PiVision {
   @Override
   public void updatePiVisionLog(boolean logWhenDisabled) {
     log.writeLog(logWhenDisabled, name, "Update Variables", 
-      "Number of Targets", numberOfTargets,
-      "Width", width,
-      "X Offset", x,
+      "Number of Targets", numberOfTargets, // number of targets
+      "Target Width", width, 
+      "Center Offset X", x, 
+      // "Center Offset Y", y,
       // "Target Area", area,
-      // "Latency", latency,
+      "FPS", fps,
+      "Time Camera", timeCamera,
+      "Time Robot", timeRobot,
+      "Time Frame", timeFrame,
+      "Latency", latency,
       "Network Table Read Counter", networkTableReadCounter,
       // "Snapshot Count", snapshotCount,
       "Dist", getDistance()

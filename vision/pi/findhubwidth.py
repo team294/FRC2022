@@ -37,6 +37,8 @@ timeRobot = 0
 timeRobotDelta = timeRobot - time.time()
 def robotTimeUpdate(table, key, value, isNew):
     # print("robotTimeUpdate: key: '%s'; value: %s; isNew: %s" % (key, value, isNew))
+    global timeRobot
+    global timeRobotDelta
     timeRobot = value
     timeRobotDelta = timeRobot - time.time()
 
@@ -47,7 +49,7 @@ sd.addEntryListener(robotTimeUpdate, False, "Robot Time", False)
 cs = CameraServer.getInstance()
 cs.enableLogging()
 
-config = {     "fps": 60,     "height": 480,     "pixel format": "mjpeg",     "properties": [         {             "name": "connect_verbose",             "value": 1         },         {             "name": "exposure_auto",             "value": 1         },         {             "name": "exposure_absolute",             "value": 7         },         {             "name": "white_balance_temperature_auto",             "value": False         },         {             "name": "white_balance_temperature",             "value": 2800         },         {             "name": "raw_brightness",             "value": 30         },         {             "name": "brightness",             "value": 0         },         {             "name": "raw_contrast",             "value": 3         },         {             "name": "contrast",             "value": 30         },         {             "name": "raw_saturation",             "value": 100         },         {             "name": "saturation",             "value": 50         },         {             "name": "power_line_frequency",             "value": 2         },         {             "name": "raw_sharpness",             "value": 25         },         {             "name": "sharpness",             "value": 50         },         {             "name": "backlight_compensation",             "value": 0         },         {             "name": "raw_exposure_absolute",             "value": 5         },         {             "name": "pan_absolute",             "value": 0         },         {             "name": "tilt_absolute",             "value": 0         },         {             "name": "zoom_absolute",             "value": 0         }     ],     "width": 680 }
+config = {     "fps": 30,     "height": 480,     "pixel format": "mjpeg",     "properties": [         {             "name": "connect_verbose",             "value": 1         },         {             "name": "exposure_auto",             "value": 1         },         {             "name": "exposure_absolute",             "value": 7         },         {             "name": "white_balance_temperature_auto",             "value": False         },         {             "name": "white_balance_temperature",             "value": 2800         },         {             "name": "raw_brightness",             "value": 30         },         {             "name": "brightness",             "value": 0         },         {             "name": "raw_contrast",             "value": 3         },         {             "name": "contrast",             "value": 30         },         {             "name": "raw_saturation",             "value": 100         },         {             "name": "saturation",             "value": 50         },         {             "name": "power_line_frequency",             "value": 2         },         {             "name": "raw_sharpness",             "value": 25         },         {             "name": "sharpness",             "value": 50         },         {             "name": "backlight_compensation",             "value": 0         },         {             "name": "raw_exposure_absolute",             "value": 5         },         {             "name": "pan_absolute",             "value": 0         },         {             "name": "tilt_absolute",             "value": 0         },         {             "name": "zoom_absolute",             "value": 0         }     ],     "width": 680 }
 # try:
 #     with open("camerasettings.json", "rt", encoding="utf-8") as f:
 #         j = json.load(f)
@@ -77,7 +79,7 @@ while True:
     # Return value: time = the frame time is in 1us increments
     timeLastSnapshot = timeSnapshot
     timeFrame, input_img = sink.grabFrame(input_img)
-    timeSnapshot = time.time()
+    timeSnapshot = timeFrame/1.0e6
 
     if timeFrame == 0: # There is an error
         output.notifyError(sink.getError())
@@ -180,7 +182,7 @@ while True:
     sd.putNumber("rfps", fps)
     sd.putNumber("rtime-camera", timeSnapshot)
     sd.putNumber("rtime-robot", timeSnapshot + timeRobotDelta)
-    sd.putNumber("rtime-frame", timeFrame)
+    # sd.putNumber("rtime-frame", timeFrame)
     ntInst.flush()
 
     # posts final image to stream
