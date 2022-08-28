@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+
+import java.sql.Struct;
+
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -20,7 +23,6 @@ import edu.wpi.first.math.util.Units;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
     /**
      * Recognized ball colors from color sensor.
      */

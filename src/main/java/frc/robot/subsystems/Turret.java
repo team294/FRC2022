@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.DistanceVsTime;
 import frc.robot.utilities.FileLog;
 import frc.robot.utilities.Loggable;
 
@@ -26,7 +27,7 @@ import static frc.robot.Constants.*;
 public class Turret extends SubsystemBase implements Loggable {
   private final FileLog log;
   private final WPI_TalonFX motor;
-
+  private DistanceVsTime distanceVsTime;
   private DigitalInput calSwitch = new DigitalInput(Ports.DIOTurretCalSwitch);    // Calibration switch on turret at start of match
 
   private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles
@@ -201,6 +202,15 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   /**
+   * 
+   * @param time the time
+   * @return
+   */
+  public double getTurretPositionAtTime(double time){
+    return distanceVsTime.getValue(time);
+  }
+
+  /**
    * Sets the turret encoder as either calibrated or uncalibrated
    * @param calibrated true = calibrated, false = uncalibrated
    * @param currentPosition current turret position, in degrees.  Ignored if calibrated = false 
@@ -228,7 +238,7 @@ public class Turret extends SubsystemBase implements Loggable {
   @Override
   public void periodic(){
     measuredDPS = getTurretVelocity();
-
+    distanceVsTime.addValue(getTurretPosition(), System.currentTimeMillis());
     // Auto-calibrate at limit switches
     if (!encoderCalibrated && isAtCalSwitch()) {
       setEncoderCalibrated(true, TurretConstants.calSwitch);
