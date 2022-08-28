@@ -571,7 +571,7 @@ public class DriveTrain extends SubsystemBase {
  
     // calculate angVel in degrees per second
     angularVelocity =  lfRunningAvg.calculate( (currAng - prevAng) / (currTime - prevTime) * 1000 );
-     
+    
     if(log.getLogRotation() == log.DRIVE_CYCLE) {
       updateDriveLog(false);
 
@@ -597,6 +597,7 @@ public class DriveTrain extends SubsystemBase {
       tLagAngular = SmartDashboard.getNumber("Drive tLag Angular", tLagAngular);
        
       // Update data on SmartDashboard
+      SmartDashboard.putNumber("Drive High Temp", Math.max(rightMotor1.getTemperature(), Math.max(rightMotor2.getTemperature(), Math.max(leftMotor1.getTemperature(), leftMotor2.getTemperature()))));
       SmartDashboard.putNumber("Drive Right Raw", getRightEncoderRaw());
       SmartDashboard.putNumber("Drive Left Raw", getLeftEncoderRaw());
       SmartDashboard.putNumber("Drive Right Enc", getRightEncoderInches());
@@ -608,7 +609,8 @@ public class DriveTrain extends SubsystemBase {
       SmartDashboard.putNumber("Drive AngVel", angularVelocity);
       SmartDashboard.putNumber("Drive Raw Gyro", getGyroRaw());
       SmartDashboard.putBoolean("Drive isGyroReading", isGyroReading());
-
+      SmartDashboard.putNumber("Drive Pitch", ahrs.getRoll());
+      
       // position from odometry (helpful for autos)
       var translation = odometry.getPoseMeters().getTranslation();
       SmartDashboard.putNumber("Drive Odometry X",translation.getX());
@@ -672,7 +674,8 @@ public class DriveTrain extends SubsystemBase {
       "Right Inches", getRightEncoderInches(), "R Vel", getRightEncoderVelocity(),
       "Gyro Angle", getGyroRotation(), "RawGyro", getGyroRaw(), 
       "Gyro Velocity", angularVelocity, 
-      "Odometry X", translation.getX(), "Odometry Y", translation.getY()
+      "Odometry X", translation.getX(), "Odometry Y", translation.getY(),
+      "Pitch", ahrs.getRoll()
       );
   }
 

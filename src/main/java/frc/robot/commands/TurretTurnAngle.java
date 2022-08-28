@@ -155,7 +155,7 @@ public class TurretTurnAngle extends CommandBase {
     addRequirements(turret);
 
     SmartDashboard.putNumber("TurnTurret Manual Target Ang", 45);
-    SmartDashboard.putNumber("TurnTurret Manual MaxVel", 150);
+    SmartDashboard.putNumber("TurnTurret Manual MaxVel", 300);  //150 during season, increased to 300 after tuning
     SmartDashboard.putNumber("TurnTurret Manual MaxAccel", kMaxTurnAcceleration);
     SmartDashboard.putNumber("TurnTurret Manual Tolerance", 0.5);
 
@@ -317,7 +317,9 @@ public class TurretTurnAngle extends CommandBase {
     targetVel = tStateNow.velocity;
     targetAccel = tStateNow.acceleration;
     double forecastVel = tStateForecast.velocity;
-    double forecastAccel = MathUtil.clamp((forecastVel-targetVel)/tLagTurn, -maxAccel, maxAccel);    
+    // double forecastAccel = MathUtil.clamp((forecastVel-targetVel)/tLagTurn, -maxAccel, maxAccel);    
+    TrapezoidProfileBCR.State tStateFutureAccel = tProfile.calculate(timeSinceStart + .05);       // The acceleration tends to cause velocity overshoot after accel goes to 0.  So, use accel value 50ms in the future to avoid overshoot.
+    double forecastAccel = tStateFutureAccel.acceleration;
 
     if(!tProfile.isFinished(timeSinceStart) && !feedbackUsingVision){
       // Feed-forward percent voltage to drive motors

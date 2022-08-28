@@ -17,8 +17,9 @@ lt = (56, 100, 65)
 ut = (74, 255, 255)
 
 # initialize network tables
-NetworkTablesInstance.getDefault().initialize(server='10.2.94.2')
-sd = NetworkTablesInstance.getDefault().getTable(name)
+ntInst = NetworkTablesInstance.getDefault()
+ntInst.initialize(server='10.2.94.2')
+sd = ntInst.getTable(name)
 # sd.putNumber("LowerThresholdH", 56)
 # sd.putNumber("LowerThresholdS", 129)
 # sd.putNumber("LowerThresholdV", 65)
@@ -30,6 +31,19 @@ sd = NetworkTablesInstance.getDefault().getTable(name)
 # sd.putNumber("rx", 1000)
 # sd.putNumber("ytol", yTolerance)
 sd.putNumber("snapshot", 0)
+
+# Listen for RoboRIO "heartbeat" = Robot time of day in seconds.  This should update once per second.
+timeRobot = 0
+timeRobotDelta = timeRobot - time.time()
+def robotTimeUpdate(table, key, value, isNew):
+    # print("robotTimeUpdate: key: '%s'; value: %s; isNew: %s" % (key, value, isNew))
+    global timeRobot
+    global timeRobotDelta
+    timeRobot = value
+    timeRobotDelta = timeRobot - time.time()
+
+sd.addEntryListener(robotTimeUpdate, False, "Robot Time", False)
+
 
 # initialize camera server
 cs = CameraServer.getInstance()
@@ -57,18 +71,22 @@ mjpeg = MjpegServer("cvhttpserver", "", 8083)
 mjpeg.setSource(output)
 
 input_img = np.array([[]])
+timeSnapshot = time.time()
 
 # vision loop
 while True:
-    # get frame
-    time, input_img = sink.grabFrame(input_img)
+    # get frame.  Wait for the next frame and get the image.
+    # Return value: time = the frame time is in 1us increments
+    timeLastSnapshot = timeSnapshot
+    timeFrame, input_img = sink.grabFrame(input_img)
+    timeSnapshot = timeFrame/1.0e6
 
-    if time == 0: # There is an error
+    if timeFrame == 0: # There is an error
         output.notifyError(sink.getError())
         continue
 
     if (sd.getNumber("snapshot", 0) == 1):
-        timestr = time.strftime("%Y-%m-%d_%H-%M-%S")
+        timestr = timeFrame.strftime("%Y-%m-%d_%H-%M-%S")
         cv2.imwrite(f"/home/pi/snapshot_{timestr}.jpg", input_img)
         sd.putNumber("snapshot", 0)
 
@@ -153,10 +171,19 @@ while True:
 
     final = cv2.resize(input_img, (160, 120)) # TODO TEST
 
+    # Add FPS to display
+    fps = 1 / (timeSnapshot - timeLastSnapshot)
+    #cv2.putText(final, str(round(fps, 1)), (0, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255))
+
     # posts number of elements found, width of bounding box, and x-value in angle degrees
     sd.putNumber("rv", rv)
     sd.putNumber("rw", rw)
     sd.putNumber("rx", rx)
+    sd.putNumber("rfps", fps)
+    sd.putNumber("rtime-camera", timeSnapshot)
+    sd.putNumber("rtime-robot", timeSnapshot + timeRobotDelta)
+    # sd.putNumber("rtime-frame", timeFrame)
+    ntInst.flush()
 
     # posts final image to stream
     output.putFrame(final)

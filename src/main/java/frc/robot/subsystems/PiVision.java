@@ -16,9 +16,10 @@ import frc.robot.utilities.StringUtil;
 public class PiVision extends SubsystemBase implements Loggable {
   private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
   protected NetworkTable table;
-  protected NetworkTableEntry rx, ry, rv, rw;
+  protected NetworkTableEntry rx, ry, rv, rw, rheartbeat, rfps, rtimeCamera, rtimeRobot, rtimeFrame;
+  protected long heartbeatTimeMillis;
   protected FileLog log;
-  protected double x, y, width, numberOfTargets;
+  protected double x, y, width, numberOfTargets, fps, timeCamera, timeRobot, timeFrame, latency;
   protected String name;
   protected int networkTableReadCounter = 0;
   protected boolean fastLogging = false;
@@ -33,6 +34,14 @@ public class PiVision extends SubsystemBase implements Loggable {
     rx = table.getEntry("rx");
     // ry = table.getEntry("ry");
     rv = table.getEntry("rv");
+    rheartbeat = table.getEntry("Robot Time");
+    rfps = table.getEntry("rfps");
+    rtimeCamera = table.getEntry("rtime-camera");
+    rtimeRobot = table.getEntry("rtime-robot");
+    rtimeFrame = table.getEntry("rtime-frame");
+
+    // Record current time for heartbeat
+    heartbeatTimeMillis = System.currentTimeMillis();
   }
 
   /**
@@ -62,12 +71,13 @@ public class PiVision extends SubsystemBase implements Loggable {
    * reads data from network tables
    */
   public void readData() {
-    double xNew, yNew, numberOfTargetsNew, widthNew; 
+    double xNew, yNew, numberOfTargetsNew, widthNew, timeRobotNew; 
     numberOfTargetsNew = rv.getDouble(1000.0);
     widthNew = rw.getDouble(1000.0);
     // xNew = rx.getDouble(1000.0) * PiVisionConstants.angleMultiplier;
     xNew = rx.getDouble(1000.0);
     // yNew = ry.getDouble(1000.0);
+    timeRobotNew = rtimeRobot.getDouble(0.0);
     networkTableReadCounter = 0;
   
     // Check if the pivision updated the NetworkTable while we were reading values, to ensure that all
@@ -77,15 +87,22 @@ public class PiVision extends SubsystemBase implements Loggable {
       width = widthNew;
       x = xNew;
       // y = yNew;
+      timeRobot = timeRobotNew;
 
       numberOfTargetsNew = rv.getDouble(1000.0);
       widthNew = rw.getDouble(1000.0);
       xNew = rx.getDouble(1000.0);
       // yNew = ry.getDouble(1000.0);
+      timeCamera = rtimeCamera.getDouble(0.0);
+      timeFrame = rtimeFrame.getDouble(0.0);
+      fps = rfps.getDouble(0.0);
+      timeRobotNew = rtimeRobot.getDouble(0.0);
+
       networkTableReadCounter++;
     // } while(networkTableReadCounter<= 5 && (xNew != x || yNew != y));
-    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width || numberOfTargetsNew != numberOfTargets));
+    } while(networkTableReadCounter<= 5 && (xNew != x || widthNew != width || numberOfTargetsNew != numberOfTargets || timeRobotNew != timeRobot));
 
+    latency = ((double)System.currentTimeMillis())/1000.0 - timeRobot;
   }
 
   @Override
@@ -109,7 +126,19 @@ public class PiVision extends SubsystemBase implements Loggable {
       // SmartDashboard.putNumber(StringUtil.buildString(name, " y"), y);
       SmartDashboard.putNumber(StringUtil.buildString(name, " width"), width);
       SmartDashboard.putNumber(StringUtil.buildString(name, " targets"), numberOfTargets);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " fps"), fps);
+      SmartDashboard.putNumber(StringUtil.buildString(name, " latency"), latency);
       SmartDashboard.putBoolean(StringUtil.buildString(name, " Updating"), isGettingData());
+    }
+
+    // Send heartbeat to Pi (every 1 sec)
+    if (System.currentTimeMillis() - heartbeatTimeMillis > 1000) {
+      // Record current time for heartbeat
+      heartbeatTimeMillis = System.currentTimeMillis();
+
+      // Send time to Pi
+      rheartbeat.setDouble(((double)heartbeatTimeMillis) / 1000.0);
+      tableInstance.flush();
     }
   }
 
@@ -129,7 +158,11 @@ public class PiVision extends SubsystemBase implements Loggable {
       "Center Offset X", x, 
       // "Center Offset Y", y,
       // "Target Area", area,
-      // "Latency", latency,
+      "FPS", fps,
+      "Time Camera", timeCamera,
+      "Time Robot", timeRobot,
+      "Time Frame", timeFrame,
+      "Latency", latency,
       "Network Table Read Counter", networkTableReadCounter
       // "Snapshot Count", snapshotCount
       );
