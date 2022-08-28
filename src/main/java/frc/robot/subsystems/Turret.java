@@ -27,7 +27,7 @@ import static frc.robot.Constants.*;
 public class Turret extends SubsystemBase implements Loggable {
   private final FileLog log;
   private final WPI_TalonFX motor;
-  private DistanceVsTime distanceVsTime;
+  private DistanceVsTime distanceVsTime = new DistanceVsTime();
   private DigitalInput calSwitch = new DigitalInput(Ports.DIOTurretCalSwitch);    // Calibration switch on turret at start of match
 
   private boolean fastLogging = false; // true is enabled to run every cycle; false follows normal logging cycles

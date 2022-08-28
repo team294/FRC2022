@@ -68,6 +68,13 @@ public class PiVision extends SubsystemBase implements Loggable {
   }
 
   /**
+   * @return offset of target in degrees from center, positive = clockwise
+   */
+  public double getFrameTime() {
+    return timeFrame;
+  }
+
+  /**
    * reads data from network tables
    */
   public void readData() {

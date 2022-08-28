@@ -281,7 +281,7 @@ public class TurretTurnAngle extends CommandBase {
     currProfileTime = System.currentTimeMillis();
     // currAngle is relative to the startAngle
     // currAngle = turret.getTurretPosition() - startAngle;
-    currAngle = turret.getTurretPositionAtTime() - startAngle;
+    currAngle = turret.getTurretPositionAtTime(piVisionHub.getFrameTime()) - startAngle;
     currVelocity = turret.getTurretVelocity();
     
     if (piVisionHub.seesTarget() && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)) {  

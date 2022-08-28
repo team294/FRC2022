@@ -22,18 +22,18 @@ public class DistanceVsTime {
 
     public double getValue(double time){
         double val;
-        double startDistance = 0;
+        double startDistance = distances.get(0);
         double endDistance = distances.get(4);
-        double startTime = 0;
+        double startTime = times.get(0);
         double endTime = times.get(4);
         boolean greater = false;
         for (int i = 0; i < 5; i++){
             if (greater){
-                if(time < times.get(i)){
+                if (time < times.get(i)){
                     endDistance = distances.get(i);
                     endTime = times.get(i);
                 }
-                else{
+                else {
                     startDistance = distances.get(i);
                     startTime = times.get(i);
                 }
