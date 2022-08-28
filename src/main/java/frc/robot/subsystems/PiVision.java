@@ -71,7 +71,7 @@ public class PiVision extends SubsystemBase implements Loggable {
    * @return offset of target in degrees from center, positive = clockwise
    */
   public double getFrameTime() {
-    return timeFrame;
+    return timeRobot * 1000;
   }
 
   /**
@@ -86,7 +86,7 @@ public class PiVision extends SubsystemBase implements Loggable {
     // yNew = ry.getDouble(1000.0);
     timeRobotNew = rtimeRobot.getDouble(0.0);
     networkTableReadCounter = 0;
-  
+    
     // Check if the pivision updated the NetworkTable while we were reading values, to ensure that all
     // of the data (targetExists, X, Y, etc) are from the same vision frame.
     do {
@@ -95,14 +95,14 @@ public class PiVision extends SubsystemBase implements Loggable {
       x = xNew;
       // y = yNew;
       timeRobot = timeRobotNew;
-
+      
       numberOfTargetsNew = rv.getDouble(1000.0);
       widthNew = rw.getDouble(1000.0);
       xNew = rx.getDouble(1000.0);
       // yNew = ry.getDouble(1000.0);
       timeCamera = rtimeCamera.getDouble(0.0);
-      timeFrame = rtimeFrame.getDouble(0.0);
       fps = rfps.getDouble(0.0);
+      timeFrame = rtimeFrame.getDouble(0.0);
       timeRobotNew = rtimeRobot.getDouble(0.0);
 
       networkTableReadCounter++;

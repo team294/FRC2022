@@ -27,27 +27,28 @@ public class DistanceVsTime {
         double startTime = times.get(0);
         double endTime = times.get(4);
         boolean greater = false;
-        for (int i = 0; i < 5; i++){
-            if (greater){
-                if (time < times.get(i)){
-                    endDistance = distances.get(i);
-                    endTime = times.get(i);
-                }
-                else {
-                    startDistance = distances.get(i);
+        if (time < startTime){
+            endTime = times.get(1);
+            endDistance = distances.get(1);
+        }
+        else if(time > endTime){
+            startTime = times.get(3);
+            startDistance = distances.get(3);
+        }
+        else{
+            for (int i = 0; i < times.size(); i++){
+                if(times.get(i) < time && times.get(i+1) > time){
                     startTime = times.get(i);
+                    endTime = times.get(i+1);
+                    startDistance = distances.get(i);
+                    endDistance = distances.get(i+1);
                 }
-            }
-            else if (time > times.get(i)){
-                greater = true;
-                startDistance = distances.get(i);
-                startTime = times.get(i);
-
             }
         }
-        double slope = (endTime - startTime)/(endDistance - startDistance);
-        double intercept = endTime - slope * endDistance;
+        double slope = (endDistance - startDistance)/(endTime - startTime);
+        double intercept = endDistance - slope * endTime;
         val = slope * time + intercept;
+        System.out.println("\nSlope: " + slope + "\nintercept: " + intercept + "\nStart distance: " + startDistance + "\nEnd Distance: " + endDistance + "\ntime: " + time + "\nbefore: " + startTime + "\nafter: " + endTime + "\nvalue: " + val);
         return val;
     }
 }
