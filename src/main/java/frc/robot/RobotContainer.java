@@ -89,7 +89,7 @@ public class RobotContainer {
     // don't configure triggers here as they interfere with autos. do it in teleopinit
     //configureSensorTriggers();
 
-    driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
+    driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, rightJoystick, leftJoystick, log));
   }
 
   /**
@@ -314,15 +314,19 @@ public class RobotContainer {
     }
 
     // left joystick left button
+    left[1].whenPressed(new IntakeRetract(intakeFront, uptake, log));
+
     //left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
-    //left[2].whenPressed(new IntakeStop(intakeFront, log));
+    left[2].whenPressed(new IntakeRetract(intakeFront, uptake, log));
 
     // right joystick left button
-    right[1].whenPressed(new IntakeToggle(intakeFront, uptake, log)); 
+    right[1].whenPressed(new IntakeExtend(intakeFront, uptake, log)); 
 
     // right joystick right button
+    right[2].whenPressed(new IntakeExtend(intakeFront, uptake, log)); 
+
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
  
   }
