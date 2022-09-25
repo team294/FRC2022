@@ -89,7 +89,7 @@ public class RobotContainer {
     // don't configure triggers here as they interfere with autos. do it in teleopinit
     //configureSensorTriggers();
 
-    driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, rightJoystick, leftJoystick, log));
+    driveTrain.setDefaultCommand(new DriveWithJoystickArcade(driveTrain, leftJoystick, rightJoystick, log));
   }
 
   /**

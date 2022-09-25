@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -141,8 +139,8 @@ public final class Constants {
    
     public static final class OIConstants {
         public static final int usbXboxController = 0;
-        public static final int usbRightJoystick = 1;
-        public static final int usbLeftJoystick = 2;
+        public static final int usbLeftJoystick = 1;
+        public static final int usbRightJoystick = 2;
         public static final int usbCoPanel = 3;
     }
 
