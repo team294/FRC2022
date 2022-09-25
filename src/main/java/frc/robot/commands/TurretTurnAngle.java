@@ -284,6 +284,10 @@ public class TurretTurnAngle extends CommandBase {
     
     if (piVisionHub.seesTarget() && (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight)) {  
       // If using vision and we see the goal, then update target angle to the location of the goal
+
+      // Changed 9/25/2022:  Vision target angle has ~50msec lag, which caused problems when regenerating the trapezoid
+      //    using the "latest" reported angle from the camera.  Instead of regenerating vision target from camera,
+      //    just use the original target angle instead (and repeat the commend if needed to get the turret more accurate to the target).
       // targetRel = MathBCR.normalizeAngle(currAngle + piVisionHub.getXOffset());
       // tStateFinal = new TrapezoidProfileBCR.State(targetRel, 0.0);
     } else if (!piVisionHub.seesTarget() && targetType == TargetType.kVisionScanLeft && Math.abs(softLimitRev - currAngle - startAngle) < 5) {
@@ -332,10 +336,11 @@ public class TurretTurnAngle extends CommandBase {
 
       if (targetType == TargetType.kVisionOnScreen || targetType == TargetType.kVisionScanLeft || targetType == TargetType.kVisionScanRight) {
         // Live camera feedback
-        // TODO Tune this better?  use adaptive minimum speed?
+        // 9/25/2022:  Don't use live camera feedback, due to ~50msec lag in camera position reporting.
         // pFB = kITurnEnd * Math.signum( MathBCR.normalizeAngle(piVisionHub.getXOffset()) );
-        pFB = kITurnEnd * ( targetRel - currAngle );
         // pFB = kITurnEnd * MathBCR.normalizeAngle(piVisionHub.getXOffset());
+
+        pFB = kITurnEnd * ( targetRel - currAngle );
       } else {
         // TODO Tune this better?  use adaptive minimum speed?
         pFB = kITurnEnd * ( targetRel - currAngle );
