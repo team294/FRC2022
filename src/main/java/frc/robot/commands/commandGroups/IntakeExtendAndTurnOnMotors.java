@@ -16,9 +16,9 @@ import frc.robot.utilities.FileLog;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class IntakeExtend extends SequentialCommandGroup {
+public class IntakeExtendAndTurnOnMotors extends SequentialCommandGroup {
   /** Creates a new IntakeExtend. */
-  public IntakeExtend(Intake intake, Uptake uptake, FileLog log) {
+  public IntakeExtendAndTurnOnMotors(Intake intake, Uptake uptake, FileLog log) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
