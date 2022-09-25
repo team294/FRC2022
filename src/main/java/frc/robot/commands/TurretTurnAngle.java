@@ -191,10 +191,7 @@ public class TurretTurnAngle extends CommandBase {
     pidAngVel.setPID(kPTurn, 0, kDTurn);
     pidAngVel.reset();
 
-
     startAngle = turret.getTurretPosition();
-
-    
 
     switch (targetType) {
       case kRelative:
