@@ -23,12 +23,9 @@ public class TurretTurnAngleTwice extends SequentialCommandGroup {
 
     addCommands(
 
-      new TurretTurnAngle(type, regenerate, turret, piVisionHub, log).withTimeout(0.5), //uses values from Shuffleboard
-      new TurretTurnAngle(type, regenerate, turret, piVisionHub, log)
-      // new WaitCommand(0.5),
-      // new TurretTurnAngle(type, regenerate, turret, piVisionHub, log),
-      // new WaitCommand(1),
-      // new TurretTurnAngle(type, 45, 300, 500, regenerate, 0.5, turret, piVisionHub, log)
+      new TurretTurnAngle(type, regenerate, turret, piVisionHub, log).withTimeout(0.9), //uses values from Shuffleboard
+      new TurretTurnAngle(type, regenerate, turret, piVisionHub, log).withTimeout(0.9)
+      
       
       
     );

@@ -254,7 +254,8 @@ public class RobotContainer {
     //   new WaitCommand(0.07), // TODO change?
     //   new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
     // ));
-    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    //xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    xbLT.whenActive(new TurretTurnAngleTwice(TargetType.kVisionOnScreen, false, turret, pivisionhub, log));
     // xbLT.whenInactive(new ParallelCommandGroup(
     //   new TurretStop(turret, log),
     //   new PiVisionHubSetLEDState(0, pivisionhub) 
