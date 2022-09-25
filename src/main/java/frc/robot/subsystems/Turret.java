@@ -203,8 +203,8 @@ public class Turret extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @param time the time
-   * @return
+   * @param time in milliseconds
+   * @return turret angle at certain time
    */
   public double getTurretPositionAtTime(double time){
     return distanceVsTime.getValue(time);

@@ -71,7 +71,7 @@ public class PiVision extends SubsystemBase implements Loggable {
    * @return offset of target in degrees from center, positive = clockwise
    */
   public double getFrameTime() {
-    return timeRobot * 1000;
+    return timeRobot;
   }
 
   /**
