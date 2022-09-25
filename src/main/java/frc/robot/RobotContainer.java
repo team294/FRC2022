@@ -99,8 +99,8 @@ public class RobotContainer {
     if (sensorConfigured == false) {
     
       Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor() && DriverStation.isTeleop());
-      colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, xboxController, log), false);
-      
+      colorSensorTrigger.whenActive(new UptakeSortBall(intakeFront, uptake, feeder, xboxController, log), false);
+
       // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
       // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
 
