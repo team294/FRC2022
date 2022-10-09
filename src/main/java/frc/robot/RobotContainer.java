@@ -314,12 +314,12 @@ public class RobotContainer {
     }
 
     // left joystick left button
-    left[1].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log));
+    left[1].whenPressed(new IntakeRetractAndFlush(intakeFront, uptake, log));
 
     //left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
-    left[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log));
+    left[2].whenPressed(new IntakeRetractAndFlush(intakeFront, uptake, log));
 
     // right joystick left button
     right[1].whenPressed(new IntakeExtendAndTurnOnMotors(intakeFront, uptake, log)); 
