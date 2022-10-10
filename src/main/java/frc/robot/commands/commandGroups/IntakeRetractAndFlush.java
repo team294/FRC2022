@@ -25,7 +25,7 @@ public class IntakeRetractAndFlush extends SequentialCommandGroup {
       new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log),
 
       new ConditionalCommand(
-          new FlushSequence(intakeFront, log, 0.5),
+          new FlushSequence(intakeFront, uptake, log, 0.5),
           new WaitCommand(0.01), 
           () -> !((uptake.isBallGoingToFeeder() && uptake.isBallAtColorSensor()) || (uptake.isBallGoingToFeeder() && feeder.isBallPresent()) || (uptake.isBallAtColorSensor() && feeder.isBallPresent()))
           
