@@ -570,12 +570,14 @@ public class DriveTrain extends SubsystemBase {
     double leftMeters = Units.inchesToMeters(getLeftEncoderInches());
     double rightMeters = Units.inchesToMeters(getRightEncoderInches());
     odometry.update(Rotation2d.fromDegrees(degrees), leftMeters, rightMeters);
-    fieldSim.setRobotPose(getPose());
-
+    
     if (piVisionHub.seesTarget()) {
       double dist = piVisionHub.getDistance();
-      double angle = getGyroRotation();
+      double angle = getGyroRotation() - piVisionHub.getXOffset();
+      odometry.resetPosition(new Pose2d(Units.inchesToMeters(dist), 0, Rotation2d.fromDegrees(angle)), Rotation2d.fromDegrees(degrees));
     }
+    
+    fieldSim.setRobotPose(getPose());
   }
 
   @Override
