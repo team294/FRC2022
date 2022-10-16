@@ -46,7 +46,7 @@ public AutoTwoBall(double waitTime, DriveTrain driveTrain, Shooter shooter, Feed
       // shoot 
       new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log).withTimeout(3),       // F2 -- Added 3-sec timeout, in case we lose vision
       new ShootSetup(true, AutoConstants.ballTwoRPM, pivisionhub, shooter, log),
-      new ShootSequence(intake, uptake, feeder, shooter, log),
+      new ShootSequence(uptake, feeder, shooter, log),
 
       // Prep for Teleop mode
       new IntakeToColorSensor(intake, uptake, log),           // F8 added IntakeToColorSensor, since it was removed from ShootSequence in F7

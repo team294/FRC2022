@@ -245,7 +245,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log),false);
+    xbRT.whenActive(new ShootSequence(uptake, feeder, shooter, log),false);
     // xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -325,9 +325,8 @@ public class RobotContainer {
     right[1].whenPressed(new IntakeExtendAndTurnOnMotors(intakeFront, uptake, log)); 
 
     // right joystick right button
-    right[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log)); 
-
-    // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
+    right[2].whenPressed(new IntakeRetractAndFlush(intakeFront, uptake, log)); 
+    // right[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log)); 
  
   }
 

@@ -51,7 +51,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
             new XboxRumble(0.5, 0.25, 2, xboxController, log),    // Notify drive that the robot has one ball
             // this logic has moved to the end of command group to allow sensors to stabilize
             //new UptakeStop(uptake, log)
-            new ScheduleCommand(new IntakeRetractAndTurnOffMotors(intake, uptake, log))
+            new ScheduleCommand(new IntakeRetractAndTurnOffMotors(intake, log))
           ),
           () -> !feeder.isBallPresent()
         ),
