@@ -566,15 +566,15 @@ public class DriveTrain extends SubsystemBase {
    * 
    * @param piVisionHub The PiVisionHub object that is used to get the data from the Raspberry Pi
    */
-  public void updateOdometry(double degrees, PiVisionHub piVisionHub) {
+  public void updateOdometry(double degrees, Turret turret, PiVisionHub piVisionHub) {
     double leftMeters = Units.inchesToMeters(getLeftEncoderInches());
     double rightMeters = Units.inchesToMeters(getRightEncoderInches());
     odometry.update(Rotation2d.fromDegrees(degrees), leftMeters, rightMeters);
     
     if (piVisionHub.seesTarget()) {
-      double dist = piVisionHub.getDistance();
-      double angle = getGyroRotation() - piVisionHub.getXOffset();
-      odometry.resetPosition(new Pose2d(Units.inchesToMeters(dist), 0, Rotation2d.fromDegrees(angle)), Rotation2d.fromDegrees(degrees));
+      double dist = piVisionHub.getDistance() + 40; // 40 inches is a guess of the distance from the center of the hub to the most outer edge of hub
+      double angle = (getGyroRotation() - turret.getTurretPosition() - piVisionHub.getXOffset())+180; // reverses vector direction
+      odometry.resetPosition(new Pose2d(Math.cos(Units.degreesToRadians(angle))*Units.inchesToMeters(dist), Math.sin(Units.degreesToRadians(angle))*Units.inchesToMeters(dist), Rotation2d.fromDegrees(angle)), Rotation2d.fromDegrees(degrees));
     }
     
     fieldSim.setRobotPose(getPose());
