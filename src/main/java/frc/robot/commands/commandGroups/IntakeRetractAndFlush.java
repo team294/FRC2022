@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Feeder;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.*;
 import frc.robot.subsystems.IntakeFront;
 import frc.robot.subsystems.Uptake;
 import frc.robot.utilities.FileLog;
@@ -22,13 +24,18 @@ public class IntakeRetractAndFlush extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log),
+      new IntakeRetractAndTurnOffMotors(intakeFront, log),
 
       new ConditionalCommand(
-          new FlushSequence(intakeFront, uptake, log, 0.5),
-          new WaitCommand(0.01), 
-          () -> !((uptake.isBallGoingToFeeder() && uptake.isBallAtColorSensor()) || (uptake.isBallGoingToFeeder() && feeder.isBallPresent()) || (uptake.isBallAtColorSensor() && feeder.isBallPresent()))
-          
+        sequence(
+          new IntakeSetPercentOutput(-IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log), // turn on transfer wheels to clear jams, intake in reverse to clear jams (F7)
+          new WaitCommand(0.5),
+          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log), // turn on transfer wheels to clear jams
+          new WaitCommand(1.0),
+          new IntakeSetPercentOutput(0, 0, intakeFront, log)
+        ),
+        new WaitCommand(0.01), 
+        () -> !((uptake.isBallGoingToFeeder() && uptake.isBallAtColorSensor()) || (uptake.isBallGoingToFeeder() && feeder.isBallPresent()) || (uptake.isBallAtColorSensor() && feeder.isBallPresent()))
         )
 
     );

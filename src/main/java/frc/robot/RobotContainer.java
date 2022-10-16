@@ -170,6 +170,7 @@ public class RobotContainer {
     SmartDashboard.putData("Turret Set Percent", new TurretSetPercentOutput(turret, log));
     SmartDashboard.putData("Turret Calibrate Fwd", new TurretRampOutput(0, 0.3, 10.0, turret, log));  
     SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, pivisionhub, log));
+    SmartDashboard.putData("Turret Turn Vision Twice", new TurretTurnAngleTwice(TargetType.kVisionOnScreen, false, turret, pivisionhub, log));
 
     // Shooter camera subsystem
     SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubSetLEDState(2, pivisionhub));
@@ -253,7 +254,8 @@ public class RobotContainer {
     //   new WaitCommand(0.07), // TODO change?
     //   new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
     // ));
-    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    //xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    xbLT.whenActive(new TurretTurnAngleTwice(TargetType.kVisionOnScreen, false, turret, pivisionhub, log));
     // xbLT.whenInactive(new ParallelCommandGroup(
     //   new TurretStop(turret, log),
     //   new PiVisionHubSetLEDState(0, pivisionhub) 
@@ -276,9 +278,7 @@ public class RobotContainer {
     xb[4].whenHeld(new ShootSetup(false, 4100, pivisionhub, shooter, log));        
     // xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
-    //x - micro shot for use in the pit
-    // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
-    // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    //x - shot speed using vision
     xb[3].whileHeld(new ShootSetup(true, 3100, pivisionhub, shooter, log));        
     
     // LB = 5, RB = 6
