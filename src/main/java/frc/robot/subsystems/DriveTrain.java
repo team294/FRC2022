@@ -573,7 +573,7 @@ public class DriveTrain extends SubsystemBase {
     
     if (piVisionHub.seesTarget()) {
       double dist = piVisionHub.getDistance() + 40; // 40 inches is a guess of the distance from the center of the hub to the most outer edge of hub
-      double angle = (getGyroRotation() - turret.getTurretPosition() - piVisionHub.getXOffset())+180; // reverses vector direction
+      double angle = (degrees - turret.getTurretPosition() - piVisionHub.getXOffset())+180; // reverses vector direction
       odometry.resetPosition(new Pose2d(Math.cos(Units.degreesToRadians(angle))*Units.inchesToMeters(dist), Math.sin(Units.degreesToRadians(angle))*Units.inchesToMeters(dist), Rotation2d.fromDegrees(angle)), Rotation2d.fromDegrees(degrees));
     }
     
