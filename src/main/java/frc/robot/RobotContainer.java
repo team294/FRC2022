@@ -170,6 +170,7 @@ public class RobotContainer {
     SmartDashboard.putData("Turret Set Percent", new TurretSetPercentOutput(turret, log));
     SmartDashboard.putData("Turret Calibrate Fwd", new TurretRampOutput(0, 0.3, 10.0, turret, log));  
     SmartDashboard.putData("Turret Turn to Angle", new TurretTurnAngle(TargetType.kAbsolute, false, turret, pivisionhub, log));
+    SmartDashboard.putData("Turret Turn Vision Twice", new TurretTurnAngleTwice(TargetType.kVisionOnScreen, false, turret, pivisionhub, log));
 
     // Shooter camera subsystem
     SmartDashboard.putData("shooter-cam ToggleLED", new PiVisionHubSetLEDState(2, pivisionhub));
@@ -253,7 +254,8 @@ public class RobotContainer {
     //   new WaitCommand(0.07), // TODO change?
     //   new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log)
     // ));
-    xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    //xbLT.whenActive(new TurretTurnAngle(TargetType.kVisionOnScreen, 0, -1, turret, pivisionhub, log));
+    xbLT.whenActive(new TurretTurnAngleTwice(TargetType.kVisionOnScreen, false, turret, pivisionhub, log));
     // xbLT.whenInactive(new ParallelCommandGroup(
     //   new TurretStop(turret, log),
     //   new PiVisionHubSetLEDState(0, pivisionhub) 
@@ -314,15 +316,19 @@ public class RobotContainer {
     }
 
     // left joystick left button
+    // left[1].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log));
+
     //left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
-    //left[2].whenPressed(new IntakeStop(intakeFront, log));
+    // left[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log));
 
     // right joystick left button
-    right[1].whenPressed(new IntakeToggle(intakeFront, uptake, log)); 
+    right[1].whenPressed(new IntakeExtendAndTurnOnMotors(intakeFront, uptake, log)); 
 
     // right joystick right button
+    right[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log)); 
+
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
  
   }
