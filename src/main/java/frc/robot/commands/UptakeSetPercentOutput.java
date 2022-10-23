@@ -50,6 +50,25 @@ public class UptakeSetPercentOutput extends CommandBase {
     addRequirements(uptake);
   }
 
+  /**
+   * Runs the uptake and eject motors
+   * @param uptakePercent -1.0 to 1.0, + = up, - = down
+   * @param ejectPercent -1.0 to 1.0, + = eject ball, - = send ball to feeder
+   * @param uptake uptake subsystem
+   * @param log logfile
+   * @param requireUptakeSubsystem true = requires uptake subsystem (normal usage).  false = does not 
+   * require uptake subsystem (use with EXTREME care)
+   */
+  public UptakeSetPercentOutput(double uptakePercent, double ejectPercent, Uptake uptake, FileLog log, boolean requireUptakeSubsystem) {
+    this.uptakePercent = uptakePercent;
+    this.ejectPercent = ejectPercent;
+    this.uptake = uptake;
+    this.log = log;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    if (requireUptakeSubsystem) addRequirements(uptake);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
