@@ -36,7 +36,7 @@ public class ShootSequence extends SequentialCommandGroup {
       new WaitCommand(1).withInterrupt(() -> !feeder.isBallPresent()),  // wait for second ball to shoot 
       new WaitCommand(.15),  // Wait for ball to exit shooter
       new FeederSetPercentOutput(0, feeder, log),           // turn off the feeder
-      // new IntakeToColorSensor(intake, uptake, log)          // turn on intake
+
       new FileLogWrite(true, false, "ShootSequence", "end", log)
     );
   }

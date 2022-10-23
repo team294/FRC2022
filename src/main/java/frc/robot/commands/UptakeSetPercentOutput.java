@@ -66,7 +66,9 @@ public class UptakeSetPercentOutput extends CommandBase {
     this.log = log;
 
     // Use addRequirements() here to declare subsystem dependencies.
-    if (requireUptakeSubsystem) addRequirements(uptake);
+    if (requireUptakeSubsystem) {
+      addRequirements(uptake);
+    }
   }
 
   // Called when the command is initially scheduled.

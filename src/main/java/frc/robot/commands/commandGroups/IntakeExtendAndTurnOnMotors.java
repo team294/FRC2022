@@ -5,8 +5,8 @@
 package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.UptakeConstants;
 import frc.robot.commands.*;
@@ -37,7 +37,7 @@ public class IntakeExtendAndTurnOnMotors extends SequentialCommandGroup {
         // No ball at color sensor
         new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log, false),
         // Ball at color sensor
-        new WaitCommand(0.01),
+        new InstantCommand(),
         () -> !uptake.isBallAtColorSensor()
       )
     );

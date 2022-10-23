@@ -19,10 +19,18 @@ import frc.robot.utilities.FileLog;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeRetractAndFlush extends SequentialCommandGroup {
 
-  /** Creates a new IntakeRetractAndFlush. */
+  /**
+   * Retracts the intake and turns off the intake motors.
+   * If there are less than 2 balls in the uptake/feeder, then runs a "flush" sequence
+   * on the intake/transfer motors to try to knock any balls out of the dead space in 
+   * the transfer area.
+   * @param intakeFront intake subsystem
+   * @param uptake uptake subsystem (not a requirement, only used for sensors)
+   * @param feeder feeder subsystem (not a requirement, only used for sensors)
+   * @param log
+   */
   public IntakeRetractAndFlush(IntakeFront intakeFront, Uptake uptake, Feeder feeder, FileLog log) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+
     addCommands(
       new IntakeRetractAndTurnOffMotors(intakeFront, log),
 
