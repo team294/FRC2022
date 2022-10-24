@@ -39,7 +39,7 @@ public AutoShootTaxi(double waitTime, DriveTrain driveTrain, Shooter shooter, Fe
 
       // shoot
       new ShootSetup(true, AutoConstants.ballOneRPM, pivisionhub, shooter, log),
-      new ShootSequence(intake, uptake, feeder, shooter, log),
+      new ShootSequence(uptake, feeder, shooter, log),
     
       // deploy intake so we are ready to go in teleop
       new IntakePistonSetPosition(true, intake, log),

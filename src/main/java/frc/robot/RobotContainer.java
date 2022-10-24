@@ -99,8 +99,9 @@ public class RobotContainer {
     if (sensorConfigured == false) {
     
       Trigger colorSensorTrigger = new Trigger(() -> uptake.isBallAtColorSensor() && DriverStation.isTeleop());
-      colorSensorTrigger.whenActive(new UptakeSortBall(uptake, feeder, xboxController, log), false);
-      
+      // colorSensorTrigger.whenActive(new UptakeSortBall(intakeFront, uptake, feeder, xboxController, log), false);
+      colorSensorTrigger.whenActive(new UptakeSortBall(intakeFront, uptake, feeder, xboxController, log));
+
       // Trigger ejectSensorTrigger = new Trigger(() -> uptake.isBallInEjector());
       // ejectSensorTrigger.whenActive(new UptakeEjectTrigger(uptake, log));
 
@@ -245,7 +246,7 @@ public class RobotContainer {
     Trigger xbRT = new AxisTrigger(xboxController, 3, 0.9);
     
     // right trigger shoots ball
-    xbRT.whenActive(new ShootSequence(intakeFront, uptake, feeder, shooter, log),false);
+    xbRT.whenActive(new ShootSequence(uptake, feeder, shooter, log),false);
     // xbRT.whenInactive(new ShootSequenceStop(uptake, feeder, log));
 
     // left trigger aim turret
@@ -278,9 +279,7 @@ public class RobotContainer {
     xb[4].whenHeld(new ShootSetup(false, 4100, pivisionhub, shooter, log));        
     // xb[4].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
     
-    //x - micro shot for use in the pit
-    // xb[3].whenHeld(new ShootSetup(false, 500, pivisionhub, shooter, log));
-    // xb[3].whenReleased(new ShooterSetVelocity(InputMode.kSpeedRPM, ShooterConstants.shooterDefaultRPM, shooter, log));
+    //x - shot speed using vision
     xb[3].whileHeld(new ShootSetup(true, 3100, pivisionhub, shooter, log));        
     
     // LB = 5, RB = 6
@@ -316,18 +315,18 @@ public class RobotContainer {
     }
 
     // left joystick left button
-    // left[1].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log));
+    //left[1].whenPressed(new IntakeRetractAndFlush(intakeFront, uptake, feeder, log));
 
     //left[1].whenPressed(new IntakeToColorSensor(intakeFront, uptake, log));
 
     // left joystick right button
-    // left[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log));
+    //left[2].whenPressed(new IntakeRetractAndFlush(intakeFront, uptake, feeder, log));
 
     // right joystick left button
     right[1].whenPressed(new IntakeExtendAndTurnOnMotors(intakeFront, uptake, log)); 
 
     // right joystick right button
-    right[2].whenPressed(new IntakeRetractAndTurnOffMotors(intakeFront, uptake, log)); 
+    right[2].whenPressed(new IntakeRetractAndFlush(intakeFront, uptake, feeder, log)); 
 
     // right[2].whileHeld(new DriveTurnGyro(TargetType.kVision, 0, 90, 100, true, 1, driveTrain, limelightFront, log)); // turn gyro with vision
  

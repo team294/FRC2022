@@ -19,7 +19,9 @@ public class TurretSetPercentOutput extends CommandBase {
   private boolean fromShuffleboard = false;
 
   /**
-   * Sets the turret speed from Shuffboard, -1.0 to +1.0 (+ = turn right)
+   * Sets the turret speed from Shuffboard, -1.0 to +1.0 (+ = turn right).
+   * This command immediately ends, but it leaves the turret running
+   * at the requested speed.  To stop the turret, run the TurretStop command.
    * @param turret turret subsystem
    * @param log logfile
    */
