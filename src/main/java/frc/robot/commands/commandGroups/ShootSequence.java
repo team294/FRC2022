@@ -32,6 +32,7 @@ public class ShootSequence extends SequentialCommandGroup {
       new ShooterSetVelocity(InputMode.kLastSetSpeed, shooter, log).withTimeout(1),    // Wait for shooter to be at speed
       new WaitCommand(0.5).withInterrupt(feeder :: isBallPresent),
       new FeederSetPercentOutput(FeederConstants.onPct, feeder, log),         // turn on feeder to send second ball to shooter
+      new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log),      // Turn off eject motor, to prepare for next ball
 
       new WaitCommand(1).withInterrupt(() -> !feeder.isBallPresent()),  // wait for second ball to shoot 
       new WaitCommand(.15),  // Wait for ball to exit shooter
