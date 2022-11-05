@@ -33,6 +33,9 @@ public AutoBeachBlitzThreeBall(double waitTime, DriveTrain driveTrain, Shooter s
       new DriveResetPose(0, 0, 0, driveTrain, log),   // set initial pose to 180 degrees away from the ball (facing the hub)
       new PiVisionHubSetLEDState(1, pivisionhub),       // turn on led light for vision
 
+      // Back up so we can see the target for the first shot
+      new DriveStraight(-AutoConstants.driveFromStartToSeeHub, TargetType.kAbsolute, 0, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+
       // shoot
       new TurretTurnAngle(TargetType.kVisionOnScreen, 0, 3, turret, pivisionhub, log).withTimeout(3), 
       new ShootSetup(true, AutoConstants.ballOneRPM, pivisionhub, shooter, log),
@@ -46,7 +49,8 @@ public AutoBeachBlitzThreeBall(double waitTime, DriveTrain driveTrain, Shooter s
       new IntakeToColorSensor(intake, uptake, log),
 
       // drive to third ball
-      new DriveStraight(AutoConstants.driveToBallTwoInMeters, TargetType.kAbsolute, 180, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
+      new DriveStraight(AutoConstants.driveToBallTwoInMeters-AutoConstants.driveFromStartToSeeHub, TargetType.kAbsolute, 
+                        180, 2.66, 3.8, true, driveTrain, limeLight, log).withTimeout(3),
 
       // turn back to hub
       new DriveTurnGyro(TargetType.kAbsolute, 0, 300, 200, 3, driveTrain, limeLight, log).withTimeout(2),

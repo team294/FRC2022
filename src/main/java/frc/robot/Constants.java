@@ -145,6 +145,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+        public static final double driveFromStartToSeeHub = 0.4;      // Starting position is too close to see hub for vision.  Move this far to see hub.
         public static final double driveToBallTwoInMeters = 1.4; 
         public static final double ballOneRPM = 3000;
         public static final double ballTwoRPM = 3300;
