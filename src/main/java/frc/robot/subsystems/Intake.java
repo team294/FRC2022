@@ -59,8 +59,8 @@ public class Intake extends SubsystemBase implements Loggable {
     motor.configNeutralDeadband(0.01);
     motor.configVoltageCompSaturation(IntakeConstants.compensationVoltage);
     motor.enableVoltageCompensation(true);
-    motor.configOpenloopRamp(0.25);   //seconds from neutral to full.  Was 0.05, increased (G2) due to stripped belt on intake pulley
-    motor.configClosedloopRamp(0.25); //seconds from neutral to full.  Was 0.05, increased (G2) due to stripped belt on intake pulley
+    motor.configOpenloopRamp(0.4);   //seconds from neutral to full.  Was 0.05, increased (G2) due to stripped belt on intake pulley
+    motor.configClosedloopRamp(0.4); //seconds from neutral to full.  Was 0.05, increased (G2) due to stripped belt on intake pulley
 
     // set sensor configuration
     motor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, timeoutMs); 
