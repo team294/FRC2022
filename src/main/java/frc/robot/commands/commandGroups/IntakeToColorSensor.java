@@ -24,7 +24,7 @@ public IntakeToColorSensor(Intake intake, Uptake uptake, FileLog log) {
       new FileLogWrite(false, false, "IntakeToColorSensor", "starting", log),
       new ConditionalCommand(
         sequence(
-          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intake, log),
+          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPctTransfer, intake, log),
           new UptakeSetPercentOutput(UptakeConstants.onPct, 0, uptake, log)
         ),
         new FileLogWrite(false, false, "IntakeToColorSensor", "intake not extended", log),
