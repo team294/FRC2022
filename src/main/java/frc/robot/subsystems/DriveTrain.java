@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -119,6 +120,13 @@ public class DriveTrain extends SubsystemBase {
 
     setVoltageCompensation(true);
     setOpenLoopRampLimit(true);
+
+    // Set stator current limits to reduce overheating
+    // StatorCurrentLimitConfiguration currLimitCfg = new StatorCurrentLimitConfiguration(true, 50, 60, 0.05);     // Units = boolean, Amps, Amps, seconds
+    // leftMotor1.configStatorCurrentLimit(currLimitCfg);
+    // leftMotor2.configStatorCurrentLimit(currLimitCfg);
+    // rightMotor1.configStatorCurrentLimit(currLimitCfg);
+    // rightMotor2.configStatorCurrentLimit(currLimitCfg);
 
     // create the differential drive AFTER configuring the motors
     diffDrive = new DifferentialDrive(leftMotor1, rightMotor1);
@@ -618,6 +626,9 @@ public class DriveTrain extends SubsystemBase {
 
       //Values for bugfixing
       SmartDashboard.putNumber("Drive Motor Temp", leftMotor1.getTemperature());
+      SmartDashboard.putNumber("Drive L2 Temp", leftMotor2.getTemperature());
+      SmartDashboard.putNumber("Drive R1 Temp", rightMotor1.getTemperature());
+      SmartDashboard.putNumber("Drive R2 Temp", rightMotor2.getTemperature());
       SmartDashboard.putNumber("Drive Bus Volt", leftMotor1.getBusVoltage());
     }
 

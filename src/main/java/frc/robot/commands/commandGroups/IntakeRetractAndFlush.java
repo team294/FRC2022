@@ -36,9 +36,9 @@ public class IntakeRetractAndFlush extends SequentialCommandGroup {
 
       new ConditionalCommand(
         sequence(
-          new IntakeSetPercentOutput(-IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log), // turn on transfer wheels to clear jams, intake in reverse to clear jams (F7)
+          new IntakeSetPercentOutput(-IntakeConstants.onPct, IntakeConstants.onPctTransfer, intakeFront, log), // turn on transfer wheels to clear jams, intake in reverse to clear jams (F7)
           new WaitCommand(0.5),
-          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intakeFront, log), // turn on transfer wheels to clear jams
+          new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPctTransfer, intakeFront, log), // turn on transfer wheels to clear jams
           new WaitCommand(1.0),
           new IntakeSetPercentOutput(0, 0, intakeFront, log)
         ),
