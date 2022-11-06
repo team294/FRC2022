@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -145,6 +146,10 @@ public class DriveTrain extends SubsystemBase {
     prevTime = System.currentTimeMillis();
     currTime = System.currentTimeMillis();
     lfRunningAvg.reset();
+
+    // Record status frame periods
+    log.writeLogEcho(true, "Drive", "Init", "Status Frame 1 period", leftMotor1.getStatusFramePeriod(StatusFrameEnhanced.Status_1_General),
+                     "Status Frame 4 period", leftMotor1.getStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat));
 
     // display PID coefficients on SmartDashboard
     SmartDashboard.putNumber("Drive kV Linear", kVLinear); // Linear coefficients
@@ -523,6 +528,10 @@ public class DriveTrain extends SubsystemBase {
     return leftMotor1.getMotorOutputVoltage();
   }
 
+  public double getLeftOutputVoltage2() {
+    return leftMotor2.getMotorOutputVoltage();
+  }
+
   public double getLeftBusVoltage() {
     return leftMotor1.getBusVoltage();
   }
@@ -535,8 +544,16 @@ public class DriveTrain extends SubsystemBase {
     return leftMotor1.getStatorCurrent();
   }
 
+  public double getLeftStatorCurrent2() {
+    return leftMotor2.getStatorCurrent();
+  }
+
   public double getRightOutputVoltage() {
     return rightMotor1.getMotorOutputVoltage();
+  }
+
+  public double getRightOutputVoltage2() {
+    return rightMotor2.getMotorOutputVoltage();
   }
 
   public double getRightBusVoltage() {
@@ -553,6 +570,10 @@ public class DriveTrain extends SubsystemBase {
 
   public double getRightStatorCurrent() {
     return rightMotor1.getStatorCurrent();
+  }
+
+  public double getRightStatorCurrent2() {
+    return rightMotor2.getStatorCurrent();
   }
 
   public double getTalonLeftClosedLoopError() {
