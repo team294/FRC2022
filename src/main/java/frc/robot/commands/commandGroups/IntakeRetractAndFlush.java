@@ -32,7 +32,7 @@ public class IntakeRetractAndFlush extends SequentialCommandGroup {
   public IntakeRetractAndFlush(IntakeFront intakeFront, Uptake uptake, Feeder feeder, FileLog log) {
 
     addCommands(
-      new IntakeRetractAndTurnOffMotors(intakeFront, log),
+      new IntakeRetractAndTurnOffMotors(false, intakeFront, log),
 
       new ConditionalCommand(
         sequence(

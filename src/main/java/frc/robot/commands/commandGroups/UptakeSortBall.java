@@ -59,7 +59,7 @@ public class UptakeSortBall extends SequentialCommandGroup {
 
             // Close intake.  Schedule the intake command separately, so UptakeSortBall does not require the Intake 
             // subsystem.  This prevents conflicts between UptakeSortBall and the intake extend/retract buttons.
-            new ScheduleCommand(new IntakeRetractAndTurnOffMotors(intake, log))
+            new ScheduleCommand(new IntakeRetractAndTurnOffMotors(true, intake, log))
           ),
           () -> !feeder.isBallPresent()
         ),
