@@ -30,7 +30,7 @@ public class IntakeExtendAndTurnOnMotors extends SequentialCommandGroup {
     addCommands(
       new IntakePistonSetPosition(true, intake, log),
       // new IntakeToColorSensor(intake, uptake, log)
-      new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPct, intake, log),
+      new IntakeSetPercentOutput(IntakeConstants.onPct, IntakeConstants.onPctTransfer, intake, log),
 
       // Turn on uptake, unless we are holding a ball at the color sensor
       new ConditionalCommand(

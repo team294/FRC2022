@@ -145,6 +145,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+        public static final double driveFromStartToSeeHub = 0.4;      // Starting position is too close to see hub for vision.  Move this far to see hub.
         public static final double driveToBallTwoInMeters = 1.4; 
         public static final double ballOneRPM = 3000;
         public static final double ballTwoRPM = 3300;
@@ -184,6 +185,7 @@ public final class Constants {
         public static final double ticksPerRevolution = 2048.0;                     // Divide by this to convert raw ticks to revolutions
         public static final double rawVelocityToRPM = 600.0 / ticksPerRevolution;   // Multiply by this to convert raw velocity (ticksPer100ms) to RPM
         public static final double onPct = 0.25;                                    // Default on percentage
+        public static final double onPctTransfer = 0.25;                            // Default on percentage for transfer motor
     }
 
     public static final class FeederConstants {

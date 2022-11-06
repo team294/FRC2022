@@ -19,6 +19,7 @@ public class AutoSelection {
 	public static final int TWO_BALL = 2;
 	public static final int FOUR_BALL = 3;
 	public static final int FIVE_BALL = 4;
+	public static final int BLITZ_THREE_BALL = 5;
 	
 	private TrajectoryCache trajectoryCache;
 	private SendableChooser<Integer> autoChooser = new SendableChooser<>();
@@ -35,6 +36,7 @@ public class AutoSelection {
 		autoChooser.addOption("Four Ball Center", FOUR_BALL);
 		autoChooser.addOption("Shoot then Taxi", SHOOT_TAXI);
 		autoChooser.addOption("Taxi", TAXI);
+		autoChooser.addOption("Blitz Three Ball", BLITZ_THREE_BALL);
 	
 		// show auto selection widget on Shuffleboard
 		SmartDashboard.putData("Autonomous routine", autoChooser);
@@ -89,6 +91,11 @@ public class AutoSelection {
 		if (autoPlan == FIVE_BALL) {
 			log.writeLogEcho(true, "AutoSelect", "run AutoFiveBall");
 			autonomousCommand = new AutoFiveBall(waitTime, trajectoryCache, driveTrain, shooter, feeder, intake, uptake, limeLight, log);
+		}
+
+		if (autoPlan == BLITZ_THREE_BALL) {
+			log.writeLogEcho(true, "AutoSelect", "run AutoBeachBlitzThreeBall");
+			autonomousCommand = new AutoBeachBlitzThreeBall(waitTime, driveTrain, shooter, feeder, intake, uptake, turret, pivisionhub, limeLight, log);
 		}
 
 		if (autonomousCommand == null) {
