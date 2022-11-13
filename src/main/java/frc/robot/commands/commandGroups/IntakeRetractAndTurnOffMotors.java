@@ -6,6 +6,7 @@ package frc.robot.commands.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.Intake;
 import frc.robot.utilities.FileLog;
@@ -14,14 +15,30 @@ import frc.robot.utilities.FileLog;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeRetractAndTurnOffMotors extends SequentialCommandGroup {
-  /** Creates a new IntakeRetract. */
-  public IntakeRetractAndTurnOffMotors(Intake intake, FileLog log) {
+  /**
+   * 
+   * @param flush  True = reverse intake and flush any 3rd ball before retracting intake.  False = immediately retract
+   * @param intake
+   * @param log
+   */
+  public IntakeRetractAndTurnOffMotors(boolean flush, Intake intake, FileLog log) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new IntakePistonSetPosition(false, intake, log),
-      new WaitCommand(0.5),
-      new IntakeSetPercentOutput(0, intake, log)
-    );
+    if (flush) {
+      // Flush 3rd ball from intake, then close
+      addCommands(
+        new IntakeSetPercentOutput(-IntakeConstants.onPct, -IntakeConstants.onPctTransfer, intake, log),
+        new WaitCommand(1.25),
+        new IntakePistonSetPosition(false, intake, log),
+        new IntakeSetPercentOutput(0, intake, log)
+      );
+    } else {
+      // Immediately close
+      addCommands(
+        new IntakePistonSetPosition(false, intake, log),
+        new WaitCommand(0.5),
+        new IntakeSetPercentOutput(0, intake, log)
+      );
+    }
   }
 }

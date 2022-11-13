@@ -100,11 +100,11 @@ public final class Constants {
         public static final int CANPneumaticHub = 1;
         public static final int CANPowerDistHub = 1;
 
-        public static final int CANLeftDriveMotor1 = 11;
-        public static final int CANLeftDriveMotor2 = 12;
+        public static final int CANLeftDriveMotor1 = 12;        // Swapping primary/follower for G5 code to see if that affects motor heating
+        public static final int CANLeftDriveMotor2 = 11;
 
-        public static final int CANRightDriveMotor1 = 15;
-        public static final int CANRightDriveMotor2 = 16;
+        public static final int CANRightDriveMotor1 = 16;        // Swapping primary/follower for G5 code to see if that affects motor heating
+        public static final int CANRightDriveMotor2 = 15;
 
         public static final int CANIntakeFront = 21;
         public static final int CANIntakeFrontTransfer = 22;    // Horizontal Omni wheels between intake and uptake
